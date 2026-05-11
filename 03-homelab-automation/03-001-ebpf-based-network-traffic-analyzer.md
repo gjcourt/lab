@@ -13,6 +13,45 @@ depends_on:
 
 # eBPF-based Network Traffic Analyzer
 
+## Final Disposition
+
+> **This section is a draft.** The 48h soak started ~2026-05-10 is still running. The Status and
+> Kill-or-Continue verdict below are TODOs that will be filled in once the soak completes.
+
+- **Status**: TODO post-soak (intended: `Complete`)
+- **Kill or Continue verdict**: TODO post-soak (intended: `Continue` — rationale: three
+  Hubble-distinct panels live (retransmits, SRTT, DNS latency), low steady-state CPU overhead, and a
+  healthy 6/6 node deployment.)
+- **Soak result**: _Filled in after 48h soak completes (started ~2026-05-10)._
+
+### Links
+
+- Source repo: [`gjcourt/netscope`](https://github.com/gjcourt/netscope)
+- Grafana dashboard: `netscope` — TCP retransmit rate, SRTT histogram, DNS latency percentiles
+- Operator runbook:
+  [`gjcourt/homelab` → `docs/operations/apps/netscope.md`](https://github.com/gjcourt/homelab/blob/main/docs/operations/apps/netscope.md)
+  (landed via PR #630)
+- Postmortem:
+  [`gjcourt/netscope` → `docs/postmortems/2026-05-10-srtt-verifier-iterations.md`](https://github.com/gjcourt/netscope/blob/main/docs/postmortems/2026-05-10-srtt-verifier-iterations.md)
+- Alerting rules: [`gjcourt/homelab` PR #631](https://github.com/gjcourt/homelab/pull/631)
+- Kernel-load CI smoke gating future BPF changes:
+  [`gjcourt/netscope#13`](https://github.com/gjcourt/netscope/issues/13)
+- Plan amendments: Phase 0 close-out
+  ([brainstorm#12](https://github.com/gjcourt/brainstorm/pull/12)), Phase 2 close-out
+  ([brainstorm#14](https://github.com/gjcourt/brainstorm/pull/14)), this Phase 4 finalization PR
+
+### Open follow-ups (deferred, not blockers)
+
+- **Per-domain DNS breakdown (v2)** — QNAME decoding via the ringbuf path; tracked in
+  `gjcourt/netscope` (issue / PR link to be added by parallel work)
+- **DNS coverage gap for glibc `res_send` / `sendto+msg_name`** — known limitation of the
+  connected-UDP-socket hook; captured in the runbook troubleshooting section
+- **CI smoke kernel checksum pinning** — the CI smoke job in
+  [`netscope#13`](https://github.com/gjcourt/netscope/issues/13) flagged that the kernel image is
+  not pinned by sha256; future hardening item
+- **Per-4-tuple keying for retransmit / SRTT** — current shipping design aggregates; per-tuple
+  keying is deferred to a future PR if signal warrants it
+
 ## Description
 
 Build a per-node DaemonSet that attaches eBPF programs (written in C, loaded via libbpf-style CO-RE)
@@ -222,13 +261,23 @@ write the operator-facing runbook.
 - [ ] **Validation:** 7-day rolling window meeting CPU/memory budgets; alerts wired into the
       existing homelab alerting path; runbook checked in and linked from the dashboard
 
-### Phase 4 — Documentation & Postmortem (≈1 week)
+### Phase 4 — Documentation & Postmortem (≈1 week) — Draft close-out (awaiting soak)
 
-- [ ] README in `netscope` repo: overview, build, deploy, troubleshoot
-- [ ] Architecture doc: program-by-program walkthrough, map design, attach ordering with Cilium
-- [ ] CO-RE / `vmlinux.h` regeneration runbook (for Talos kernel upgrades)
-- [ ] Postmortem with explicit kill-or-continue recommendation for ongoing maintenance burden
-- [ ] Update this brainstorm doc: status `Complete`, link to repo and dashboards
+- [x] README in `netscope` repo: overview, build, deploy, troubleshoot
+- [~] Architecture doc: program-by-program walkthrough, map design, attach ordering with Cilium —
+  _partial._ The SRTT verifier postmortem covers the kernel-side iteration story; the operator
+  runbook in `gjcourt/homelab` (`docs/operations/apps/netscope.md`) covers the operational
+  architecture (attach order, map layout, scrape model). A standalone "architecture doc" in the
+  netscope repo is not duplicated.
+- [x] ~~CO-RE / `vmlinux.h` regeneration runbook (for Talos kernel upgrades)~~ — **N/A.** The
+      shipping design did not need `vmlinux.h` regeneration: CO-RE works via shadowed struct
+      definitions (e.g. partial `tcp_sock` with just the fields read) plus `bpf_core_cast` /
+      `bpf_skc_to_tcp_sock`. No per-kernel snapshot to regenerate, so the runbook is not required.
+- [x] Postmortem with explicit kill-or-continue recommendation for ongoing maintenance burden —
+      [SRTT verifier postmortem](https://github.com/gjcourt/netscope/blob/main/docs/postmortems/2026-05-10-srtt-verifier-iterations.md);
+      kill-or-continue verdict captured in **Final Disposition** above (pending soak)
+- [ ] Update this brainstorm doc: status `Complete`, link to repo and dashboards — links done;
+      status flip deferred to post-soak (see **Final Disposition**)
 
 ### Phase 5 — Stretch Goals (open-ended; only if Phases 0–4 land cleanly)
 
