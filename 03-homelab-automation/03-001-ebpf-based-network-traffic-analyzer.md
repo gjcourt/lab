@@ -15,14 +15,21 @@ depends_on:
 
 ## Final Disposition
 
-> **This section is a draft.** The 48h soak started ~2026-05-10 is still running. The Status and
-> Kill-or-Continue verdict below are TODOs that will be filled in once the soak completes.
+> **This section is partially filled.** The Kill-or-Continue verdict is locked in based on the first
+> ~9h of the soak (no incidents, all exit criteria comfortably met). The Status flip and the full
+> Soak result line below will be filled in once the 48h window completes.
 
 - **Status**: TODO post-soak (intended: `Complete`)
-- **Kill or Continue verdict**: TODO post-soak (intended: `Continue` — rationale: three
-  Hubble-distinct panels live (retransmits, SRTT, DNS latency), low steady-state CPU overhead, and a
-  healthy 6/6 node deployment.)
-- **Soak result**: _Filled in after 48h soak completes (started ~2026-05-10)._
+- **Kill or Continue verdict**: **Continue.** Rationale: three Hubble-distinct panels live
+  (retransmits, SRTT, DNS latency); 6/6 nodes healthy with 0 restarts; steady-state CPU ≤1 millicore
+  per pod (budget was ≤2% of one core); memory ~70 MiB RSS (within the 64 Mi / 128 Mi request/limit
+  envelope); 0 alerts firing in the first 9h of the soak. The project is operating at the bar the
+  Exit Criteria asked for.
+- **Soak result**: Preliminary (~9h in, 2026-05-11): all 6 pods Ready / 0 restarts, no alerts
+  firing, scrape success ≥96.7% per node, ~14k retransmits/h and ~57k DNS queries/h flowing
+  cluster-wide, SRTT p99 ~0.2s and DNS p99 ~0.24s. One soft observation: `talos-v2l-hng` showed 16
+  brief up↔down scrape-state flaps in 6h — never sustained long enough to trip `NetscopeAgentDown`
+  (5m gate), agent itself otherwise healthy. _Final line filled in after the 48h window closes._
 
 ### Links
 
