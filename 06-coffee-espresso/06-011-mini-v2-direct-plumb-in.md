@@ -29,8 +29,6 @@ modification.
 **Out of scope (deliberately):**
 
 - Drain plumbing for the drip tray — keep removable for now.
-- Auto-shutoff solenoid — deferred to a future enhancement; the plan reserves a spot in the line
-  where it would go.
 - Pump replacement / rotary conversion — explicitly not desired.
 
 ## Approach: reservoir float-fill
@@ -40,7 +38,7 @@ modification.
         │
         ├─ 1/4" inline shut-off (ball valve) ── for service isolation
         │
-        ├─ [future: NC solenoid here]         ── reserved spot, not installed yet
+        ├─ 1/4" NC brass solenoid valve       ── energized only when machine is on; fail-closed
         │
         ├─ 1/4" pressure regulator @ ~20–25 PSI
         │
@@ -64,10 +62,14 @@ mechanical **float valve** controls fill, not pump enable.
    - Stuck-open float valve → tank overfills → drip tray catches the overflow.
    - Stuck-closed float valve → tank slowly drains → original low-water switch trips → exact same
      failure mode as today.
+   - Hose burst / fitting failure → only possible while machine is on (NC solenoid closes the line
+     whenever machine is off); unattended flood risk is eliminated.
 4. Reversible: disconnect at the regulator, refill manually, machine is back to stock.
 5. Pressure-tolerant: even if the regulator fails high, the tank can't be over-pressurized (it's
    vented). Worst case is float-valve hammering / chatter and accelerated float-seat wear, which is
    loud and obvious — not a silent flood.
+6. Fail-safe on power loss: NC solenoid de-energizes closed, so a house power outage shuts off the
+   water supply automatically.
 
 ## Pre-flight: verify source-water hardness
 
@@ -102,7 +104,9 @@ before buying, and replace fiber washers on every disassembly.
 | #   | Item                                       | Spec                                                                       | Notes                                                                                                                                                                                                                   |
 | --- | ------------------------------------------ | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | 1/4" inline shut-off ball valve            | Full-port, push-to-connect or compression                                  | Local cutoff for service. Don't rely on the house valve.                                                                                                                                                                |
-| 2   | (Reserved) NC solenoid                     | 1/4", normally-closed; coil voltage TBD per "Reserved future enhancements" | **Not installed in this phase.** Reserved gap in the regulation stack.                                                                                                                                                  |
+| 2   | NC brass solenoid valve                    | 1/4", normally-closed, lead-free / DZR brass body, food-grade EPDM seals, 110 V AC or 24 V DC coil | Candidates: U.S. Solid 1/4" NPT brass NC, 110 V AC, EPDM (~$30); Cleyon 1/4" brass NC, 24 V DC (~$25). Avoid plastic-body solenoids on potable water. Energized only when machine is on; NC = fail-closed on power loss. |
+| 2a  | Smart plug (machine-side)                  | 15A indoor smart plug (Kasa / TP-Link / equivalent)                        | Single switched outlet feeds both the machine and the solenoid's coil-supply wall-wart. Machine "on" ⇒ solenoid open; machine "off" ⇒ solenoid closed.                                                                  |
+| 2b  | Solenoid coil supply                       | If 24 V DC solenoid: 24 V DC wall-wart, ≥1 A; if 110 V AC solenoid: none needed (coil runs direct from smart plug) | Mount the wall-wart and any coil wiring in a small junction box near the under-counter outlet. Don't free-air splice AC mains.                                                                                          |
 | 3   | Pressure regulator                         | 1/4" inlet/outlet, gauge'd, set to ~25 PSI                                 | Watts U5B-LF (3/8" NPT) needs a 1/4" NPT→BSPP transition before the float valve, since the float valve is BSPP. A 1/4" BSPP-native in-line regulator avoids this. Don't mix tapered/parallel threads at the same joint. |
 | 4   | Reservoir float valve                      | 1/4" male thread inlet (RO-style brass), with quarter-turn shut-off        | Mounts through a hole drilled in the **tank lid**. Set to close ~1/2" below max-fill mark.                                                                                                                              |
 | 5   | 1/4" LLDPE polyethylene tubing             | Length: filter output → machine + ~12" service loop                        | Espresso aftermarket standard. Routes easier than braided; takes John Guest fittings cleanly.                                                                                                                           |
@@ -131,11 +135,26 @@ Aquasana Claryum Direct Connect filter, 1/4" braided output line from filter.
 In order, downstream of the existing Aquasana output:
 
 1. **Inline shut-off** (close it now while building the rest).
-2. **Empty space reserved for future solenoid** — leave ~3" of straight line.
+2. **NC solenoid valve** — installed upstream of the regulator and the long run to the reservoir,
+   so a downstream hose burst still triggers shut-off when the machine cycles off. Flow arrow on the
+   valve body points downstream. Verify thread standard (NPT vs. BSPP) matches the adjacent
+   fittings; transition with a brass adapter + PTFE tape (NPT) or fiber washer (BSPP) as needed.
 3. **Pressure regulator** — bench-set to ~25 PSI **before** mounting.
 4. **1/4" line** continuing to the machine.
 
-Mount the regulator stack against the cabinet wall — don't let it hang from the line.
+Mount the regulator stack against the cabinet wall — don't let it hang from the line. Mount the
+solenoid coil-up so any seal weep drips clear of the coil and electrical connection.
+
+**Solenoid wiring** (recommended: smart-plug path):
+
+- Single switched outlet (smart plug) feeds both the machine's power cord and the solenoid coil
+  supply.
+- If the solenoid is **110 V AC**: wire the coil leads into a small junction box fed from the
+  switched outlet. No transformer. Use a proper strain relief and grounded box — this is mains.
+- If the solenoid is **24 V DC**: plug a 24 V DC wall-wart into the switched outlet, then run the
+  low-voltage leads to the coil. Easier and lower-risk; preferred unless there's a reason not to.
+- Result: machine "on" ⇒ solenoid energized ⇒ valve open. Machine "off" or power loss ⇒ solenoid
+  de-energized ⇒ valve closed.
 
 ### 4. Modify the reservoir for the float valve
 
@@ -156,10 +175,14 @@ Mount the regulator stack against the cabinet wall — don't let it hang from th
 
 ### 6. Pressurize and verify
 
-- Open inline shut-off slowly, watch every joint.
+- Smart plug **on** (solenoid energized, valve open). Open inline shut-off slowly, watch every
+  joint.
 - Float valve fills to set level and **closes cleanly** (no oscillation / hammering).
 - If hammering: drop regulator setpoint in 5 PSI increments until quiet.
 - Drain the tank manually to confirm the existing low-water switch still trips.
+- **Solenoid functional check**: with the inline shut-off open, smart plug **off** — confirm no
+  flow downstream of the solenoid (watch the float valve; tank should not refill as you draw it
+  down). Then smart plug **on** — confirm flow resumes within ~1 second.
 
 ### 7. Wet test
 
@@ -175,18 +198,13 @@ Mount the regulator stack against the cabinet wall — don't let it hang from th
 
 ## Reserved future enhancements
 
-- **Solenoid auto-shutoff**: splice into the reserved gap in the regulation stack. NC solenoid
-  energized whenever the machine is on, so the line is depressurized whenever the machine is off.
-  Insurance against a 3 a.m. float-valve failure flooding the kitchen. ~$30–60 in parts. Wiring
-  options worth comparing before committing: (a) smart plug + 120VAC solenoid coil, both gated by a
-  Home Assistant rule (lowest-risk, no machine modification); (b) 24VAC solenoid driven by a small
-  external transformer also gated by a smart plug; (c) tapping the machine's own switched mains
-  through a relay (most "automatic" but voids any reversibility and requires opening the case).
-  Option (a) is the default unless there's a strong reason otherwise.
 - **Drain plumb**: drill the drip tray for a hose barb, run silicone hose to a drain on continuous
   downhill slope. Independent workstream.
 - **Softening upgrade**: if hardness creeps up (annual re-test), add Pentair Claris or BWT Bestmax
   cartridge upstream of regulator stack, downstream of Claryum.
+- **Home Assistant integration of the smart plug**: schedule, away-mode auto-off, leak-sensor
+  triggered shutoff. The plug from Phase 1 is already HA-compatible; this is a software-only
+  follow-up.
 
 ## Exit Criteria
 
@@ -195,6 +213,8 @@ Mount the regulator stack against the cabinet wall — don't let it hang from th
 - [ ] Inline shut-off closes cleanly with full water-flow stop downstream.
 - [ ] Regulator gauge reads 20–25 PSI under static line pressure.
 - [ ] Float valve fills to set level and closes without hammering.
+- [ ] Solenoid: smart-plug off ⇒ no downstream flow; smart-plug on ⇒ flow within ~1 s. Pulling the
+      wall outlet (simulated power loss) also closes the valve.
 - [ ] Existing low-water switch trips when tank is manually drained.
 - [ ] No leaks at any joint after 24 hours of static line pressure.
 - [ ] 5+ consecutive shots pulled with steady tank refill.
@@ -204,13 +224,15 @@ Mount the regulator stack against the cabinet wall — don't let it hang from th
 - [x] Researched s1cafe.com / home-barista.com community approaches
 - [x] Decided: reservoir float-fill (not inlet plumb) for vibe-pump robustness
 - [x] BoM scoped against existing Aquasana Claryum infrastructure
-- [ ] Buy parts
+- [ ] Buy parts (incl. NC brass solenoid + smart plug + coil supply)
 - [ ] Test water hardness at Claryum output
-- [ ] Build regulation stack
+- [ ] Build regulation stack (shut-off → solenoid → regulator)
+- [ ] Wire solenoid via smart plug; bench-test open/close before plumbing
 - [ ] Modify reservoir lid; mount float valve
 - [ ] Wet test
+- [ ] Solenoid power-cycle + power-loss shutoff verified
 - [ ] 24h burn-in observation
-- [ ] Document as-built (regulator setpoint, line route, water test numbers)
+- [ ] Document as-built (regulator setpoint, line route, water test numbers, solenoid model/coil V)
 
 ## Sources
 
