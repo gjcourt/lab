@@ -114,6 +114,32 @@ before buying, and replace fiber washers on every disassembly.
 | 7   | Fiber washers                              | 1/4" BSPP sized (parallel-thread, flat-face seal)                                                                  | One per joint; replace on every disassembly.                                                                                                                                                                             |
 | 8   | Hardness test strip / TDS meter            | One-time use                                                                                                       | Pre-flight check. ~$5–25.                                                                                                                                                                                                |
 
+### Orderable picks (concrete products)
+
+Specific products for the spec'd lines above (the **solenoid** already has candidates on line 2).
+Verify thread standard (BSPP vs NPT) per part before buying — see the thread note at the top of this BoM.
+
+| Line | Pick | ~Price | Where |
+|---|---|---|---|
+| 1 — shut-off ball valve | John Guest 1/4" push-fit ball valve (**PPSV040808W**) | ~$8 | Amazon |
+| 3 — regulator (recommended) | Chris' Coffee Pressure Regulator w/ gauge — 0–100 psi, ships with 1/4" John Guest fittings, dial to ~25 psi (JG-native → avoids the BSPP/NPT transition) | ~$80 | chriscoffee.com |
+| 3 — regulator (budget alt) | Espresso Parts 30 PSI fixed inline regulator (not adjustable; 30 vs ~25 target is fine for float-fill) | ~$30 | espressoparts.com |
+| 4 — float valve | 1/4" brass RO float valve, male-thread + quarter-turn (e.g. LiquaGen / PureSec) | ~$10 | Amazon |
+| 5 — tubing | 1/4" LLDPE RO tubing, 25 ft (e.g. Malida) | ~$10 | Amazon |
+| 6 — JG fittings | 1/4" John Guest push-fit assortment (tees / elbows / unions) | ~$15 | Amazon |
+| 7 — washers | 1/4" BSPP fiber/nylon washer pack | ~$6 | Amazon |
+| 8 — water test | TDS meter (~$15) + GH/KH test strips or an API GH/KH titration kit (~$8) | ~$23 | Amazon |
+
+Links: [Chris' Coffee regulator](https://www.chriscoffee.com/products/pressure-regulator-valve) ·
+[Espresso Parts 30 PSI](https://www.espressoparts.com/products/30-psi-inline-water-pressure-regulator) ·
+[JG ball valve PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2) ·
+[LiquaGen RO float valve](https://www.amazon.com/LiquaGen-Reverse-Osmosis-Filtration-Systems/dp/B07DGX3NGB)
+
+Spec'd lines total ≈ **$70–130** depending on regulator choice (excludes the deferred solenoid +
+the reused Claryum filter / cold-water branch). Note: most espresso regulators (Chris'/Watts) ship
+NPT or with JG; the **float valve is typically BSPP/male-thread** — keep a 1/4" NPT↔BSPP adapter +
+fiber washers on hand for that joint.
+
 **Existing infrastructure being reused (no purchase):** dedicated cold-water branch to kitchen,
 Aquasana Claryum Direct Connect filter, 1/4" braided output line from filter.
 
