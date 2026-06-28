@@ -57,10 +57,26 @@ control anything — it's receive-only.)
 - [ ] HA dashboard/remote card (and at least one automation) replacing the physical remotes
 - [ ] Fully local — no cloud dependency
 
-## Shopping list (~$15)
+## Bill of materials (~$10–15 beyond the dev board)
 
-- ESP32 dev board · IR LED + 2N2222 (or similar) NPN transistor + resistor · TSOP38238 IR receiver
-- (or) Athom pre-built ESPHome IR+RF433 unit (~$15–20) · (or) Broadlink RM4 Pro (~$40) for instant
+Already have: **ESP32 / Seeed XIAO ESP32-C3 dev board + USB-C cable** (brains, WiFi, power, flashing).
+
+| Part | Qty | ~Price | Purpose |
+|---|---|---|---|
+| **IR receiver — TSOP38238** (or VS1838B / TSOP4838) | 1 | ~$1.50 | Demodulates 38 kHz IR → clean envelope for **capture** (and optional physical-remote→HA input) |
+| **IR LED, 940 nm** (5 mm) | 1–3 | ~$0.20 ea | Transmitter; extras = more range / aim at multiple devices |
+| **NPN transistor — 2N2222** (or 2N3904 / S8050 / BC337) | 1 | ~$0.10 | Drives the IR LED at ~100 mA+ pulsed — the GPIO can't. **The #1 part for range** |
+| **Resistor ~470 Ω–1 kΩ** | 1 | ~$0.02 | Transistor *base* resistor (GPIO → base) |
+| **Resistor ~33–100 Ω** | 1 | ~$0.02 | IR LED *current-limit* (start ~100 Ω; drop toward 33 Ω for more range) |
+| **Breadboard + jumpers** | 1 | ~$6 | Prototyping (or perfboard + solder for permanent) |
+
+Recommended extras (good practice, often skipped): a **0.1 µF cap** across the TSOP VS↔GND + a **~100 Ω** resistor in its supply line (datasheet supply filtering). Internal pull-up means a 10 kΩ on the TSOP output is usually unnecessary.
+
+**Circuit:** TSOP `OUT→GPIO`, `GND→GND`, `VS→3.3V`. LED driver: `GPIO→470Ω–1kΩ→transistor base`; `emitter→GND`; `IR LED anode→33–100Ω→5V` (use the board's 5V/VBUS for range); `LED cathode→collector`. Logic stays 3.3 V; LED runs off 5 V via the transistor (no transistor = ~6-inch range).
+
+**Tools:** phone **front camera** to confirm the LED fires (IR shows faint purple; rear cams have IR-cut filters). Soldering iron only if going permanent; multimeter handy.
+
+**Shortcuts:** KY-022 receiver module (fine, no resistors) — but the common **KY-005 transmitter module has no driver transistor**, so its range is weak; build the transistor circuit instead. Or buy the fully-prebuilt **Athom ESPHome IR+RF433 unit (~$15–20)** — LED+driver+receiver wired, ships with ESPHome, zero soldering. (Or **Broadlink RM4 Pro ~$40** for instant non-DIY.)
 
 ## Ready-to-flash ESPHome configs
 
