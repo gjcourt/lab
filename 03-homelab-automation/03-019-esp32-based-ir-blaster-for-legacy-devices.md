@@ -62,6 +62,114 @@ control anything — it's receive-only.)
 - ESP32 dev board · IR LED + 2N2222 (or similar) NPN transistor + resistor · TSOP38238 IR receiver
 - (or) Athom pre-built ESPHome IR+RF433 unit (~$15–20) · (or) Broadlink RM4 Pro (~$40) for instant
 
+## Ready-to-flash ESPHome configs
+
+Two-phase: flash `learn.yaml` to capture codes, then move them into `blaster.yaml` to transmit.
+Needs a `secrets.yaml` next to them with `wifi_ssid` / `wifi_password`. When actually built, these
+should live in **`~/src/homelab/firmware/esphome/ir-blaster/`** (same convention as the mmwave
+nodes — secrets.yaml gitignored; flash USB first, then OTA). Wiring: TSOP `OUT→GPIO14` (VS→3.3V,
+GND→GND); IR LED on `GPIO4` **through an NPN transistor** (GPIO→1kΩ→base; LED+resistor on a 5V
+collector path) — never straight off the GPIO, or range is inches.
+
+### learn.yaml (capture phase)
+```yaml
+# Flash, open the logs, point each remote at the TSOP and press buttons.
+# ESPHome prints the decoded protocol + code (or raw timings). Record each into
+# your code book, then move them into blaster.yaml.
+substitutions:
+  name: ir-blaster
+  recv_pin: GPIO14            # TSOP38238 OUT (adjust per board)
+
+esphome:
+  name: ${name}
+  friendly_name: IR Blaster (learning)
+esp32:
+  board: esp32dev            # Seeed XIAO ESP32-C3: board: seeed_xiao_esp32c3
+logger:
+  level: DEBUG               # IR dumps print at DEBUG
+api:
+ota:
+  platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+remote_receiver:
+  pin:
+    number: ${recv_pin}
+    inverted: true           # TSOP idles HIGH, pulls LOW on a mark
+    mode: { input: true, pullup: true }
+  dump: all                  # try every decoder (use `raw` to see timings)
+  tolerance: 25%
+  idle: 25ms
+```
+
+### blaster.yaml (transmit phase)
+```yaml
+# Fill in the codes captured with learn.yaml. Each button becomes a HA entity
+# (button.ir_blaster_*); pressing it fires the IR LED. Receiver kept so a
+# physical remote can also trigger HA automations.
+substitutions:
+  name: ir-blaster
+  tx_pin: GPIO4              # IR LED via NPN transistor (NOT direct!)
+  recv_pin: GPIO14          # optional: physical-remote → HA input
+
+esphome:
+  name: ${name}
+  friendly_name: IR Blaster
+esp32:
+  board: esp32dev           # Seeed XIAO ESP32-C3: board: seeed_xiao_esp32c3
+logger:
+api:
+ota:
+  platform: esphome
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+remote_transmitter:
+  pin: ${tx_pin}
+  carrier_duty_percent: 50%  # standard for a 38 kHz carrier
+
+remote_receiver:             # optional input; set dump:all to re-learn
+  pin:
+    number: ${recv_pin}
+    inverted: true
+    mode: { input: true, pullup: true }
+  dump: []
+
+button:
+  # --- replace address/command with YOUR captured codes ---
+  - platform: template
+    name: "Amp Power"
+    on_press:
+      - remote_transmitter.transmit_nec: { address: 0x10, command: 0x21 }
+
+  - platform: template
+    name: "Amp Volume Up"
+    on_press:
+      - remote_transmitter.transmit_nec: { address: 0x10, command: 0x22 }
+      # hold-to-repeat feel: wrap with repeat: { times: 3, wait_time: 40ms }
+
+  # Sony uses a different action (12/15/20-bit):
+  # - platform: template
+  #   name: "TV Power (Sony)"
+  #   on_press:
+  #     - remote_transmitter.transmit_sony: { data: 0xA90, nbits: 12 }
+
+  # A code that only decoded as RAW:
+  # - platform: template
+  #   name: "CD Play (raw)"
+  #   on_press:
+  #     - remote_transmitter.transmit_raw:
+  #         carrier_frequency: 38kHz
+  #         code: [9000, -4500, 560, -560, 560, -1690]
+```
+
+> Per-protocol transmit actions: `transmit_nec`, `transmit_sony`, `transmit_rc5`, `transmit_samsung`,
+> `transmit_panasonic`, `transmit_pronto` (for Pronto hex from online DBs), `transmit_raw` (fallback).
+> Match the action to whatever `dump: all` reported for that button.
+
 ## Progress
 
 - [x] Research: IR vs RF, tool landscape, approach decided (2026-06-27)
