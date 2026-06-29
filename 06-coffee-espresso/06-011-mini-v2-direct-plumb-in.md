@@ -4,7 +4,7 @@ number: '06-011'
 category: 'coffee-espresso'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
-target_skills: 'Water Plumbing, Pressure Regulation, BSP Fittings'
+target_skills: 'Water Plumbing, Pressure Regulation, NPT/Push-Fit Fittings'
 status: 'Not Started'
 depends_on:
   - hardware/lucca-a53
@@ -79,7 +79,8 @@ alkalinity. La Spaziale boilers don't auto-flush, so scale matters here.
 
 **Do this before installing anything:**
 
-1. Hardness test strip ($5 hardware store) or TDS meter.
+1. API GH/KH titration kit (~$8) — reads hardness + alkalinity directly. (A TDS meter is only a
+   rough proxy; the Claryum doesn't reduce TDS, so its reading ≈ tap.)
 2. Test from the **Claryum output**, not the upstream tap.
 3. Three numbers to check:
 
@@ -95,56 +96,64 @@ BoM before going further.
 ## Bill of materials
 
 Thread-standard note: this plan does **not** plumb into the boiler — all joints live on the supply
-line between the Aquasana output and the reservoir float valve. Most espresso-aftermarket regulators
-and RO-style float valves use **G-thread BSP-parallel** ports (sealed with a fiber/nylon washer
-against a flat face), not tapered NPT. **Don't mix:** an NPT male into a BSPP female will start
-threading and then leak under pressure. Verify each part's thread standard from its spec sheet
-before buying, and replace fiber washers on every disassembly.
+line between the Aquasana output and the reservoir float valve. In this build (a US
+plumber-installed Claryum line) every threaded joint is **NPT**, sealed with PTFE tape — **no BSP,
+no compression, no fiber washers**. Three transitions need an NPT↔push adapter; everything else is
+1/4" John Guest push-fit:
 
-| #   | Item                                       | Spec                                                                                                               | Notes                                                                                                                                                                                                                    |
-| --- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | 1/4" inline shut-off ball valve            | Full-port, push-to-connect or compression                                                                          | Local cutoff for service. Don't rely on the house valve.                                                                                                                                                                 |
-| 2   | NC brass solenoid valve                    | 1/4", normally-closed, lead-free / DZR brass body, food-grade EPDM seals, 110 V AC or 24 V DC coil                 | Candidates: U.S. Solid 1/4" NPT brass NC, 110 V AC, EPDM (~$30); Cleyon 1/4" brass NC, 24 V DC (~$25). Avoid plastic-body solenoids on potable water. Energized only when machine is on; NC = fail-closed on power loss. |
-| 2a  | Smart plug (machine-side)                  | 15A indoor smart plug (Kasa / TP-Link / equivalent)                                                                | Single switched outlet feeds both the machine and the solenoid's coil-supply wall-wart. Machine "on" ⇒ solenoid open; machine "off" ⇒ solenoid closed.                                                                   |
-| 2b  | Solenoid coil supply                       | If 24 V DC solenoid: 24 V DC wall-wart, ≥1 A; if 110 V AC solenoid: none needed (coil runs direct from smart plug) | Mount the wall-wart and any coil wiring in a small junction box near the under-counter outlet. Don't free-air splice AC mains.                                                                                           |
-| 3   | Pressure regulator                         | 1/4" inlet/outlet, gauge'd, set to ~25 PSI                                                                         | Watts U5B-LF (3/8" NPT) needs a 1/4" NPT→BSPP transition before the float valve, since the float valve is BSPP. A 1/4" BSPP-native in-line regulator avoids this. Don't mix tapered/parallel threads at the same joint.  |
-| 4   | Reservoir float valve                      | 1/4" male thread inlet (RO-style brass), with quarter-turn shut-off                                                | Mounts through a hole drilled in the **tank lid**. Set to close ~1/2" below max-fill mark.                                                                                                                               |
-| 5   | 1/4" LLDPE polyethylene tubing             | Length: filter output → machine + ~12" service loop                                                                | Espresso aftermarket standard. Routes easier than braided; takes John Guest fittings cleanly.                                                                                                                            |
-| 6   | Push-to-connect fittings (John Guest 1/4") | Tees, elbows, straight unions as needed                                                                            | Push-to-connect at any joint that may need disassembly for service.                                                                                                                                                      |
-| 7   | Fiber washers                              | 1/4" BSPP sized (parallel-thread, flat-face seal)                                                                  | One per joint; replace on every disassembly.                                                                                                                                                                             |
-| 8   | Hardness test strip / TDS meter            | One-time use                                                                                                       | Pre-flight check. ~$5–25.                                                                                                                                                                                                |
+| Joint                                         | Thread             | Adapter                                          |
+| --------------------------------------------- | ------------------ | ------------------------------------------------ |
+| Braided Claryum output                        | 3/8" NPT female    | JG **PP010823W** (1/4" push × 3/8" NPT male)     |
+| Solenoid inlet + outlet                       | 1/4" NPT female ×2 | 2× JG **PP010822WP** (1/4" push × 1/4" NPT male) |
+| Ball valve · regulator · float valve · tubing | 1/4" push-fit      | none — native                                    |
+
+⚠️ Verify your own line before buying: confirm the Claryum output is 3/8" NPT (read the hose label /
+the male port it threads onto). European machines often use **BSP** instead — if so, swap the
+braided adapter for the BSP equivalent.
+
+| #   | Item                                                    | Spec                                                                                                                                            | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 1/4" inline shut-off ball valve                         | Full-port, push-to-connect or compression                                                                                                       | [John Guest PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2) (~$8). Local cutoff for service. Don't rely on the house valve.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2   | NC brass solenoid valve                                 | 1/4" NPT, normally-closed, brass, Viton (FKM), direct-acting (0 psi min), 24 V DC; **continuous-duty coil** if the machine is ever left on >8 h | **Continuous-duty (recommended):** [WIC 2BCK-1/4-D](https://wicvalve.com/1-4-Inch-Fast-Response-Direct-Acting-Electric-Solenoid-Valve-2BCK-1-4-D.htm) (1/4" NPT, 24 V DC, 100% ED coil, ~$30–45). Short-session only: [U.S. Solid 1/4" 24 V DC brass NC](https://ussolid.com/products/u-s-solid-electric-solenoid-valve-1-4-24v-dc-solenoid-valve-brass-body-normally-closed-viton-seal-html) (~$16) — coil is **not** continuous-duty (>8 h energized risks burnout). Both are 1/4" NPT female → need 2× PP010822WP adapters + PTFE tape. Install **flow-arrow toward the reservoir**, observe DC polarity. Not NSF-61 (fine for a cold feed). NC = fail-closed on power loss.               |
+| 2a  | Smart plug (machine-side)                               | 15A indoor smart plug (Kasa / TP-Link / equivalent)                                                                                             | [Kasa EP25](https://www.kasasmart.com/us/products/smart-plugs/kasa-smart-plug-slim-energy-monitoring-ep25) (~$13/ea in a 4-pack) or any 15 A plug. Single switched outlet feeds both the machine (~1400 W) and the coil-supply wall-wart — don't daisy-chain other loads. Machine "on" ⇒ solenoid open; "off" or power loss ⇒ solenoid closed.                                                                                                                                                                                                                                                                                                                                                |
+| 2b  | Solenoid coil supply                                    | 24 V DC wall-wart, **≥2 A** (covers ~1.8 A inrush — a 1 A supply can brown out at pull-in)                                                      | Solenoid has bare lead wires → splice to the wall-wart (cut the barrel or use a barrel-to-screw-terminal adapter); observe polarity. Mount wiring in a small junction box near the under-counter outlet.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| 3   | Pressure regulator                                      | 1/4" JG push-fit, **gauge'd**, set to ~20–25 PSI                                                                                                | **Recommended: [Chris' Coffee regulator w/ gauge](https://www.chriscoffee.com/products/pressure-regulator-valve)** (~$100, JG 1/4") — ships preset ~50 psi, **dial down to ~25 before trusting it**; the gauge is what lets you verify, which is why it beats the value pick for error-proofing. Value alt: [JG Micro regulator](https://www.wb.coffee/shop/john-guest-micro-pressure-regulator-valve-1-8-1-4-43588) (~$29; 0–4 bar adjustable, **no gauge → set blind**, ships from the EU). Skip the [Flojet → JG kit](https://www.espressoparts.com/products/flojet-water-pressure-regulator-to-john-guest-kit) — non-adjustable 1750-series pump regulator, vendor-rated "temporary use." |
+| 4   | Reservoir float valve                                   | Plastic RO float valve with a threaded mounting shank + 1/4" inlet                                                                              | [Example: LiquaGen RO float valve](https://www.amazon.com/LiquaGen-Reverse-Osmosis-Filtration-Systems/dp/B07DGX3NGB) (~$10). Brass/quarter-turn unnecessary — service shut-off is line 1. Mounts through a hole drilled in the **tank lid**; close ~1/2" below max-fill. **Test-fit before drilling** (see install §4).                                                                                                                                                                                                                                                                                                                                                                       |
+| 5   | 1/4" LLDPE polyethylene tubing                          | **1/4" OD (0.25") imperial — NOT 6 mm**                                                                                                         | ⚠️ JG sells imperial _and_ metric; 6 mm tube leaks in a 1/4" collet. Buy 1/4" OD. Routes easier than braided; takes JG fittings cleanly.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| 6   | Push-to-connect fittings (John Guest **1/4" imperial**) | A couple of elbows for corners + spare collets                                                                                                  | Run is linear (no tee needed). **1/4" imperial, not 6 mm.** Push-to-connect at any joint that may need service.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 7   | NPT thread adapters + PTFE tape                         | 1× PP010823W (3/8" NPT) + 2× PP010822WP (1/4" NPT), all × 1/4" push                                                                             | Bridge the braided line + solenoid into the push-fit chain (see the adapter table above). **Plastic — hand-tighten with PTFE tape, don't wrench** (cracks). No BSPP fiber washers needed in this build.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 8   | Water test: GH/KH kit (+ optional TDS meter)            | One-time use                                                                                                                                    | [API GH & KH titration kit](https://www.amazon.com/API-TEST-Freshwater-Aquarium-Water/dp/B003SNCHMA) (~$8) measures hardness + alkalinity — the numbers that matter. Claryum doesn't reduce TDS, so a TDS meter (~$15) is only a rough proxy. Pre-flight check.                                                                                                                                                                                                                                                                                                                                                                                                                               |
 
 ### Orderable picks (concrete products)
 
-Specific products for the spec'd lines above (the **solenoid** already has candidates on line 2).
-Verify thread standard (BSPP vs NPT) per part before buying — see the thread note at the top of this
-BoM.
+Every line item in the BoM table above links to a concrete product. Order-ready list, grouped by
+vendor (robust path: continuous-duty solenoid + gauge'd regulator):
 
-| Line                        | Pick                                                                                                                                                     | ~Price | Where             |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------------- |
-| 1 — shut-off ball valve     | John Guest 1/4" push-fit ball valve (**PPSV040808W**)                                                                                                    | ~$8    | Amazon            |
-| 3 — regulator (recommended) | Chris' Coffee Pressure Regulator w/ gauge — 0–100 psi, ships with 1/4" John Guest fittings, dial to ~25 psi (JG-native → avoids the BSPP/NPT transition) | ~$80   | chriscoffee.com   |
-| 3 — regulator (budget alt)  | Espresso Parts 30 PSI fixed inline regulator (not adjustable; 30 vs ~25 target is fine for float-fill)                                                   | ~$30   | espressoparts.com |
-| 4 — float valve             | 1/4" brass RO float valve, male-thread + quarter-turn (e.g. LiquaGen / PureSec)                                                                          | ~$10   | Amazon            |
-| 5 — tubing                  | 1/4" LLDPE RO tubing, 25 ft (e.g. Malida)                                                                                                                | ~$10   | Amazon            |
-| 6 — JG fittings             | 1/4" John Guest push-fit assortment (tees / elbows / unions)                                                                                             | ~$15   | Amazon            |
-| 7 — washers                 | 1/4" BSPP fiber/nylon washer pack                                                                                                                        | ~$6    | Amazon            |
-| 8 — water test              | TDS meter (~$15) + GH/KH test strips or an API GH/KH titration kit (~$8)                                                                                 | ~$23   | Amazon            |
+**Amazon (one cart):**
 
-Links: [Chris' Coffee regulator](https://www.chriscoffee.com/products/pressure-regulator-valve) ·
-[Espresso Parts 30 PSI](https://www.espressoparts.com/products/30-psi-inline-water-pressure-regulator)
-·
-[JG ball valve PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2)
-·
-[LiquaGen RO float valve](https://www.amazon.com/LiquaGen-Reverse-Osmosis-Filtration-Systems/dp/B07DGX3NGB)
+| Part                  | Pick                                                  | ~Price |
+| --------------------- | ----------------------------------------------------- | ------ |
+| Braided→chain adapter | JG PP010823W (1/4" push × 3/8" NPT male)              | $6     |
+| Solenoid adapters ×2  | JG PP010822WP (1/4" push × 1/4" NPT male), 5-pk       | $8     |
+| PTFE tape             | any                                                   | $2     |
+| Shut-off ball valve   | John Guest PPSV040808W (1/4" push-fit)                | $8     |
+| Float valve           | LiquaGen, threaded stem + nut, 1/4" push (B07DGX3NGB) | $10    |
+| 1/4" LLDPE tubing     | 25 ft roll — **1/4" OD, not 6 mm**                    | $10    |
+| JG fittings           | elbows + spare collets (1/4" imperial)                | $10    |
+| Smart plug            | Kasa EP25 (4-pack, ~$13 ea)                           | $13    |
+| 24 V DC wall-wart     | **≥2 A** DC supply for the coil                       | $12    |
+| Water test            | API GH/KH titration kit (B003SNCHMA)                  | $8     |
 
-Spec'd lines total ≈ **$70–130** depending on regulator choice (excludes the deferred solenoid + the
-reused Claryum filter / cold-water branch). Note: most espresso regulators (Chris'/Watts) ship NPT
-or with JG; the **float valve is typically BSPP/male-thread** — keep a 1/4" NPT↔BSPP adapter +
-fiber washers on hand for that joint.
+**WIC Valve:** continuous-duty solenoid WIC 2BCK-1/4-D (1/4" NPT, 24 V DC) — ~$30–45. **Chris'
+Coffee:** gauge'd JG regulator — ~$100.
+
+**Robust-path total ≈ $230** (continuous-duty solenoid + gauge'd regulator). Dropping to the EU
+JG-micro regulator saves ~$70. All threaded joints are NPT (PTFE tape) — no BSP, no compression, no
+fiber washers. Excludes the reused Claryum filter / cold-water branch.
 
 **Existing infrastructure being reused (no purchase):** dedicated cold-water branch to kitchen,
-Aquasana Claryum Direct Connect filter, 1/4" braided output line from filter.
+Aquasana Claryum Direct Connect filter, braided output line from filter terminating in a **3/8" NPT
+female** fitting (this build's measured value — verify yours).
 
 ## Installation steps
 
@@ -188,6 +197,10 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 ### 4. Modify the reservoir for the float valve
 
 - Pull Mini V2 reservoir out.
+- **Test-fit before drilling.** Set the float valve roughly in place and confirm the float arm has
+  full travel without fouling the tank walls or the existing low-water magnet, and that it can close
+  ~1/2" below max-fill. RO float valves are sized for larger tanks — verify it suits this small
+  reservoir before committing to a hole.
 - Drill a hole in the **lid** (not the wall) for the float-valve thread. Step bit + lubricant; lid
   is plastic, easy.
 - Mount the float valve through the lid; tighten with supplied gasket/washer.
@@ -271,4 +284,4 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 - [Vivaldi II / Lucca A53 plumb thread — s1cafe.com](https://www.s1cafe.com/viewtopic.php?t=2231)
 - [Tank-version Vivaldi plumb conversion — s1cafe.com](https://www.s1cafe.com/viewtopic.php?t=2376)
 - [How to plumb the La Spaziale S1 Vivaldi II — home-barista.com](https://www.home-barista.com/espresso-machines/how-to-plumb-la-spaziale-s1-vivaldi-ii-t5386.html)
-- [Aquasana Claryum Direct Connect — contaminant reduction spec](https://www.aquasana.com/water-filtration-systems/under-counter-water-filters/claryum-direct-connect-water-filter-system)
+- [Aquasana Claryum Direct Connect — contaminant reduction spec](https://www.aquasana.com/under-sink-water-filters/claryum-direct-connect-100329886.html)
