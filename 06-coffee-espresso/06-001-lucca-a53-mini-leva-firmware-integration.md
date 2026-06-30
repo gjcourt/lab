@@ -1,30 +1,193 @@
 ---
-title: 'Lucca A53 Mini `leva!` Firmware Integration'
+title: 'Lucca A53 Mini Pressure & Flow Profiling via ito + `leva!`'
 number: '06-001'
 category: 'coffee-espresso'
 difficulty: 'Hard'
-time_commitment: 'Months'
-target_skills: 'Microcontroller Wiring, `leva!` Firmware, High-Voltage Safety, PID Tuning'
+time_commitment: '2-4 weeks (install) + ongoing tuning'
+target_skills: 'Mains Wiring, Sensor Plumbing/Fittings, `leva!` Configuration, Pressure-Loop Tuning'
 status: 'Not Started'
 depends_on:
   - hardware/lucca-a53
-  - hardware/esp32
+  - hardware/ito-module
 ---
 
-# Lucca A53 Mini `leva!` Firmware Integration
+# Lucca A53 Mini Pressure & Flow Profiling via ito + `leva!`
 
 ## Description
 
-The ultimate espresso project. Wire a compatible microcontroller (like an STM32 or ESP32) to your
-Lucca A53 Mini. Flash the open-source `leva!` firmware, intercept the pump and heater controls, and
-calibrate the sensors to enable advanced pressure and flow profiling.
+Add **lever-style pressure and flow profiling** to the **La Spaziale Mini Vivaldi II** (Clive's
+**LUCCA A53 Mini**) by installing the **ito microcontroller module** (softwareandcircuits.com, EU)
+and running the **`leva!`** firmware. leva! closes a feedback loop on a pressure sensor and drives
+the existing **vibratory pump** via phase-angle control — nearly stepless — to follow a programmed
+pressure/flow curve (pre-infusion → ramp → decline), exactly like a lever machine.
+
+**This is no longer speculative for this machine.** Multiple Mini Vivaldi II owners in the
+[home-barista ito/leva! thread](https://www.home-barista.com/espresso-machines/ito-leva-controller-q-experience-t61709.html)
+have this running. A full local index of that thread (365 posts, Nov 2019 → Apr 2026) lives at
+`/Volumes/family/projects/electronics/espresso/home-barista-thread-index/INDEX.md`, and the leva!
+firmware + hardware-install PDFs are at
+`/Volumes/family/projects/electronics/espresso/leva! (for ito)/`.
+
+> Owner `blondica73` (thread post #2): _"I used the ITO board to upgrade my La Spaziale Mini Vivaldi
+> II … I have mine set up to read the pressure, flow, and temperature (group head block)."_ Cost was
+> ~$200 for the kit, shipped to family in the EU and hand-carried to the US (it isn't sold here).
+
+## Scope
+
+This project is **pressure/flow profiling only**. leva! can _also_ take over PID temperature
+control, but on the A53 that **conflicts with the stock control board** — owners run profiling and
+leave temperature to the factory electronics. That separate, optional, harder workstream is split
+out into **[06-012 leva! PID Temperature Takeover](06-012-leva-pid-temperature-takeover.md)**.
+
+| Capability                        | This project | Notes                                                            |
+| --------------------------------- | ------------ | ---------------------------------------------------------------- |
+| Pressure profiling (vibe pump)    | ✅ in scope  | The proven core. Lever profiles, pre-infusion, declining curves. |
+| Flow display + flow-based control | ✅ in scope  | Needs the Digmesa flow meter on the tank→pump line.              |
+| Pressure / flow / temp logging    | ✅ in scope  | Via the Status Monitor app (the XML config ships with leva!).    |
+| Dosing by time / volume / weight  | ✅ in scope  | Volume needs the flow meter; weight needs a BLE scale.           |
+| PID temperature control           | ❌ → 06-012  | Conflicts with the A53 stock board. Leave temp to the factory.   |
+
+## How leva! profiles a vibratory pump
+
+Not obvious that you _can_ pressure-profile a vibe pump — you can, and have been able to since the
+`caffè!`/`leva!` lineage added it (~2016; same idea the Decent uses). Per the firmware author
+(`sandc`/Dietmar) in-thread:
+
+> "Regular control loop with feedback: pressure sensor measures pressure, controller adjusts pump
+> power, nearly stepless via phase-angle control (the pump sounds more or less normal)."
+
+Pump power is expressed as a **phase angle**: 0° = full power, ~105–120° = pump stops (vibe pumps
+quit well below 180°). leva! computes that angle from a proportional + integral response to the
+pressure error; you tune it like a PID loop. Factory defaults won't produce good shots "except by
+luck" — tuning is the real, ongoing work of this project (see Tuning below).
+
+## The A53-specific fluid-system wrinkle: the over-pressure bypass
+
+The Mini Vivaldi II has a **brew over-pressure bypass valve** that returns water to the pump inlet.
+Two consequences for profiling, both from the thread:
+
+1. **Set it above your max brew pressure.** If it opens at/near brew pressure it will fight the
+   profile and bias the flow meter. Aim for it to crack only **just above 9 bar** (or whatever your
+   profile ceiling is). leva! has a `PRESS OPV` setting to account for it.
+2. **Flow-meter placement matters because of it.** Install the flow meter on the **tank→pump line
+   (before the pump)**, which is what owners did. A meter downstream of the bypass would read high.
+
+Note the manual's general profiling rule — _no pressure-affecting component between the sensor and
+the portafilter_ (no gicleur jet, no spring-loaded shower-screen valve, no S11/B valve). Owners
+report tapping a **T-fitting into the brew line** and profiling cleanly, so the A53 grouphead has
+**not** required surgery in practice — but **verify your own grouphead** when you're in there
+(Pre-flight below). The bypass valve, not a grouphead valve, is the thing to get right.
+
+## Bill of materials
+
+The ito kit bundles most of this. Buy the **full kit with pressure sensor + flow meter**; you can
+ignore the PID/SSR parts for now (those belong to 06-012).
+
+| #   | Item                       | Spec / pick                                                                             | Notes                                                                                                                                                                                         |
+| --- | -------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **ito module + leva! kit** | From [softwareandcircuits.com](http://www.softwareandcircuits.com) — EU only, ~€180–220 | Not sold in the US; ship to an EU address and hand-carry, as owners do. Get the **rotary-encoder display** variant (firmware `1 - ito with rotary encoder`).                                  |
+| 2   | Pressure sensor            | Included in kit; ~24 mm × 54 mm, rated **125 °C**                                       | T-tap into the brew line. **Adapter may need light filing to fit** (owner report). Mount away from the pump — **vibration kills it**, heat is fine.                                           |
+| 3   | Digmesa flow meter         | Included in kit (type FHKSC or nano PP)                                                 | Install on the **tank→pump line, before the pump** (see bypass note). ≤65 °C ambient.                                                                                                         |
+| 4   | T-fitting + sensor adapter | To tee the pressure sensor into the brew line                                           | Owners left a branch on the tee for an optional physical gauge. La Spaziale brew group reportedly has a pre-tapped port — confirm.                                                            |
+| 5   | Display + rotary encoder   | Included in kit (OLED + encoder)                                                        | The one real ergonomics problem: mounting it without cutting the machine face. Plan a **3D-printed external housing** (German owners did).                                                    |
+| 6   | Status Monitor 4+ + tablet | App from softwareandcircuits; any cheap tablet                                          | Reads/plots pressure/flow/temp over WiFi using the bundled XML. Owner uses an Alldocube iPlay50 Mini, woken per-shot. **Do not power the tablet from ito** — its supply has no spare current. |
+
+**Existing infrastructure reused:** the machine's vibratory pump, brew solenoid, and (for now) the
+entire stock temperature-control board.
+
+## Pre-flight (verify before committing)
+
+1. **Confirm it's the Mini (vibe pump).** leva! drives **vibratory** pumps only. The full-size A53
+   uses a **rotary** pump and is **not** compatible (its motor's inrush can destroy the SSR). The
+   Mini Vivaldi II / A53 Mini is the vibe-pump model → OK.
+2. **Inspect the grouphead.** Open it and confirm there's no spring-loaded valve / gicleur / S11/B
+   restrictor between the sensor tap point and the portafilter. Owners report a clean path; verify
+   yours.
+3. **Check pump + 3-way valve seal condition.** Worn non-return / 3-way seals that are fine at
+   normal pressure **leak under profiling**. An old machine may want a pump rebuild first.
+4. **Confirm the bypass valve cracking pressure** and plan to set it >9 bar.
+
+## Installation outline
+
+1. **Plumb the pressure sensor** — tee into the brew line, fit adapter (file if needed), mount the
+   sensor where it stays cool-ish and **vibration-free**. Leave a gauge branch if wanted.
+2. **Plumb the flow meter** — inline on the tank→pump feed, before the pump.
+3. **Wire the pump to ito** — the original pump switch (mains) can feed ito's `SNS` input so leva!
+   detects "pump on" _and_ samples the AC waveform for zero-crossing (phase-angle control needs
+   this). Alternatively start/stop from the rotary encoder.
+4. **Mount display/encoder** — external 3D-printed housing to avoid cutting the case (design task).
+5. **Flash leva!** — over WiFi via XMODEM-CRC to port 2323 (TeraTerm on Windows, ZOC on macOS), per
+   `readme - important.txt`. Back up settings first (`MCu` dump on port 23). Install the matching
+   **Status Monitor XML**. Use firmware `1 - ito with rotary encoder`.
+6. **Set the bypass valve** above brew-pressure ceiling; configure `PRESS OPV`.
+
+## Tuning (the real, ongoing work)
+
+Run the firmware-manual tutorials, then iterate with the Status Monitor plots (turn on the **pump
+power / phase-angle** trace — temperature plots don't help when debugging pressure):
+
+- **Pressure pre-test** (Menu, p.49) to seed pump characterization — needs a blind filter.
+- **`K` (proportional)** — start near the values owners cite (~3.5 gave clean graphs for one). Halve
+  it if you see oscillation/roughness; raise it if the pressure jump is sluggish.
+- **`I`** — integral response.
+- **`PHASE OFF`** — the pump-stop phase angle; tune if a soaking pre-infusion (e.g. 20 s @ 1.1 bar)
+  drifts above setpoint.
+- **`PRESS MAX` / `PRESS OPV`** — ceiling + bypass accounting.
+- **`Flow Corr`** — biases the feed-forward; nudge so the bias line tracks the pump-power line in
+  the first seconds of the shot.
+
+A good starting recipe from the thread: **`Gen Lever` preset profile + ~10 s pre-infusion @ 1.5
+bar** produced well-regarded shots on a Mini Vivaldi II. The firmware author actively tunes owners'
+curves in-thread if you post phase plots.
 
 ## Exit Criteria
 
-- [ ] Define what done looks like for this project
+- [ ] ito installed; leva! `1 - ito with rotary encoder` flashed; Status Monitor plotting live
+      pressure + flow + temp.
+- [ ] Pressure sensor reads a credible brew-pressure curve; flow meter reads plausible mL/s.
+- [ ] Over-pressure bypass set >9 bar; `PRESS OPV` configured; no flow-meter bias artifacts.
+- [ ] A `Gen Lever` (or custom) profile tracks setpoint within a fraction of a bar at the plateau
+      (not 7.9 bar when 9 is programmed).
+- [ ] Pre-infusion (e.g. 10 s @ 1.5 bar) holds without overshoot; clean declining-pressure shot.
+- [ ] No leaks at the sensor tee or flow meter after a session of shots.
+- [ ] Display/encoder mounted without cutting irreplaceable parts.
+- [ ] Stock temperature control still works (PID takeover deferred to 06-012).
 
 ## Progress
 
-- [ ] Initial research
-- [ ] Implementation
-- [ ] Documentation
+- [x] Researched leva! firmware + hardware-install manuals (local PDFs)
+- [x] Indexed the full home-barista ito/leva! thread; confirmed Mini Vivaldi II owners profiling
+      successfully (index at `.../home-barista-thread-index/INDEX.md`)
+- [x] Scoped to profiling-only; split PID takeover into 06-012
+- [ ] Pre-flight: confirm vibe pump, inspect grouphead path, check seal condition, bypass pressure
+- [ ] Source ito kit from the EU (full kit: pressure sensor + flow meter)
+- [ ] Install pressure sensor (T-tap) + flow meter (pre-pump)
+- [ ] Wire pump to ito SNS; design + print display/encoder housing
+- [ ] Flash leva!; install Status Monitor XML
+- [ ] Set bypass + `PRESS OPV`; run pressure pre-test
+- [ ] Tune K/I, PHASE OFF, Flow Corr against Status Monitor plots
+- [ ] Dial in a lever profile; document as-built (sensor location, profile, tuned params)
+
+## Related projects
+
+- **[06-012 leva! PID Temperature Takeover](06-012-leva-pid-temperature-takeover.md)** — the
+  optional temperature-control half, split out because it conflicts with the A53 stock board.
+- **[06-009 Pump Pressure Transducer Retrofit](06-009-pump-pressure-transducer-retrofit.md)** — the
+  DIY/no-ito way to read brew pressure; largely **subsumed** by the leva! kit's sensor.
+- **[06-002 ESP32 Shot Profiler & Logger](06-002-esp32-espresso-shot-profiler-and-logger.md)** — DIY
+  logging alternative; leva!'s Status Monitor covers most of this.
+- **[06-011 Mini V2 Direct Plumb-In](06-011-mini-v2-direct-plumb-in.md)** — the float-fill plumb-in
+  keeps an atmospheric pump inlet, which **this** project's profiling assumes; the two are
+  compatible (and float-fill is the profiling-friendly choice).
+
+## Sources
+
+- Local: leva! firmware manual + hardware-installation PDF,
+  `/Volumes/family/projects/electronics/espresso/leva! (for ito)/`
+- Local: full thread index,
+  `/Volumes/family/projects/electronics/espresso/home-barista-thread-index/INDEX.md`
+- [ITO/Leva! Controller — Q&A + Experience (home-barista, t61709)](https://www.home-barista.com/espresso-machines/ito-leva-controller-q-experience-t61709.html)
+- [La Spaziale Mini Vivaldi and pressure profiling (home-barista, t56816)](https://www.home-barista.com/espresso-machines/la-spaziale-mini-vivaldi-and-pressure-profiling-t56816.html)
+- [softwareandcircuits.com — ito module + leva!](http://www.softwareandcircuits.com)
+- [projectcaffe.bplaced.net — leva! features / beta manual](http://projectcaffe.bplaced.net/features_leva.html)
+- kaffee-netz.de — pressure-sensor install on a similar machine (linked from thread)

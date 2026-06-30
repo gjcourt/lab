@@ -238,6 +238,24 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 - Inspect every joint for weep / drip.
 - Re-tighten any wet joint; re-test.
 
+## Compatibility with pressure profiling (06-001)
+
+This plumb-in is **profiling-friendly** — and that's an argument _for_ the float-fill approach, not
+just a coincidence:
+
+- [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) (ito + `leva!` pressure profiling)
+  controls the **vibratory pump** via phase-angle, and its pressure loop assumes the pump draws from
+  an **atmospheric inlet** — exactly what float-fill preserves. An **inlet-side direct plumb**
+  (pressurized pump inlet) would change pump behavior and complicate profile calibration. So the
+  robustness choice here is also the right choice for a future profiler.
+- leva!'s **flow meter installs on the tank→pump line** (before the pump). Float-fill leaves that
+  line intact — the meter goes downstream of where the float valve tops up the tank, unaffected.
+- Heads-up for later: the Mini V2 has a **brew over-pressure bypass valve** returning water to the
+  pump inlet. It's irrelevant to this plumb-in but matters for profiling (set it >9 bar; see
+  06-001).
+
+Net: do this project freely now; it does not foreclose — and arguably enables — 06-001 later.
+
 ## Reserved future enhancements
 
 - **Drain plumb**: drill the drip tray for a hose barb, run silicone hose to a drain on continuous
