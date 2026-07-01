@@ -45,6 +45,22 @@ Request workflow:
   looks like.
 - These design choices are **MUST DO** when making agentic changes to this rep
 
+### Supporting documentation & assets
+
+The flat `NN-NNN-slug.md` file stays the single canonical entry for each project. Two optional
+affordances exist for when a project or category accumulates real documentation:
+
+- **Optional per-project folder:** a project may add a sibling folder `NN-NNN-slug/` next to its
+  canonical file to hold as-built notes, photos, datasheets, or research digests.
+- **Per-category `_reference/`:** shared or reference material not tied to a single project goes in
+  a `_reference/` folder inside the category (e.g. `06-coffee-espresso/_reference/leva/`).
+- Folders whose names start with `_`, and the optional per-project folders, are **not projects**:
+  the invariant checker only counts flat `NN-NNN-*.md` files directly in each category folder, so
+  these never affect project counts.
+- Do not commit bulk third-party content (e.g. verbatim forum scrapes, vendor PDFs) to this
+  **public** repo — keep those on local/NAS storage and link to them; commit only original
+  synthesis.
+
 ## 5. Branch Protection
 
 The "never commit to `main`" rule is backed by:

@@ -321,7 +321,7 @@ CREATE INDEX reviews_user_rated ON reviews (user_id, rated_at);
 
 #### Rollout milestones
 
-1. **This PR** (gjcourt/brainstorm) — plan documented.
+1. **This PR** (gjcourt/lab) — plan documented.
 2. **Sync service skeleton** (gjcourt/flashcards) — `server/` subdir, Hono app, kysely-migrate
    migrations, `Dockerfile.sync`, `image-sync.yml`, unit tests. Image published to
    `ghcr.io/gjcourt/flashcards-sync`.
