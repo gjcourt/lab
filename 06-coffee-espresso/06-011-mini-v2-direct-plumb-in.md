@@ -204,29 +204,38 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
   same rail adds Home Assistant control (leak-sensor auto-shutoff, scheduling) — not required for
   the fail-safe.
 
-### 4. Mount the float valve in the reservoir
+### 4. Mount the float valve (through-wall)
 
-The Mini V2 reservoir is a **five-sided open-top drawer** (floor + 4 walls, **no lid**). That's an
-advantage, not a problem: the supply line just drapes **over the open rim** — no vessel penetration
-to seal, and RO float valves are designed to bolt through a vertical panel anyway, not a lid.
+The reservoir is a plain rectangular **open-top tub**
+([Clive part](https://clivecoffee.com/products/la-spaziale-water-tank-plastic-housing), ~$65) with
+one outlet hole in the floor and the existing low-water float inside; the "retaining cross" is
+**non-structural**. So mount the
+[LiquaGen float valve](https://liquagen.com/products/liquagen-float-valve-for-reverse-osmosis-water-filtration-systems)
+the way it's designed — its **threaded stem + locking nut through a hole in an upper wall**, float
+arm swinging inside, 1/4" push inlet outside. Fixing the valve directly to the vessel is the most
+rigid mount; the tub being a cheap replaceable part makes the one hole low-stakes and revertible
+(keep the stock tub).
 
-- Pull the reservoir drawer out.
-- **Test-fit before committing.** Set the float valve roughly in place and confirm the float arm has
-  full travel without fouling the walls or the existing low-water magnet, and that it can close
-  ~1/2" below the rim. RO float valves are sized for larger tanks — verify it suits this small
-  drawer.
-- **Anchor the valve to a bracket, not a drilled lid** (there is none). Either (a) a small L-bracket
-  clipped over / screwed to the **inner face of a wall near the top** — any screw holes then sit
-  **above the waterline**, so no leak path — or (b) a rim bridge spanning the opening. Fix it to the
-  **drawer itself** so the assembly travels with the drawer when it's pulled.
-- **Route the 1/4" line over the rim** and push-fit onto the valve inlet — no hole through any
-  water-holding wall. Keep the push-fit so the drawer lifts out for cleaning.
-- Verify the float arm swings freely, clear of the walls and the existing low-water switch magnet
-  through full travel. Set it to close ~1/2" below the rim.
-- **Check drawer travel / headroom:** with the bracket + over-rim tube fitted, the drawer must still
-  slide fully home without fouling the cabinet. Keep the bracket low-profile; rear-rim routing
-  usually has the most clearance. If headroom is too tight for any over-rim hardware, fall back to a
-  low-profile valve through the **rear wall, above the waterline**.
+- **Confirm the stem size** with calipers. 1/4" RO float valves standardize on a **5/8" mounting
+  hole** (some 1/2") — verify the LiquaGen before drilling.
+- **Dry-fit and clock first — before the bit touches plastic.** Hold the valve against the **rear
+  wall** (most cabinet clearance, natural tube entry), high enough to close ~1/2" below the rim, and
+  swing the float through its **full arc**: confirm it clears the existing low-water float and the
+  walls, and that neither valve nor boss sits over the **floor outlet**. Mark center.
+- **Drill with a step bit, slow.** A titanium step bit reaching 5/8"+ in 1/16" steps (e.g. LaserBest
+  90588, 1/4"–3/4") lets you sneak up to a snug hole; the single-flute Irwin Unibit #2 is cleaner in
+  plastic but stops at 1/2". Low RPM — too fast melts, too aggressive cracks the thin wall. Back the
+  wall with a scrap block; sneak up to a **snug** hole (the gasket seals against the edge — don't
+  oversize); deburr both faces.
+- **Mount:** stem through the hole, **rubber gasket between the valve base and the wall**, locking
+  nut on the outside — snug by hand (plastic; don't wrench). Position to close ~1/2" below the rim.
+- **Check outside clearance:** the 1/4" inlet + tube must clear the cabinet and still let the drawer
+  slide home. Leave a service loop and a **push-fit at the valve** so the drawer pulls forward /
+  lifts out for cleaning.
+- Re-verify the float arm swings free through full travel, clear of the low-water float and walls.
+
+_No-drill alternative (not chosen): a PETG bridge spanning the tub's short dimension takes its
+rigidity from the beam rather than the tub — use only if you won't modify the tub._
 
 ### 5. Connect line to float valve
 
@@ -308,11 +317,11 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [x] Researched s1cafe.com / home-barista.com community approaches
 - [x] Decided: reservoir float-fill (not inlet plumb) for vibe-pump robustness
 - [x] BoM scoped against existing Aquasana Claryum infrastructure
-- [ ] Buy parts (incl. NC brass solenoid + coil supply; smart-plug/ESP32 optional, HA layer only)
+- [x] Buy parts (incl. NC brass solenoid + coil supply; smart-plug/ESP32 optional, HA layer only)
 - [ ] Test water hardness at Claryum output
 - [ ] Build regulation stack (shut-off → solenoid → regulator)
 - [ ] Wire solenoid via smart plug; bench-test open/close before plumbing
-- [ ] Modify reservoir lid; mount float valve
+- [ ] Drill rear-wall hole (~5/8", step bit); mount float valve with gasket + locknut
 - [ ] Wet test
 - [ ] Solenoid power-cycle + power-loss shutoff verified
 - [ ] 24h burn-in observation
