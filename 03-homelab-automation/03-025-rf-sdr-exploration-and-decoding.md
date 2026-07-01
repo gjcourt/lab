@@ -31,7 +31,10 @@ pulling 433 MHz sensors into Home Assistant.
 - ~$35, receive-only, 500 kHz–1.7 GHz, ~2.4 MHz BW — perfect to _learn_ on.
 - Universal software; skills transfer to every fancier SDR.
 - Most of what makes RF fun is **RX** (see TX note below). Buy RX now; add TX only with a goal.
-- ⚠️ Buy genuine from **rtl-sdr.com** (v4) — counterfeits are rampant.
+- ⚠️ The Blog **V4 is EOL** (R828D tuner discontinued; a final batch hits Amazon ~July 2026, then
+  gone for good). For a fresh buy get the in-production **Blog V3** or the **Nooelec v5**; chase the
+  last V4 only if you want its built-in HF upconverter (see shopping list). Buy genuine —
+  counterfeits are rampant.
 
 ## How RF capture works (the detailed process)
 
@@ -111,7 +114,7 @@ cellular/aviation/public-safety/licensed bands, never jam, never replay others' 
 
 ## Exit Criteria
 
-- [ ] Genuine RTL-SDR v4 + a decent antenna set in hand
+- [ ] Genuine RTL-SDR (Blog V3 / Nooelec v5 / last-batch V4) + a decent antenna set in hand
 - [ ] At least 3 RX wins decoded (e.g. ADS-B, NOAA APT, rtl_433 sensors)
 - [ ] 433 MHz sensors flowing into Home Assistant via rtl_433 → MQTT
 - [ ] One protocol reverse-engineered in URH (or one GNU Radio flowgraph built)
@@ -119,9 +122,27 @@ cellular/aviation/public-safety/licensed bands, never jam, never replay others' 
 
 ## Shopping list (~$35–60)
 
-- RTL-SDR Blog v4 kit (~$35, includes antennas) from rtl-sdr.com
-- (later, only with a TX goal) CC1101/ESP32 (~$5–35) or Broadlink RM4 Pro (~$40), or a
-  HackRF/bladeRF for research/ham
+**Just the dongle — nothing from Mouser.** This is a buy-a-receiver + open-software project: the
+antenna ships with the kit and there are no discrete components to source. (Contrast the IR blaster
+[[03-019]], which _is_ a Mouser BoM.)
+
+- **RTL-SDR dongle + antenna kit (~$35–40)** — pick one:
+  - **Nooelec v5** — in stock now; better heat management + TCXO stability for a 24/7 `rtl_433`→HA
+    receiver. HF via direct sampling. **Best default for this plan** (its RX wins are all VHF/UHF).
+  - **RTL-SDR Blog V3** — the canonical reference dongle, in stable production; same VHF/UHF
+    performance, HF via direct sampling.
+  - **RTL-SDR Blog V4** — **EOL**: a final batch hits Amazon ~July 2026, then gone. Worth chasing
+    only for its built-in **HF upconverter** (cleaner shortwave/ham) — nothing in this plan's RX
+    progression (ADS-B, NOAA, 433 MHz) needs it. Don't mix up the (unreleased) _Blog_ V5 with the
+    _Nooelec_ v5 above.
+  - All kits include a dipole antenna set → no separate antenna purchase.
+- (later, only with a concrete TX goal) CC1101/ESP32 (~$5–35) or Broadlink RM4 Pro (~$40), or a
+  HackRF/bladeRF for research/ham. None are Mouser parts (CC1101 breakouts are Amazon/AliExpress).
+
+**Batching tip:** SparkFun carries the RTL-SDR kit, and the IR blaster [[03-019]] already sources
+its breadboard + jumpers from SparkFun — so you can add the dongle to that SparkFun order and keep
+the Mouser order to the IR semiconductors. Or buy the dongle direct from rtl-sdr.com (free
+shipping).
 
 ## Progress
 
