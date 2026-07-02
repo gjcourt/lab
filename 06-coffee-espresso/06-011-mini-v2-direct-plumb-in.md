@@ -34,19 +34,29 @@ modification.
 ## Approach: reservoir float-fill
 
 ```text
-[Aquasana Claryum output, 1/4" braided]
+                        ⟵ upstream shutoff (your Claryum-feed valve) = SERVICE isolation
+[Aquasana Claryum output] ── 3/8" NPT
+        │   [JG PP010823W · 1/4" push × 3/8" NPT]
         │
-        ├─ 1/4" inline shut-off (ball valve) ── for service isolation
+        ├─ ( 1/4" ball valve )     ─ OPTIONAL local cutoff (upstream valve already isolates)
         │
-        ├─ 1/4" NC brass solenoid valve       ── coil on machine's switched-mains rail → open only when machine on; fail-closed
+        ├─ 1/4" NC brass solenoid  ─ 24 V, fail-closed; coil on the machine's SWITCHED-MAINS
+        │   [2× JG PP010822WP]        rail → open only when the machine is ON
         │
-        ├─ 1/4" pressure regulator @ ~20–25 PSI
+        ├─ 1/4" pressure regulator ─ gauged, ~20–25 PSI (mount to the wall, not the line)
         │
-        └─ 1/4" line ─→ float valve in Mini V2 reservoir
-                          │
-                          └─ closes when tank reaches set level
-                             → vibe pump still gravity-feeds as stock
-                             → existing low-water switch unchanged
+        └─ 1/4" LLDPE tube ─ ~12" service loop, routed OVER the drawer rim
+                │
+                ▼
+           ══╡ FLOAT VALVE ╞══  stem + gasket + locknut through a ~5/8" hole in the REAR
+                │               WALL; closes ~½" below the rim
+                ▼
+           RESERVOIR (five-sided open drawer)
+           · low-water float switch UNTOUCHED (dry-run protection)
+           · floor outlet → pump  (keep the float-arm arc clear)
+                │
+                ▼  gravity feed — exactly as stock
+           [ vibe pump ] → brew boiler → group → cup
 ```
 
 The Mini V2's existing **low-water float switch** (the magnetic switch that disables the pump when
@@ -129,7 +139,7 @@ braided adapter for the BSP equivalent.
 
 | #   | Item                                                                  | Spec                                                                                                                                            | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | --- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | 1/4" inline shut-off ball valve                                       | Full-port, push-to-connect or compression                                                                                                       | [John Guest PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2) (~$8). Local cutoff for service. Don't rely on the house valve.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 1   | 1/4" inline shut-off ball valve **(optional)**                        | Full-port, push-to-connect or compression                                                                                                       | **Optional.** An **upstream shutoff (e.g. your Claryum-feed valve)** already covers service isolation, and the NC solenoid handles automatic shutoff — so a local valve is redundant-but-convenient. [John Guest PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2) (~$8) if you want a cutoff right at the stack.                                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2   | NC brass solenoid valve                                               | 1/4" NPT, normally-closed, brass, Viton (FKM), direct-acting (0 psi min), 24 V DC; **continuous-duty coil** if the machine is ever left on >8 h | **Continuous-duty (recommended):** [WIC 2BCK-1/4-D](https://wicvalve.com/1-4-Inch-Fast-Response-Direct-Acting-Electric-Solenoid-Valve-2BCK-1-4-D.htm) (1/4" NPT, 24 V DC, 100% ED coil, ~$30–45). Short-session only: [U.S. Solid 1/4" 24 V DC brass NC](https://ussolid.com/products/u-s-solid-electric-solenoid-valve-1-4-24v-dc-solenoid-valve-brass-body-normally-closed-viton-seal-html) (~$16) — coil is **not** continuous-duty (>8 h energized risks burnout). Both are 1/4" NPT female → need 2× PP010822WP adapters + PTFE tape. Install **flow-arrow toward the reservoir**, observe DC polarity. Not NSF-61 (fine for a cold feed). NC = fail-closed on power loss.                                                                                              |
 | 2a  | **Machine-on interlock** — switched-mains tap (⚠️ _not_ a smart plug) | Splice off the machine's **switched-mains rail** (live only when its own power switch is on)                                                    | ⚠️ **Correction:** a smart plug does **not** gate this safely — outlet power ≠ machine-on (the Mini V2 has its own power switch), so the solenoid would sit open with the machine off. Feed the coil supply (row 2b) from the machine's switched-mains rail — the same rail the **ito** module powers from (its **N/L** input, "only live when machine on"; see [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) connector map). Machine on ⇒ coil live ⇒ valve open; off / power loss ⇒ NC closed. Tap L/N **downstream of the machine's power switch** (full mains — not a logic rail, not ito's supply). Cleanest done during the ito install. A smart plug or ESP32 is **optional**, only for a Home Assistant layer (leak-sensor auto-shutoff, scheduling). |
 | 2b  | Solenoid coil supply                                                  | 24 V DC wall-wart, **≥2 A** (covers ~1.8 A inrush — a 1 A supply can brown out at pull-in)                                                      | Solenoid has bare lead wires → splice to the wall-wart (cut the barrel or use a barrel-to-screw-terminal adapter); observe polarity. **Power the wall-wart from the machine's switched-mains rail (row 2a), not a wall outlet**, so the coil is live only when the machine is on. Mount wiring in a small junction box near the machine's mains entry.                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -152,7 +162,7 @@ vendor (robust path: continuous-duty solenoid + gauge'd regulator):
 | Braided→chain adapter | JG PP010823W (1/4" push × 3/8" NPT male)              | $6     |
 | Solenoid adapters ×2  | JG PP010822WP (1/4" push × 1/4" NPT male), 5-pk       | $8     |
 | PTFE tape             | any                                                   | $2     |
-| Shut-off ball valve   | John Guest PPSV040808W (1/4" push-fit)                | $8     |
+| Ball valve (optional) | JG PPSV040808W — skip if you have an upstream shutoff | $8     |
 | Float valve           | LiquaGen, threaded stem + nut, 1/4" push (B07DGX3NGB) | $10    |
 | 1/4" LLDPE tubing     | 25 ft roll — **1/4" OD, not 6 mm**                    | $10    |
 | JG fittings           | elbows + spare collets (1/4" imperial)                | $10    |
