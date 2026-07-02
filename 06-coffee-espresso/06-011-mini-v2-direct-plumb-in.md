@@ -229,6 +229,24 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
   same rail adds Home Assistant control (leak-sensor auto-shutoff, scheduling) — not required for
   the fail-safe.
 
+**Two separate supplies — don't confuse them.** The 24 V solenoid coil runs off its **own 24 V DC
+supply**, _not_ the ito's 5 V PSU (the ito's HLK-PM01 is **5 V / 0.6 A** — wrong voltage and far too
+little current for a solenoid). Both simply hang off the **same switched-mains rail**:
+
+```text
+power switch → SWITCHED-MAINS RAIL   (120 VAC, live only when machine ON)
+      ├─► ito HLK-PM01 → 5 VDC 0.6 A → ito module         (ito's own supply)
+      └─► your 24 VDC PSU → 24 V solenoid coil            (the interlock)
+machine OFF → rail dead → 24 VDC PSU off → NC coil de-energized → VALVE CLOSED
+```
+
+Wire the 24 V supply's **AC input downstream of the power switch** (onto the switched-mains rail) so
+the coil is energized only when the machine is on — that's what makes it fail-closed. Cleanest
+method: **hardwire the wall-wart** — crack its case, wire its AC input (rated 100–240 V, so 120 V is
+fine) to the switched-mains at the control board, and its 24 V DC output to the coil (**observe
+polarity**). ⚠️ A cracked-open wall-wart is a bare mains PCB — **enclose it in a junction box**;
+don't leave it floating.
+
 ### 4. Mount the float valve (through-wall)
 
 The reservoir is a plain rectangular **open-top tub**
