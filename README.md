@@ -1,4 +1,4 @@
-# 109 Multidisciplinary Engineering & Skill-Building Projects
+# 110 Multidisciplinary Engineering & Skill-Building Projects
 
 Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 109 engineering and skill-building
 projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
@@ -32,7 +32,7 @@ The 109 projects are divided into the following categories:
    modeling, and personal finance tracking.
 5. **[Piano](05-piano/projects.md)** (15 Projects) - Advanced classical repertoire tools, jazz
    theory, and improvisation.
-6. **[Coffee & Espresso](06-coffee-espresso/projects.md)** (13 Projects) - Lucca A53 profiling,
+6. **[Coffee & Espresso](06-coffee-espresso/projects.md)** (14 Projects) - Lucca A53 profiling,
    `leva!` firmware, and sensor integration.
 7. **[Cross-Disciplinary](07-cross-disciplinary/projects.md)** (10 Projects) - Projects that blend
    multiple categories (e.g., wooden ESP32 audio receivers, mechanical keyboards).

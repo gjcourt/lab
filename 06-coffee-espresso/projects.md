@@ -1,4 +1,4 @@
-# Coffee & Espresso Projects (13)
+# Coffee & Espresso Projects (14)
 
 This category focuses on espresso profiling, the Lucca A53 Mini, `leva!` firmware, and sensor
 integration.
@@ -20,3 +20,4 @@ integration.
 | 06-011 | [Mini V2 Direct Plumb-In](06-011-mini-v2-direct-plumb-in.md)                                                     | In Progress | Easy       | 1-2 days        |
 | 06-012 | [leva! PID Temperature Takeover (A53 Stock-Board Conflict)](06-012-leva-pid-temperature-takeover.md)             | Not Started | Hard       | Months          |
 | 06-013 | [Espresso Water Remineralization](06-013-espresso-water-remineralization.md)                                     | Not Started | Easy       | 1-2 days        |
+| 06-014 | [ESP32 Button-Automation Sidecar](06-014-esp32-button-automation-sidecar.md)                                     | Not Started | Medium     | 1-4 weeks       |
