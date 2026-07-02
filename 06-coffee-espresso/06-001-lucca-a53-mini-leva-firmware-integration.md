@@ -193,11 +193,13 @@ manual — see **Tuning** below and `_reference/leva/`.
 
 1. **Pre-flight** (section above): vibe-pump confirmed, grouphead path clear (no gicleur/S11 between
    the sensor tap and the portafilter), pump/3-way seals sound, bypass valve noted.
-2. **Mount & power ito.** Solder the on-board HLK-PM01 PSU (or wire external 5 V / ≥600 mA). Fit the
-   4 adhesive feet + acrylic insulation shield; mount in a **non-metal or grounded enclosure — not
-   metal screws** (insulation distance), away from boiler heat. Wire **N/L to the machine's
-   switched-mains rail**; use a surge-protected outlet. Keep mains leads separated from low-voltage
-   leads (EMC).
+2. **Mount & power ito.** **Solder on the HLK-PM01 PSU** — it ships loose on purpose (mains-safety +
+   a power choice), and it's what converts the switched-mains **N/L → the 5 V** ito runs on; mind
+   orientation (L/N in, +5 V/GND out — check the manual footprint). _(Or power ito from an external
+   5 V / ≥600 mA source and skip the HLK-PM01.)_ Fit the 4 adhesive feet + acrylic insulation
+   shield; mount in a **non-metal or grounded enclosure — not metal screws** (insulation distance),
+   away from boiler heat. Wire **N/L to the machine's switched-mains rail**; use a surge-protected
+   outlet. Keep mains leads separated from low-voltage leads (EMC).
 3. **Wire the pump for phase-angle control.** Route the vibratory pump through an ito on-board
    **relay (clamp 1 or 2)**; feed the **pump-switch L phase into `SNS`** for zero-cross detection +
    "pump on" (phase-angle needs SNS to see the L phase). → **Do steps 2–3 in the same machine-open
@@ -219,6 +221,11 @@ manual — see **Tuning** below and `_reference/leva/`.
 7. **Configure + fluid prep.** Install Status Monitor + its XML (plots pressure/flow/temp over
    WiFi). Set the pressure-sensor scaling, flow-meter type, and **`PRESS OPV`**; set the machine's
    over-pressure **bypass valve to crack just above 9 bar**. Then → **Tuning**.
+
+> **Tip — flash on the bench first.** The loose PSU lets you de-risk the firmware step: power ito
+> from a **5 V USB / bench source** (no HLK-PM01) and do **steps 5–6 (WLAN + leva! flash) on the
+> bench at low voltage**, then **solder the HLK-PM01 and do the mains install** (steps 2–4) in the
+> machine. Decouples the fiddly firmware work from the mains wiring.
 
 ## Tuning (the real, ongoing work)
 
