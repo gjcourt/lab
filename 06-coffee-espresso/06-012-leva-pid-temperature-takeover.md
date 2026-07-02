@@ -53,6 +53,56 @@ backstop) — leva! controlling steam is explicitly _not recommended_.
       alone? Default answer today: **no — do 06-001 first, revisit only if temp stability proves
       limiting.**
 
+## Test / probe plan (prove feasibility)
+
+Feasibility hinges on one question — **does the stock brain fault when it loses the element, or can
+it be pacified?** Answer it in three phases. Phase A is free and safe on the live machine, so do it
+before spending anything.
+
+### Phase A — map the control path (non-destructive, live machine)
+
+- [ ] **Identify the temp sensor** — resistance across the boiler-probe leads, cold: NTC ≈ tens of
+      kΩ (drops with heat), Pt100 ≈ 100 Ω (rises ~0.385 Ω/°C), thermostat = continuity. Scope the
+      sensor input while heating.
+- [ ] **Find the heater-switch leg** — trace the element leads (one to L, often via a safety stat;
+      the other to the triac output). Clamp-meter which leg carries the switched current. _This is
+      the leg you cut._
+- [ ] **Capture the "heat command"** — scope the CPU→triac gate drive: on/off vs zero-cross burst vs
+      phase-angle, and logic level.
+- [ ] **Locate the safety thermostat / thermal fuse** in the element circuit — **keep it in series**
+      after interposing (overheat backstop); do not bypass it.
+
+### Phase B — characterize fault behavior (spare board / bench rig)
+
+- [ ] **Current-sense check (the decider):** is there a shunt or CT in the heater circuit feeding
+      the board? Open the triac output while heating and watch for an instant error. **Senses
+      current → the cut is visible → likely faults. Watches temperature only → the cut is invisible
+      as long as temp reads fine.**
+- [ ] **Heater-timeout / watchdog:** element disconnected + probe reading **cold** → does it fault
+      after N minutes? Note the timeout. Repeat with the probe **spoofed at-temp** → does it stay
+      happy?
+- [ ] **Sensor-plausibility window:** feed the sensor input open / shorted / out-of-range → find the
+      fault thresholds (the stock probe must stay in-range).
+
+### Phase C — prove the co-exist (integration, bench)
+
+- [ ] **Interception dry-run:** cut the leg → element on ito's SSR → leva! holds temp via TSic →
+      leave the stock probe reading real temp. Run cold-start → warm-up → hold → brew → recovery;
+      watch for any fault.
+- [ ] **Cold-start:** compare ito's time-to-temp against the Phase-B timeout. If the watchdog is
+      shorter, mitigate (spoof the probe warm during warm-up, or let the brain heat until setpoint
+      then hand off to ito).
+- [ ] **Dosing/valve integrity:** exercise dosing, 3-way valve, hot water, steam — confirm all still
+      work with ito owning the heat.
+
+**Tools:** DMM, clamp/current meter, oscilloscope or logic analyzer, resistance decade box,
+thermocouple, mains isolation (isolated probes / variac), plus the SSR + TSic + ito for the dry-run.
+
+**Go / no-go:** **clean** if the brain watches temperature only (Phase B, current-sense) and stays
+satisfied on a valid probe reading (watchdog); **workable with mitigation** if there is a survivable
+cold-start timeout; **hard no** (→ full replacement, not co-exist) if it monitors element current or
+interlocks the moment it loses actuation.
+
 ## De-risking: bench-test on a spare control board
 
 The board-fault risk is the crux, so the responsible path is to do the reverse-engineering and the
@@ -60,9 +110,20 @@ destructive interception test on a **spare** A53 control board on the bench — 
 in-service machine first. This turns "experiment on my daily driver" into a bench project and yields
 a pristine fallback board.
 
-**Source a spare board** — La Spaziale service part via Clive / Chris' Coffee / a parts distributor
-(~$150–400). Order it **with its connector harness** (or mating connectors + pinout); grab the
-**wiring diagram** (Mini V2 owner's manual §6 / service manual) as the map.
+**Source a spare board — know which board you need.** Three distinct boards exist: the **Main
+Computer / CPU** (the brain that runs the temp loop — the fault-relevant one, **~$400 new and often
+sold out**; Clive, or the "Universal Control Board SP-14139" listed for the Mini V2 at Espresso
+World); the **triac / heater sub-board** (the power stage that actually switches the element —
+**~$77**, e.g. Caffe Tech SP7388; confirm Mini V2 fitment first); and the **button / touchpanel
+board** (front buttons only, ~$65 — irrelevant here). Used boards are scarce and a gamble (the CPU
+is usually the part that fails). Order the board **with its connector harness** (or mating
+connectors + pinout) and grab the **wiring diagram** (Mini V2 owner's manual §6 / service manual) as
+the map.
+
+**Staged spend (cheapest-first):** (1) map the control path **on the live machine, non-destructively
+and free** (Phase A above); (2) buy the **~$77 triac sub-board** as the sacrificial power stage; (3)
+only spring for a **spare CPU (~$400, or a used gamble)** if you commit to the destructive
+board-fault test — by then Phase A may have taught you enough to work the live board carefully.
 
 **Build a bench rig that emulates the machine around the board** — it won't command heat until its
 interlocks are satisfied. What each machine input/output becomes on the bench:
@@ -109,9 +170,9 @@ plan off the shelf only if temp stability proves limiting.
 - [ ] Decide co-exist vs. replace
 - [ ] Source spare control board + harness/pinout
 - [ ] Build bench rig (sensor simulators + heater-leg monitor)
+- [ ] Run the test/probe plan (Phase A live → Phase B/C on the bench)
 - [ ] Bench-test SSR interception + board-fault check
 - [ ] Validate co-exist / prep swap-in modified board
-- [ ] Bench-test SSR interception on the brew boiler
 - [ ] Install TSic sensor(s); configure PID1/PID2
 - [ ] Tune; verify stock functions intact
 
