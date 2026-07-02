@@ -32,6 +32,10 @@ firmware + hardware-install PDFs are at
 > II … I have mine set up to read the pressure, flow, and temperature (group head block)."_ Cost was
 > ~$200 for the kit, shipped to family in the EU and hand-carried to the US (it isn't sold here).
 
+**See also:** [Mini V2 modifications at a glance](_reference/mini-v2-modifications.md) —
+before/after of the fluid + electrical paths across this project and
+[06-011](06-011-mini-v2-direct-plumb-in.md) (one shared teardown).
+
 ## Scope
 
 This project is **pressure/flow profiling only**. leva! can _also_ take over PID temperature
