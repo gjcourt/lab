@@ -53,6 +53,10 @@ The Mini V2's existing **low-water float switch** (the magnetic switch that disa
 the tank is dry) is **untouched** by this work and continues to provide dry-run protection. The new
 mechanical **float valve** controls fill, not pump enable.
 
+> **See also:** [Mini V2 modifications at a glance](_reference/mini-v2-modifications.md) —
+> before/after of the fluid + electrical paths across this project and
+> [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) (one shared teardown).
+
 ## Why this is "robust"
 
 1. Vibe pump operates at atmospheric inlet pressure as factory-designed. No backpressure → no
