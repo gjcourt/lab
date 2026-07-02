@@ -111,8 +111,8 @@ in-service machine first. This turns "experiment on my daily driver" into a benc
 a pristine fallback board.
 
 **Source a spare board — know which board you need.** Three distinct boards exist: the **Main
-Computer / CPU** (the brain that runs the temp loop — the fault-relevant one, **~$400 new and often
-sold out**; Clive, or the "Universal Control Board SP-14139" listed for the Mini V2 at Espresso
+Computer / CPU** (the brain that runs the temp loop — the fault-relevant one, **~$400 new (in stock
+at Clive)**; Clive, or the "Universal Control Board SP-14139" listed for the Mini V2 at Espresso
 World); the **triac / heater sub-board** (the power stage that actually switches the element —
 **~$77**, e.g. Caffe Tech SP7388; confirm Mini V2 fitment first); and the **button / touchpanel
 board** (front buttons only, ~$65 — irrelevant here). Used boards are scarce and a gamble (the CPU
