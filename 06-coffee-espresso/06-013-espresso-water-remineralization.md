@@ -14,7 +14,7 @@ depends_on:
 
 ## Description
 
-San Francisco tap (Hetch Hetchy) is **very soft** — for 3545 Washington / Presidio Heights the
+San Francisco tap (Hetch Hetchy) is **very soft** — for our Presidio Heights (Lombard) zone the
 current SFPUC numbers are **hardness 18, alkalinity 22, chloride 8 mg/L** (see
 [06-011](06-011-mini-v2-direct-plumb-in.md) pre-flight). That's ideal for the **machine** (low
 scale) but under-mineralized for **taste**: low hardness means thin extraction, and low alkalinity

@@ -83,19 +83,19 @@ report tapping a **T-fitting into the brew line** and profiling cleanly, so the 
 The ito kit bundles most of this. Buy the **full kit with pressure sensor + flow meter**; you can
 ignore the PID/SSR parts for now (those belong to 06-012).
 
-| #   | Item                          | Spec / pick                                                                             | Notes                                                                                                                                                                                         |
-| --- | ----------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **ito module + leva! kit**    | From [softwareandcircuits.com](http://www.softwareandcircuits.com) — EU only, ~€180–220 | Not sold in the US; ship to an EU address and hand-carry, as owners do. Get the **rotary-encoder display** variant (firmware `1 - ito with rotary encoder`).                                  |
-| 2   | Pressure sensor               | Included in kit; ~24 mm × 54 mm, rated **125 °C**                                       | T-tap into the brew line. **Adapter may need light filing to fit** (owner report). Mount away from the pump — **vibration kills it**, heat is fine.                                           |
-| 3   | Digmesa flow meter            | Included in kit (type FHKSC or nano PP)                                                 | Install on the **tank→pump line, before the pump** (see bypass note). ≤65 °C ambient.                                                                                                         |
-| 4   | T-fitting + sensor adapter    | To tee the pressure sensor into the brew line                                           | Owners left a branch on the tee for an optional physical gauge. La Spaziale brew group reportedly has a pre-tapped port — confirm.                                                            |
-| 5   | Display + rotary encoder      | Included in kit (OLED + encoder)                                                        | The one real ergonomics problem: mounting it without cutting the machine face. Plan a **3D-printed external housing** (German owners did).                                                    |
-| 6   | Status Monitor 4+ + tablet    | App from softwareandcircuits; any cheap tablet                                          | Reads/plots pressure/flow/temp over WiFi using the bundled XML. Owner uses an Alldocube iPlay50 Mini, woken per-shot. **Do not power the tablet from ito** — its supply has no spare current. |
-| 7   | Flow-meter inline fittings    | Barb/adapter set matching the Digmesa ports to the OEM tank→pump tube                   | **Not in kit.** Measure the tank→pump line ID + the meter's port type once inside; the Digmesa FHKSC uses small barb ports. Add hose clamps or push-fit as appropriate.                       |
-| 8   | Pump-switch → `SNS` wiring    | Mains-rated hookup wire + faston/spade connectors + heat-shrink                         | **Not in kit.** Taps the pump switch's mains phase to ito `SNS`. Same teardown as the 06-011 switched-mains interlock tap — do both in one session.                                           |
-| 9   | Display/encoder housing       | PETG filament (self-print) or a print service                                           | **Not in kit.** External housing to avoid cutting the case. **PETG, not PLA** — warm/humid environment; PLA creeps and hydrolyses over time.                                                  |
-| 10  | PTFE tape / thread sealant    | Standard                                                                                | For the sensor tee + any threaded adapters.                                                                                                                                                   |
-| 11  | Pump / 3-way seal-rebuild kit | La Spaziale service seal kit — **contingency**                                          | Buy only if the machine is old or seals weep under profiling. Worn non-return / 3-way seals leak under profiling even when fine at normal pressure (pre-flight §3).                           |
+| #   | Item                          | Spec / pick                                                                             | Notes                                                                                                                                                                                                                                                             |
+| --- | ----------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **ito module + leva! kit**    | From [softwareandcircuits.com](http://www.softwareandcircuits.com) — EU only, ~€180–220 | Ships from the EU — softwareandcircuits.com shipped directly to a US address in this build, so the community "hand-carry" workaround isn't required (see As-received below). Get the **rotary-encoder display** variant (firmware `1 - ito with rotary encoder`). |
+| 2   | Pressure sensor               | Included in kit; ~24 mm × 54 mm, rated **125 °C**                                       | T-tap into the brew line. **Adapter may need light filing to fit** (owner report). Mount away from the pump — **vibration kills it**, heat is fine.                                                                                                               |
+| 3   | Digmesa flow meter            | Included in kit (type FHKSC or nano PP)                                                 | Install on the **tank→pump line, before the pump** (see bypass note). ≤65 °C ambient.                                                                                                                                                                             |
+| 4   | T-fitting + sensor adapter    | To tee the pressure sensor into the brew line                                           | Owners left a branch on the tee for an optional physical gauge. La Spaziale brew group reportedly has a pre-tapped port — confirm.                                                                                                                                |
+| 5   | Display + rotary encoder      | Included in kit (OLED + encoder)                                                        | The one real ergonomics problem: mounting it without cutting the machine face. Plan a **3D-printed external housing** (German owners did).                                                                                                                        |
+| 6   | Status Monitor 4+ + tablet    | App from softwareandcircuits; any cheap tablet                                          | Reads/plots pressure/flow/temp over WiFi using the bundled XML. Owner uses an Alldocube iPlay50 Mini, woken per-shot. **Do not power the tablet from ito** — its supply has no spare current.                                                                     |
+| 7   | Flow-meter inline fittings    | Barb/adapter set matching the Digmesa ports to the OEM tank→pump tube                   | **Not in kit.** Measure the tank→pump line ID + the meter's port type once inside; the Digmesa FHKSC uses small barb ports. Add hose clamps or push-fit as appropriate.                                                                                           |
+| 8   | Pump-switch → `SNS` wiring    | Mains-rated hookup wire + faston/spade connectors + heat-shrink                         | **Not in kit.** Taps the pump switch's mains phase to ito `SNS`. Same teardown as the 06-011 switched-mains interlock tap — do both in one session.                                                                                                               |
+| 9   | Display/encoder housing       | PETG filament (self-print) or a print service                                           | **Not in kit.** External housing to avoid cutting the case. **PETG, not PLA** — warm/humid environment; PLA creeps and hydrolyses over time.                                                                                                                      |
+| 10  | PTFE tape / thread sealant    | Standard                                                                                | For the sensor tee + any threaded adapters.                                                                                                                                                                                                                       |
+| 11  | Pump / 3-way seal-rebuild kit | La Spaziale service seal kit — **contingency**                                          | Buy only if the machine is old or seals weep under profiling. Worn non-return / 3-way seals leak under profiling even when fine at normal pressure (pre-flight §3).                                                                                               |
 
 **Existing infrastructure reused:** the machine's vibratory pump, brew solenoid, and (for now) the
 entire stock temperature-control board.
@@ -104,6 +104,33 @@ entire stock temperature-control board.
 > on the machine's internal line sizes — and on whether the La Spaziale group has a **pre-tapped
 > sensor port** (row 4 note). Confirm both when you're inside, not before. Rows 1–3, 5 are in the
 > kit; rows 4, 6–11 are the not-in-kit extras (6 and 11 are optional/contingency).
+
+## As-received kit configuration
+
+The kit shipped **directly to a US address** (Jan 2025, from Dietmar Eilert /
+softwareandcircuits.com), so the "hand-carry from an EU address" note above is optional — the vendor
+will ship to the US.
+
+Configuration from the "keep this document" card (these are the values you set in leva! at setup):
+
+| Setting           | This kit                                                                                                                           |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| PCB revision      | 2.x                                                                                                                                |
+| OLED module       | SSD1309 (jumper J1)                                                                                                                |
+| Flow meter        | Digmesa FHKSC, type 932-xxxx (1925 / 1934 / 2016 / 2012 impulses/L at 0° / 90° / 180° / 270°); no integrated pull-up → R6 on ito   |
+| Pressure sensor   | 200 / 215 / 300 PSI option — **confirm the checked rating** (9 bar ≈ 130 psi, within range of all three)                           |
+| WiFi              | AP `ito Module`, 2.4 GHz WPA/WPA2-PSK — **set a custom password on first boot** (credentials are on the offline card, not in repo) |
+| Manual / software | on the bundled DVD (English)                                                                                                       |
+
+**Fully loaded — reconciles the BOM above:**
+
+- Includes the **SSR kit + TSic sensor** (the PID hardware). This project stays profiling-only, but
+  the temperature-takeover hardware for [06-012](06-012-leva-pid-temperature-takeover.md) is already
+  on hand — no re-order.
+- Also includes a **fluid-installation kit** (OKS grease, PTFE, 3× fittings for G1/8" systems), the
+  **TouchCell bracket**, **BLE**, and the **USB-serial (FTDI) adapter** — so BOM row 7 (flow-meter
+  fittings) and the programming adapter are largely covered by the kit. **Verify the G1/8" fittings
+  match the Mini V2's brew/tank lines** before assuming row 7 is closed.
 
 ## Pre-flight (verify before committing)
 

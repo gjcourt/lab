@@ -80,15 +80,14 @@ alkalinity. La Spaziale boilers don't auto-flush, so scale matters here.
 
 > **Resolved 2026-07-01 — current SFPUC data confirms soft water.** SFPUC weekly monitoring for the
 > week of 6/28/2026 (from Colleen Taggart, `CTaggart@sfwater.org`, the current SFPUC water-quality
-> contact; Table 9) puts **3545 Washington St, Presidio Heights (94118)** on the northern Hetch
-> Hetchy blend zone (Lombard reservoir; Sutro nearly identical): **hardness 18, alkalinity 22,
-> chloride 8 mg/L** — essentially unchanged from 2017 (22 / 27 / 7) and comfortably inside the
-> espresso-safe targets below. Hetch Hetchy is very soft and stable year-to-year; the Claryum
-> doesn't alter these three, so the distribution figures proxy the Claryum output. **Verdict: soft
-> water → Claryum sufficient, no softening cartridge, low scale risk.** (Only College Hill /
-> HTWTP-fed neighborhoods — Bernal, Glen Park, parts of Mission/Noe — run harder ~56; not this
-> address.) Alkalinity ~22 sits below the 40–80 taste band — a remineralization / dial-in nicety,
-> not a plumb-in blocker.
+> contact; Table 9) puts **Presidio Heights (Lombard zone)** on the northern Hetch Hetchy blend zone
+> (Lombard reservoir; Sutro nearly identical): **hardness 18, alkalinity 22, chloride 8 mg/L** —
+> essentially unchanged from 2017 (22 / 27 / 7) and comfortably inside the espresso-safe targets
+> below. Hetch Hetchy is very soft and stable year-to-year; the Claryum doesn't alter these three,
+> so the distribution figures proxy the Claryum output. **Verdict: soft water → Claryum sufficient,
+> no softening cartridge, low scale risk.** (Only College Hill / HTWTP-fed neighborhoods — Bernal,
+> Glen Park, parts of Mission/Noe — run harder ~56; not this address.) Alkalinity ~22 sits below the
+> 40–80 taste band — a remineralization / dial-in nicety, not a plumb-in blocker.
 
 **To verify independently (optional):**
 
