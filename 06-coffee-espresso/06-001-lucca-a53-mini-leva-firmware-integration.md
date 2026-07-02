@@ -144,19 +144,40 @@ Configuration from the "keep this document" card (these are the values you set i
    normal pressure **leak under profiling**. An old machine may want a pump rebuild first.
 4. **Confirm the bypass valve cracking pressure** and plan to set it >9 bar.
 
-## Installation outline
+## Build sequence (start here — all parts + machine on hand)
 
-1. **Plumb the pressure sensor** — tee into the brew line, fit adapter (file if needed), mount the
-   sensor where it stays cool-ish and **vibration-free**. Leave a gauge branch if wanted.
-2. **Plumb the flow meter** — inline on the tank→pump feed, before the pump.
-3. **Wire the pump to ito** — the original pump switch (mains) can feed ito's `SNS` input so leva!
-   detects "pump on" _and_ samples the AC waveform for zero-crossing (phase-angle control needs
-   this). Alternatively start/stop from the rotary encoder.
-4. **Mount display/encoder** — external 3D-printed housing to avoid cutting the case (design task).
-5. **Flash leva!** — over WiFi via XMODEM-CRC to port 2323 (TeraTerm on Windows, ZOC on macOS), per
-   `readme - important.txt`. Back up settings first (`MCu` dump on port 23). Install the matching
-   **Status Monitor XML**. Use firmware `1 - ito with rotary encoder`.
-6. **Set the bypass valve** above brew-pressure ceiling; configure `PRESS OPV`.
+Grounded in the ito **Hardware Reference Manual** (on the kit DVD, archived at
+`.../espresso/ito-dvd/Manual/Manual.pdf`). The pressure-loop tuning is the _separate_ leva! firmware
+manual — see **Tuning** below and `_reference/leva/`.
+
+1. **Pre-flight** (section above): vibe-pump confirmed, grouphead path clear (no gicleur/S11 between
+   the sensor tap and the portafilter), pump/3-way seals sound, bypass valve noted.
+2. **Mount & power ito.** Solder the on-board HLK-PM01 PSU (or wire external 5 V / ≥600 mA). Fit the
+   4 adhesive feet + acrylic insulation shield; mount in a **non-metal or grounded enclosure — not
+   metal screws** (insulation distance), away from boiler heat. Wire **N/L to the machine's
+   switched-mains rail**; use a surge-protected outlet. Keep mains leads separated from low-voltage
+   leads (EMC).
+3. **Wire the pump for phase-angle control.** Route the vibratory pump through an ito on-board
+   **relay (clamp 1 or 2)**; feed the **pump-switch L phase into `SNS`** for zero-cross detection +
+   "pump on" (phase-angle needs SNS to see the L phase). → **Do steps 2–3 in the same machine-open
+   session as [06-011](06-011-mini-v2-direct-plumb-in.md)'s switched-mains solenoid interlock** —
+   identical wiring area, one teardown.
+4. **Install the sensors.** Pressure sensor → **ADC** header (tee into the brew line; confirm the La
+   Spaziale pre-tapped port or file the adapter; mount **vibration-free**, cool-ish, gauge branch
+   optional). Flow meter → **IMPULSE** header on the **tank→pump line, before the pump** (R6 pull-up
+   already fitted for the 932-xxxx). _(TSic → AUX and OLED → SPI/ENC are optional / for
+   [06-012](06-012-leva-pid-temperature-takeover.md).)_
+5. **WLAN.** ito boots in **AP mode** (SSID `ito Module`; **set a custom password first** at
+   `http://192.168.4.1`). Switch it to **STA mode** to join your 2.4 GHz router; set a **static DHCP
+   lease** so the IP stays stable/bookmarkable.
+6. **Flash leva!** (macOS) — in **ZOC**, connect to ito's IP on **port 2323** (Telnet / Raw socket,
+   **Xmodem-CRC**) → press RETURN (drops into the bootloader) → type **`f`** → **Upload** the leva!
+   `.hex` (firmware `1 - ito with rotary encoder`, from the `leva! (for ito)` archives) → exit with
+   `q`. ⚠️ ito must be in **AP or STA mode, _not_ STA+AP**; close Status Monitor first; back up
+   settings via port 23 beforehand if wanted.
+7. **Configure + fluid prep.** Install Status Monitor + its XML (plots pressure/flow/temp over
+   WiFi). Set the pressure-sensor scaling, flow-meter type, and **`PRESS OPV`**; set the machine's
+   over-pressure **bypass valve to crack just above 9 bar**. Then → **Tuning**.
 
 ## Tuning (the real, ongoing work)
 
