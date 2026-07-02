@@ -65,6 +65,43 @@ quit well below 180°). leva! computes that angle from a proportional + integral
 pressure error; you tune it like a PID loop. Factory defaults won't produce good shots "except by
 luck" — tuning is the real, ongoing work of this project (see Tuning below).
 
+## Before / after: the control loop
+
+Stock, the pump is a brute — full power until the shot ends. With ito + leva!, brew pressure is
+measured continuously and the pump's power is dialed via **phase angle** to track a programmed curve
+— a real feedback loop, like a lever machine's declining pressure. (Complements the shared
+[modifications-at-a-glance](_reference/mini-v2-modifications.md) wiring view; this one tells the
+control-loop story.)
+
+```text
+06-001 — pressure / flow profiling via ito + leva!    (★ = added)
+
+BEFORE  (stock — fixed-power vibe pump)
+  [tank] ─gravity─► [VIBE PUMP] ─► [brew boiler] ─► [group] ─► cup
+                        ▲  full power, on/off
+  [stock board] ─► [pump switch] ─┘        over-pressure bypass ─► pump inlet
+  The brew button just runs the pump flat-out — no pressure control.
+
+AFTER  (ito interposed; leva! closes a feedback loop on the pump)
+  Sensing taps into the fluid path:
+    [tank] ─►★[FLOW METER]─► [VIBE PUMP] ─►★[PRESSURE TEE]─► [brew boiler] ─► [group] ─► cup
+             (pre-pump)                      (brew line)        bypass ★set >9 bar
+
+  The closed loop leva! runs continuously:
+       ┌──────────────────── pump produces pressure ◄────────────────────────┐
+       ▼                                                                      │
+  ★[PRESSURE SENSOR] ─► ito ADC ─► ★[ ito + leva! PID ] ─► phase angle ─► ★[ito RELAY] ─► [VIBE PUMP]
+    measures brew P                 vs. a target profile    0°=full …            modulated,
+                                    (pre-infuse→ramp→        ~110°=stop          not on/off
+                                     decline)
+       also feeding leva!:  ★flow meter → ito IMPULSE   ·   pump-switch L → ★ito SNS
+                                                            (zero-cross timing + "pump on")
+
+  Control / monitor:  ★ito WiFi ─► Status Monitor app (live pressure / flow / temp plots)
+
+UNTOUCHED:  stock temperature board · boilers · low-water switch · dosing / 3-way valve
+```
+
 ## The A53-specific fluid-system wrinkle: the over-pressure bypass
 
 The Mini Vivaldi II has a **brew over-pressure bypass valve** that returns water to the pump inlet.
