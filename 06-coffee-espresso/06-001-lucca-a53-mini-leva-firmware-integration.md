@@ -28,6 +28,14 @@ have this running. A full local index of that thread (365 posts, Nov 2019 → Ap
 firmware + hardware-install PDFs are at
 `/Volumes/family/projects/electronics/espresso/leva! (for ito)/`.
 
+The **seminal build thread** for this exact machine is the older
+[La Spaziale Mini Vivaldi and pressure profiling](https://www.home-barista.com/espresso-machines/la-spaziale-mini-vivaldi-and-pressure-profiling-t56816.html)
+(t56816, 46 posts, Feb–Apr 2019) — `blondica73`'s original US install, with `sandc` answering. It is
+now indexed (with 20 install/graph photos) on the NAS at
+`/Volumes/family/projects/electronics/espresso/home-barista-mini-vivaldi-t56816/INDEX.md`; the
+in-repo synthesis is
+[`_reference/mini-vivaldi-thread-t56816.md`](_reference/mini-vivaldi-thread-t56816.md).
+
 > Owner `blondica73` (thread post #2): _"I used the ITO board to upgrade my La Spaziale Mini Vivaldi
 > II … I have mine set up to read the pressure, flow, and temperature (group head block)."_ Cost was
 > ~$200 for the kit, shipped to family in the EU and hand-carried to the US (it isn't sold here).
@@ -124,19 +132,19 @@ report tapping a **T-fitting into the brew line** and profiling cleanly, so the 
 The ito kit bundles most of this. Buy the **full kit with pressure sensor + flow meter**; you can
 ignore the PID/SSR parts for now (those belong to 06-012).
 
-| #   | Item                          | Spec / pick                                                                             | Notes                                                                                                                                                                                                                                                             |
-| --- | ----------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **ito module + leva! kit**    | From [softwareandcircuits.com](http://www.softwareandcircuits.com) — EU only, ~€180–220 | Ships from the EU — softwareandcircuits.com shipped directly to a US address in this build, so the community "hand-carry" workaround isn't required (see As-received below). Get the **rotary-encoder display** variant (firmware `1 - ito with rotary encoder`). |
-| 2   | Pressure sensor               | Included in kit; ~24 mm × 54 mm, rated **125 °C**                                       | T-tap into the brew line. **Adapter may need light filing to fit** (owner report). Mount away from the pump — **vibration kills it**, heat is fine.                                                                                                               |
-| 3   | Digmesa flow meter            | Included in kit (type FHKSC or nano PP)                                                 | Install on the **tank→pump line, before the pump** (see bypass note). ≤65 °C ambient.                                                                                                                                                                             |
-| 4   | T-fitting + sensor adapter    | To tee the pressure sensor into the brew line                                           | Owners left a branch on the tee for an optional physical gauge. La Spaziale brew group reportedly has a pre-tapped port — confirm.                                                                                                                                |
-| 5   | Display + rotary encoder      | Included in kit (OLED + encoder)                                                        | The one real ergonomics problem: mounting it without cutting the machine face. Plan a **3D-printed external housing** (German owners did).                                                                                                                        |
-| 6   | Status Monitor 4+ + tablet    | App from softwareandcircuits; any cheap tablet                                          | Reads/plots pressure/flow/temp over WiFi using the bundled XML. Owner uses an Alldocube iPlay50 Mini, woken per-shot. **Do not power the tablet from ito** — its supply has no spare current.                                                                     |
-| 7   | Flow-meter inline fittings    | Barb/adapter set matching the Digmesa ports to the OEM tank→pump tube                   | **Not in kit.** Measure the tank→pump line ID + the meter's port type once inside; the Digmesa FHKSC uses small barb ports. Add hose clamps or push-fit as appropriate.                                                                                           |
-| 8   | Pump-switch → `SNS` wiring    | Mains-rated hookup wire + faston/spade connectors + heat-shrink                         | **Not in kit.** Taps the pump switch's mains phase to ito `SNS`. Same teardown as the 06-011 switched-mains interlock tap — do both in one session.                                                                                                               |
-| 9   | Display/encoder housing       | PETG filament (self-print) or a print service                                           | **Not in kit.** External housing to avoid cutting the case. **PETG, not PLA** — warm/humid environment; PLA creeps and hydrolyses over time.                                                                                                                      |
-| 10  | PTFE tape / thread sealant    | Standard                                                                                | For the sensor tee + any threaded adapters.                                                                                                                                                                                                                       |
-| 11  | Pump / 3-way seal-rebuild kit | La Spaziale service seal kit — **contingency**                                          | Buy only if the machine is old or seals weep under profiling. Worn non-return / 3-way seals leak under profiling even when fine at normal pressure (pre-flight §3).                                                                                               |
+| #   | Item                          | Spec / pick                                                                             | Notes                                                                                                                                                                                                                                                                                                                                                              |
+| --- | ----------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | **ito module + leva! kit**    | From [softwareandcircuits.com](http://www.softwareandcircuits.com) — EU only, ~€180–220 | Ships from the EU — softwareandcircuits.com shipped directly to a US address in this build, so the community "hand-carry" workaround isn't required (see As-received below). Get the **rotary-encoder display** variant (firmware `1 - ito with rotary encoder`).                                                                                                  |
+| 2   | Pressure sensor               | Included in kit; ~24 mm × 54 mm, rated **125 °C**                                       | T-tap into the brew line. **Adapter may need light filing to fit** (owner report). Mount away from the pump — **vibration kills it**, heat is fine.                                                                                                                                                                                                                |
+| 3   | Digmesa flow meter            | Included in kit (type FHKSC or nano PP)                                                 | Install on the **tank→pump line, before the pump** (see bypass note). ≤65 °C ambient. **Better still: skip it and share the machine's own (GICAR) flow meter** — a second meter in series adds a restricting nozzle that cut free flow ~10 % in t56816 (#31); see the flow-meter step in Build sequence.                                                           |
+| 4   | T-fitting + sensor adapter    | To tee the pressure sensor into the brew line                                           | **Owners tee a T-fitting into the brew line** (t56816 #3 photo) and cap the spare branch for an optional gauge — plan on adding a tee, **not** on finding a factory pre-tapped port. The adapter **needed light filing to fit** (#1).                                                                                                                              |
+| 5   | Display + rotary encoder      | Included in kit (OLED + encoder)                                                        | The one real ergonomics problem: mounting it without cutting the machine face. Plan a **3D-printed external housing**; a reversible no-cut option (`sandc`, t56816 #30) is to 3D-print a **La Spaziale Dream S1 bezel** (it has a display slot by design) and swap the passive LED PCB for a custom-shaped one. Otherwise owners Dremel-cut the opening (#28/#31). |
+| 6   | Status Monitor 4+ + tablet    | App from softwareandcircuits; any cheap tablet                                          | Reads/plots pressure/flow/temp over WiFi using the bundled XML. Owner uses an Alldocube iPlay50 Mini, woken per-shot. **Do not power the tablet from ito** — its supply has no spare current.                                                                                                                                                                      |
+| 7   | Flow-meter inline fittings    | Barb/adapter set matching the Digmesa ports to the OEM tank→pump tube                   | **Not in kit.** Measure the tank→pump line ID + the meter's port type once inside; the Digmesa FHKSC uses small barb ports. Add hose clamps or push-fit as appropriate.                                                                                                                                                                                            |
+| 8   | Pump-switch → `SNS` wiring    | Mains-rated hookup wire + faston/spade connectors + heat-shrink                         | **Not in kit.** Taps the pump switch's mains phase to ito `SNS`. Same teardown as the 06-011 switched-mains interlock tap — do both in one session.                                                                                                                                                                                                                |
+| 9   | Display/encoder housing       | PETG filament (self-print) or a print service                                           | **Not in kit.** External housing to avoid cutting the case. **PETG, not PLA** — warm/humid environment; PLA creeps and hydrolyses over time.                                                                                                                                                                                                                       |
+| 10  | PTFE tape / thread sealant    | Standard                                                                                | For the sensor tee + any threaded adapters.                                                                                                                                                                                                                                                                                                                        |
+| 11  | Pump / 3-way seal-rebuild kit | La Spaziale service seal kit — **contingency**                                          | Buy only if the machine is old or seals weep under profiling. Worn non-return / 3-way seals leak under profiling even when fine at normal pressure (pre-flight §3).                                                                                                                                                                                                |
 
 **Existing infrastructure reused:** the machine's vibratory pump, brew solenoid, and (for now) the
 entire stock temperature-control board.
@@ -184,6 +192,11 @@ Configuration from the "keep this document" card (these are the values you set i
 3. **Check pump + 3-way valve seal condition.** Worn non-return / 3-way seals that are fine at
    normal pressure **leak under profiling**. An old machine may want a pump rebuild first.
 4. **Confirm the bypass valve cracking pressure** and plan to set it >9 bar.
+5. **Characterize the pump's full-power ceiling.** The Mini Vivaldi pump is "lazy" — at full power
+   it rises **~half as fast (bar/s) as a Rancilio Silvia** (t56816 #17), likely a mix of pump type,
+   flow-meter restriction, and a larger brew-boiler air pocket. **leva! can't recreate a profile
+   whose ramp is steeper than the machine hits at full power**, so pull one no-profile, full-power
+   shot first to see the ceiling. (One owner eventually swapped in a **ULKA EX5** pump, #21.)
 
 ## Build sequence (start here — all parts + machine on hand)
 
@@ -200,13 +213,25 @@ manual — see **Tuning** below and `_reference/leva/`.
    leads (EMC).
 3. **Wire the pump for phase-angle control.** Route the vibratory pump through an ito on-board
    **relay (clamp 1 or 2)**; feed the **pump-switch L phase into `SNS`** for zero-cross detection +
-   "pump on" (phase-angle needs SNS to see the L phase). → **Do steps 2–3 in the same machine-open
-   session as [06-011](06-011-mini-v2-direct-plumb-in.md)'s switched-mains solenoid interlock** —
-   identical wiring area, one teardown.
-4. **Install the sensors.** Pressure sensor → **ADC** header (tee into the brew line; confirm the La
-   Spaziale pre-tapped port or file the adapter; mount **vibration-free**, cool-ish, gauge branch
-   optional). Flow meter → **IMPULSE** header on the **tank→pump line, before the pump** (R6 pull-up
-   already fitted for the 932-xxxx). _(TSic → AUX and OLED → SPI/ENC are optional / for
+   "pump on" (phase-angle needs SNS to see the L phase). **As-built on a Mini Vivaldi II** (t56816
+   #35): ito `L` → the mains **L phase (the 3rd cable from the bottom** on the MV control board; 1st
+   & 2nd are N); the MV board's **switched pump output → `SNS`**; **`SSR 1` → pump**. Optionally, a
+   later step moves the **group-head solenoid feed (4th from bottom) onto `SSR 2`** to unlock dosing
+   / backflush / shot control — this hands the valve to ito (the "secondary-controller" trade-off;
+   dosing stays off until you do it). → **Do steps 2–3 in the same machine-open session as
+   [06-011](06-011-mini-v2-direct-plumb-in.md)'s switched-mains solenoid interlock** — identical
+   wiring area, one teardown.
+4. **Install the sensors.** Pressure sensor → **ADC** header — **tee a T-fitting into the brew
+   line** (cap the spare branch for an optional gauge; file the adapter if it's tight); mount
+   **vibration-free** and cool-ish (125 °C-rated — heat is fine, vibration kills it; never at the
+   pump). Flow meter → **IMPULSE** header. Two options: (a) the **kit Digmesa on the tank→pump line,
+   before the pump** (R6 pull-up already fitted for the 932-xxxx), or (b) **share the machine's
+   stock GICAR meter** to avoid stacking a second restricting nozzle. For (b): the GICAR connector
+   (behind 3× 3 mm Allen screws) is **red = +VCC, white = signal/output, black = GND**; it's an
+   **open-collector output already pulled to 5 V** (measured: +14.3 V rail, signal swings 0↔5 V),
+   so bridge **signal + ground** to ito through a **CD4011 NAND gate + PC817 optocoupler** for
+   isolation — and **never route the 14.8 V meter rail to an ito input** (5 V + 0.5 V absolute max).
+   _(TSic → AUX and OLED → SPI/ENC are optional / for
    [06-012](06-012-leva-pid-temperature-takeover.md).)_
 5. **WLAN.** ito boots in **AP mode** (SSID `ito Module`; **set a custom password first** at
    `http://192.168.4.1`). Switch it to **STA mode** to join your 2.4 GHz router; set a **static DHCP
@@ -225,19 +250,46 @@ manual — see **Tuning** below and `_reference/leva/`.
 Run the firmware-manual tutorials, then iterate with the Status Monitor plots (turn on the **pump
 power / phase-angle** trace — temperature plots don't help when debugging pressure):
 
-- **Pressure pre-test** (Menu, p.49) to seed pump characterization — needs a blind filter.
-- **`K` (proportional)** — start near the values owners cite (~3.5 gave clean graphs for one). Halve
-  it if you see oscillation/roughness; raise it if the pressure jump is sluggish.
+- **Pressure pre-test** (Menu, p.49) to seed pump characterization — needs a blind filter. ⚠️
+  **A53-specific gotcha:** the pre-test **won't run** out of the box because the stock control board
+  **drops the `SNS` signal on "inactivity"** (it reads the still pump as a too-fine grind) and
+  aborts the test. Two fixes (t56816 #12–#14): temporarily **jumper `SNS`↔`L`** (set the SNS
+  contact action to "do nothing" first), _or_ simply **press the machine's shot button, then start
+  the pre-test** so a live pump keeps SNS energised. The result **survives firmware upgrades**, so
+  this is a one-time chore.
+- **`K` (proportional)** — start near the values owners cite (~3.5 gave clean graphs on later
+  firmware; blondica's early build settled near ~20 — the absolute number is firmware-scale-
+  dependent, so tune to the plot, not the digit). Halve it if you see oscillation/roughness; raise
+  it if the pressure jump is sluggish. **Keep `Kc<SP` and `Kc>SP` close** — a lopsided pair (his 25
+  vs 90) produced wild pump-power swings; balancing them cleaned up the graph (#17–#19).
 - **`I`** — integral response.
+- **Two parameter sets, split at 2.5 bar by _setpoint_ (not actual pressure)** — one for the 0–2.5
+  bar pre-infusion range, one above (#40). The below-2.5 set is tuned to avoid overshoot (little
+  coffee flows there, so pressure lingers); if you **undershoot** below 2.5 bar, **raise its `Kc`**
+  (Setup→Pump→Control→Below 2.5 bar→Kc). A small "swing" right after the 2.5 bar setpoint crossing
+  is the two sets handing off.
 - **`PHASE OFF`** — the pump-stop phase angle; tune if a soaking pre-infusion (e.g. 20 s @ 1.1 bar)
   drifts above setpoint.
 - **`PRESS MAX` / `PRESS OPV`** — ceiling + bypass accounting.
 - **`Flow Corr`** — biases the feed-forward; nudge so the bias line tracks the pump-power line in
-  the first seconds of the shot.
+  the first seconds of the shot. Concrete rule from the thread: if the **bias plot rides ~5° above
+  the yellow pump-power plot, reduce `Flow Corr` by ~5°** (#22). A large negative value (blondica's
+  −25°) is a big power kick and can drive pre-infusion swing (#39–#40).
+- **Flooding flow-drop is expected, not a bug.** The pump runs full power until ~0.7 bar fills the
+  air pockets, then the control loop takes over and flow **drops sharply** (P and I ≈ 0 at zero
+  error → only bias remains) (#45–#46). To kill the audible stutter at the hand-off, **start the
+  profile at a higher pressure (e.g. 1.2 bar)** and/or adjust the flood-pressure setting.
+- **Mid-shot "blips"** trace to coffee behaviour (channeling/fine-grind stall), **mains sag when the
+  stock heater switches ~10 A** (leva! can't power-factor-correct it — it doesn't control the stock
+  heater), measurement noise (verify with a blind-filter static-pressure test), or over-aggressive
+  P/I turning a small disturbance into oscillation (#20).
 
 A good starting recipe from the thread: **`Gen Lever` preset profile + ~10 s pre-infusion @ 1.5
 bar** produced well-regarded shots on a Mini Vivaldi II. The firmware author actively tunes owners'
 curves in-thread if you post phase plots.
+
+> Note the ito pressure sensor and the machine's own gauge can **read slightly differently** —
+> expect a small offset and trust the ito sensor's loop, not the factory gauge (t56816 #18).
 
 ## Exit Criteria
 
@@ -257,17 +309,22 @@ curves in-thread if you post phase plots.
 - [x] Researched leva! firmware + hardware-install manuals (local PDFs)
 - [x] Indexed the full home-barista ito/leva! thread; confirmed Mini Vivaldi II owners profiling
       successfully (index at `.../home-barista-thread-index/INDEX.md`)
+- [x] Indexed the seminal Mini Vivaldi build thread (t56816, 46 posts + 20 photos) and folded its
+      findings in (index at `.../home-barista-mini-vivaldi-t56816/INDEX.md`; synthesis at
+      `_reference/mini-vivaldi-thread-t56816.md`)
 - [x] Scoped to profiling-only; split PID takeover into 06-012
 - [ ] Pre-flight: confirm vibe pump, inspect grouphead path, check seal condition, bypass pressure
 - [x] Source ito kit from the EU (complete kit in hand: module + pressure sensor + flow meter +
       encoder)
 - [ ] Source not-in-kit extras (flow-meter fittings, SNS wiring, PETG, tablet) — measure line
-      sizes + confirm the pre-tapped sensor port first
-- [ ] Install pressure sensor (T-tap) + flow meter (pre-pump)
+      sizes + plan the brew-line T-fitting (no factory pre-tapped port to count on)
+- [ ] Install pressure sensor (brew-line T-tap) + flow meter (kit meter pre-pump, or share the stock
+      GICAR meter via NAND-gate + optocoupler)
 - [ ] Wire pump to ito SNS (combine the machine-open work with 06-011's switched-mains interlock
       tap); design + print PETG display/encoder housing
 - [ ] Flash leva!; install Status Monitor XML
-- [ ] Set bypass + `PRESS OPV`; run pressure pre-test
+- [ ] Set bypass + `PRESS OPV`; run pressure pre-test (mind the SNS-inactivity gotcha — jumper
+      `SNS`↔`L` or press the shot button first)
 - [ ] Tune K/I, PHASE OFF, Flow Corr against Status Monitor plots
 - [ ] Dial in a lever profile; document as-built (sensor location, profile, tuned params)
 
@@ -287,10 +344,15 @@ curves in-thread if you post phase plots.
 
 - **In-repo digest:** [`_reference/leva/LEVA-DOCS-SUMMARY.md`](_reference/leva/LEVA-DOCS-SUMMARY.md)
   — executive summary + page index of the two manuals (read this before the PDFs).
+- **In-repo digest:**
+  [`_reference/mini-vivaldi-thread-t56816.md`](_reference/mini-vivaldi-thread-t56816.md) — synthesis
+  of the seminal Mini Vivaldi build thread + NAS image catalog.
 - Local: leva! firmware manual + hardware-installation PDF,
   `/Volumes/family/projects/electronics/espresso/leva! (for ito)/`
 - Local: full thread index,
   `/Volumes/family/projects/electronics/espresso/home-barista-thread-index/INDEX.md`
+- Local: Mini Vivaldi build-thread index + photos,
+  `/Volumes/family/projects/electronics/espresso/home-barista-mini-vivaldi-t56816/INDEX.md`
 - [ITO/Leva! Controller — Q&A + Experience (home-barista, t61709)](https://www.home-barista.com/espresso-machines/ito-leva-controller-q-experience-t61709.html)
 - [La Spaziale Mini Vivaldi and pressure profiling (home-barista, t56816)](https://www.home-barista.com/espresso-machines/la-spaziale-mini-vivaldi-and-pressure-profiling-t56816.html)
 - [softwareandcircuits.com — ito module + leva!](http://www.softwareandcircuits.com)
