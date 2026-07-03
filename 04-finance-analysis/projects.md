@@ -1,4 +1,4 @@
-# Finance & Analysis Projects (15)
+# Finance & Analysis Projects (16)
 
 This category focuses on EDGAR parsing, DCF modeling, and personal finance tracking.
 
@@ -21,3 +21,4 @@ This category focuses on EDGAR parsing, DCF modeling, and personal finance track
 | 04-013 | [Cryptocurrency Arbitrage Bot](04-013-cryptocurrency-arbitrage-bot.md)                                   | Not Started | Hard       | Months          |
 | 04-014 | [Personal Expense Categorization using ML](04-014-personal-expense-categorization-using-ml.md)           | Not Started | Medium     | 1-4 weeks       |
 | 04-015 | [Peer-to-Peer Lending Portfolio Analyzer](04-015-peer-to-peer-lending-portfolio-analyzer.md)             | Not Started | Medium     | 1-4 weeks       |
+| 04-016 | [EDGAR 10-K Automated Analysis Engine](04-016-edgar-10-k-automated-analysis-engine.md)                   | Not Started | Hard       | Months          |
