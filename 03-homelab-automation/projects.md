@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (26)
+# Homelab & Automation Projects (27)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -32,3 +32,4 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-024 | [Babysense Baby-Monitor Video Tap (teardown → homelab stream)](03-024-babysense-baby-monitor-video-tap.md)                     | Not Started | Hard       | Weeks           |
 | 03-025 | [RF/SDR Exploration & Decoding (RTL-SDR on-ramp)](03-025-rf-sdr-exploration-and-decoding.md)                                   | Not Started | Medium     | 1-4 weeks       |
 | 03-026 | [Rip Owned 4K UHD Blu-rays to the NAS (TrueNAS → Jellyfin)](03-026-rip-owned-4k-uhd-blurays-to-nas-jellyfin.md)                | In Progress | Medium     | 1-4 weeks       |
+| 03-027 | [XIAO ESP32-C3 IR + RF Blaster Carrier PCB](03-027-xiao-c3-ir-rf-blaster-carrier-pcb.md)                                       | In Progress | Medium     | 1-2 weeks       |
