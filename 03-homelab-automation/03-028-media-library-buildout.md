@@ -124,6 +124,79 @@ SFPL confirmed these concert/music docs on Blu-ray (curation batch): _Stop Makin
 Waltz_, _Gimme Shelter_, _Buena Vista Social Club_, _Jazz on a Summer's Day_, _Long Strange Trip_.
 Fold in if wanted.
 
+## Augmented picks — highly-rated films at SFPL (ranked)
+
+The 6-franchise wishlist is a personal target list, not "the best of what SFPL stocks." This is the
+**"already at the AV Center, grab these too"** list: 50 highly-rated, rip-worthy films **outside**
+the six franchises, all confirmed on **standard Blu-ray** at SFPL (2026-07-08). It folds in the 14
+already-confirmed music/art-house discs above and adds acclaimed classics, crowd-pleasers (like _The
+Blues Brothers_), reference-quality discs, and modern acclaimed titles.
+
+**Ranking method — multi-signal, highest-first.** Primary key = **Rotten Tomatoes critics %**;
+tiebreak = **RT audience %**. AFI Top 100 / Criterion / IMDb Top 250 status is noted in the "why"
+column where it adds signal. RT figures are point-in-time public scores (as of 2026-07) and drift a
+point or two over time. Every title is **Blu-ray at SFPL — no 4K UHD exists there** (buy the disc if
+an HDR master matters).
+
+| #   | Film                              | Year | Director             | RT crit% (aud%) | Why it's rip-worthy                            | SFPL |
+| --- | --------------------------------- | ---- | -------------------- | --------------- | ---------------------------------------------- | ---- |
+| 1   | Seven Samurai                     | 1954 | Kurosawa             | 100% (97%)      | Criterion; the ur-text of the ensemble epic    | BR   |
+| 2   | Stop Making Sense                 | 1984 | Demme                | 100% (97%)      | Greatest concert film ever shot                | BR   |
+| 3   | Singin' in the Rain               | 1952 | Kelly / Donen        | 100% (95%)      | AFI-top musical; reference Technicolor         | BR   |
+| 4   | Tokyo Story                       | 1953 | Ozu                  | 100% (94%)      | Criterion; perennial "greatest films" pick     | BR   |
+| 5   | The Red Shoes                     | 1948 | Powell / Pressburger | 100% (93%)      | Criterion; a Technicolor restoration showpiece | BR   |
+| 6   | Long Strange Trip                 | 2017 | Bar-Lev              | 100% (91%)      | Definitive Grateful Dead doc                   | BR   |
+| 7   | Casablanca                        | 1942 | Curtiz               | 99% (95%)       | AFI Top 5; the canonical Hollywood romance     | BR   |
+| 8   | Chinatown                         | 1974 | Polanski             | 99% (93%)       | AFI Top 100; the perfect screenplay            | BR   |
+| 9   | Citizen Kane                      | 1941 | Welles               | 99% (90%)       | Perennial "greatest film"; deep-focus landmark | BR   |
+| 10  | Parasite                          | 2019 | Bong Joon-ho         | 99% (90%)       | Best Picture; Criterion                        | BR   |
+| 11  | Schindler's List                  | 1993 | Spielberg            | 98% (97%)       | Best Picture; B&W reference transfer           | BR   |
+| 12  | Lawrence of Arabia                | 1962 | Lean                 | 98% (94%)       | 70mm epic; a demo disc for scale               | BR   |
+| 13  | Apocalypse Now                    | 1979 | Coppola              | 98% (94%)       | Reference 5.1 sound design                     | BR   |
+| 14  | Dr. Strangelove                   | 1964 | Kubrick              | 98% (94%)       | Criterion; the definitive satire               | BR   |
+| 15  | The Last Waltz                    | 1978 | Scorsese             | 98% (93%)       | The Band's farewell; landmark concert film     | BR   |
+| 16  | Get Out                           | 2017 | Peele                | 98% (86%)       | Best Original Screenplay; modern horror pivot  | BR   |
+| 17  | Moonlight                         | 2016 | Jenkins              | 98% (79%)       | Best Picture; A24 flagship                     | BR   |
+| 18  | The Godfather                     | 1972 | Coppola              | 97% (98%)       | AFI Top 3; restored transfer                   | BR   |
+| 19  | Spirited Away                     | 2001 | Miyazaki             | 97% (96%)       | Ghibli's Oscar winner; animation reference     | BR   |
+| 20  | Psycho                            | 1960 | Hitchcock            | 97% (95%)       | AFI Top 100; the shower-scene urtext           | BR   |
+| 21  | Spider-Man: Into the Spider-Verse | 2018 | Persichetti et al.   | 97% (93%)       | Animation showcase; reference color            | BR   |
+| 22  | Jaws                              | 1975 | Spielberg            | 97% (90%)       | The first blockbuster; demo-worthy audio       | BR   |
+| 23  | Mad Max: Fury Road                | 2015 | Miller               | 97% (86%)       | Reference action disc; saturated color         | BR   |
+| 24  | Jazz on a Summer's Day            | 1959 | Stern                | 97% (82%)       | 1958 Newport Jazz Fest; gorgeous restoration   | BR   |
+| 25  | The Godfather Part II             | 1974 | Coppola              | 96% (97%)       | AFI Top 100; the rare superior sequel          | BR   |
+| 26  | Goodfellas                        | 1990 | Scorsese             | 96% (97%)       | AFI Top 100; propulsive craft                  | BR   |
+| 27  | Ran                               | 1985 | Kurosawa             | 96% (93%)       | Criterion; Kurosawa's color Lear               | BR   |
+| 28  | The Silence of the Lambs          | 1991 | Demme                | 95% (95%)       | Best Picture; Criterion                        | BR   |
+| 29  | Pan's Labyrinth                   | 2006 | del Toro             | 95% (91%)       | Criterion; a dark-fantasy showcase             | BR   |
+| 30  | Die Hard                          | 1988 | McTiernan            | 94% (94%)       | The template action thriller                   | BR   |
+| 31  | Whiplash                          | 2014 | Chazelle             | 94% (94%)       | Editing/sound tour de force                    | BR   |
+| 32  | Vertigo                           | 1958 | Hitchcock            | 94% (93%)       | Perennial "greatest film"; restored color      | BR   |
+| 33  | Alien                             | 1979 | Scott                | 93% (94%)       | Reference production design + sound            | BR   |
+| 34  | Back to the Future                | 1985 | Zemeckis             | 93% (94%)       | The crowd-pleaser benchmark                    | BR   |
+| 35  | Gimme Shelter                     | 1970 | Maysles / Zwerin     | 93% (91%)       | Altamont; landmark rockumentary                | BR   |
+| 36  | Oppenheimer                       | 2023 | Nolan                | 93% (91%)       | Best Picture; large-format photography         | BR   |
+| 37  | Everything Everywhere All at Once | 2022 | Daniels              | 93% (88%)       | Best Picture; maximalist editing               | BR   |
+| 38  | No Country for Old Men            | 2007 | Coen Bros.           | 93% (86%)       | Best Picture; masterclass in tension           | BR   |
+| 39  | Pulp Fiction                      | 1994 | Tarantino            | 92% (96%)       | AFI Top 100; era-defining                      | BR   |
+| 40  | Dune: Part Two                    | 2024 | Villeneuve           | 92% (95%)       | Reference-grade image + sound                  | BR   |
+| 41  | Jurassic Park                     | 1993 | Spielberg            | 92% (91%)       | VFX landmark; demo audio                       | BR   |
+| 42  | Buena Vista Social Club           | 1999 | Wenders              | 92% (90%)       | Cuban-music doc; irresistible soundtrack       | BR   |
+| 43  | 2001: A Space Odyssey             | 1968 | Kubrick              | 92% (90%)       | AFI Top 100; the reference restoration         | BR   |
+| 44  | In the Mood for Love              | 2000 | Wong Kar-wai         | 92% (89%)       | Criterion; a color-and-mood showpiece          | BR   |
+| 45  | Taxi Driver                       | 1976 | Scorsese             | 89% (93%)       | AFI Top 100; restored transfer                 | BR   |
+| 46  | The Matrix                        | 1999 | The Wachowskis       | 88% (85%)       | Genre-defining; demo action + sound            | BR   |
+| 47  | Blade Runner 2049                 | 2017 | Villeneuve           | 88% (81%)       | Reference cinematography (Deakins)             | BR   |
+| 48  | Baraka                            | 1992 | Fricke               | 85% (96%)       | 70mm non-narrative; ultimate demo disc         | BR   |
+| 49  | Samsara                           | 2011 | Fricke               | 75% (87%)       | 70mm follow-up to _Baraka_; demo-grade image   | BR   |
+| 50  | The Blues Brothers                | 1980 | Landis               | 71% (86%)       | Cult crowd-pleaser; soul/R&B set pieces        | BR   |
+
+**Notes.** All 50 verified against the public SFPL catalog on 2026-07-08 — Blu-ray records surfaced
+for every title (SFPL stocks no 4K UHD). "Copies in use" is common on the popular titles (batch
+holds as with the franchises). The 14 music/art-house discs from the curation batch above (_Baraka_,
+_Samsara_, _Seven Samurai_, _Tokyo Story_, _In the Mood for Love_, _Ran_, _Parasite_, _The Red
+Shoes_, and the six concert docs) are folded into the ranking rather than listed twice.
+
 ## Next actions
 
 **All ripping is gated on the UHD ripper** (03-026: LG WH16NS40 + OWC enclosure, **inbound**) being
@@ -204,6 +277,23 @@ Blu-ray likely but not isolated. No 4K UHD exists at SFPL.
 | Episode IV: A New Hope             | 1977 | BR     | in collection             |
 | Episode V: The Empire Strikes Back | 1980 | BR     | in collection             |
 | Episode VI: Return of the Jedi     | 1983 | BR     | in collection             |
+
+**The other Star Wars films (outside the 6-film saga wishlist)** — checked 2026-07-08 for
+completeness. Five of six are on Blu-ray at SFPL; only the 2008 animated theatrical film isn't on
+disc there.
+
+| Film                                 | Year | Format   | Note                                             |
+| ------------------------------------ | ---- | -------- | ------------------------------------------------ |
+| The Force Awakens (Ep. VII)          | 2015 | BR       | Blu-ray + DVD                                    |
+| The Last Jedi (Ep. VIII)             | 2017 | BR       | Blu-ray + DVD                                    |
+| The Rise of Skywalker (Ep. IX)       | 2019 | BR       | Blu-ray + DVD                                    |
+| Rogue One: A Star Wars Story         | 2016 | BR       | Blu-ray + DVD                                    |
+| Solo: A Star Wars Story              | 2018 | BR       | Blu-ray (copies in use) + DVD                    |
+| Star Wars: The Clone Wars (animated) | 2008 | **none** | Not on disc at SFPL; only the TV series is on BR |
+
+So the full live-action saga (Ep. I–IX) plus both anthology films (_Rogue One_, _Solo_) are all
+Blu-ray-borrowable at SFPL — the lone gap is the 2008 animated theatrical film, which SFPL never
+stocked on disc.
 
 ### Indiana Jones — 5/5 on Blu-ray
 
