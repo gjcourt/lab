@@ -197,6 +197,338 @@ holds as with the franchises). The 14 music/art-house discs from the curation ba
 _Samsara_, _Seven Samurai_, _Tokyo Story_, _In the Mood for Love_, _Ran_, _Parasite_, _The Red
 Shoes_, and the six concert docs) are folded into the ranking rather than listed twice.
 
+## Track 1b — Genre expansion (rip-worthy picks beyond the franchises)
+
+**~251 films across 9 genre buckets**, deduped against the 154-film base (the 104 tracked franchise
+films + the 50 Augmented picks above). Franchise films and the Augmented-50 are excluded outright;
+where a film fit two genres it is listed **once**, in its best-fit bucket (e.g. _Fargo_ → Crime,
+_Amélie_ → World Cinema, _Crouching Tiger_ → Epics, the golden-age screwballs → Rom-Com). Ranked
+within each bucket by **Rotten Tomatoes** (critics % primary, audience % tiebreak) with
+Criterion/AFI/canon weight breaking near-ties. Every title is **Blu-ray at SFPL unless flagged
+DVD-only** — no 4K UHD exists there (buy the disc if an HDR master matters). RT figures are
+point-in-time public scores (2026-07) and drift a point or two.
+
+### Comedy
+
+_Ranked by RT (crit/aud), canon-weighted; SFPL Blu-ray preferred, no 4K UHD; six franchises
+excluded._
+
+| #   | Title                           | Year | RT (crit/aud) | SFPL format | Why                                                            |
+| --- | ------------------------------- | ---- | ------------- | ----------- | -------------------------------------------------------------- |
+| 1   | His Girl Friday                 | 1940 | 99% (91%)     | BR          | Fastest-talking screwball ever; overlapping-dialogue benchmark |
+| 2   | Modern Times                    | 1936 | 98% (95%)     | BR          | Chaplin vs. the machine age; silent-era comic peak             |
+| 3   | Airplane!                       | 1980 | 97% (89%)     | BR          | The gag-per-second spoof that defined the form                 |
+| 4   | Monty Python and the Holy Grail | 1975 | 97% (95%)     | BR          | Most-quoted absurdist comedy in the language                   |
+| 5   | Sideways                        | 2004 | 97% (85%)     | BR          | Wine-country midlife comedy with real ache                     |
+| 6   | Life of Brian                   | 1979 | 96% (92%)     | BR          | Python's sharpest satire; endlessly quotable                   |
+| 7   | What We Do in the Shadows       | 2014 | 96% (86%)     | BR          | Vampire-flatmate mockumentary, instant cult                    |
+| 8   | The Death of Stalin             | 2017 | 96% (79%)     | DVD-only    | Pitch-black politburo farce                                    |
+| 9   | Booksmart                       | 2019 | 96% (78%)     | BR          | Whip-smart one-crazy-night teen comedy                         |
+| 10  | This Is Spinal Tap              | 1984 | 95% (86%)     | BR          | The mockumentary that goes to eleven                           |
+| 11  | Being There                     | 1979 | 95% (93%)     | BR          | Sellers' quiet-genius satire of media America                  |
+| 12  | Best in Show                    | 2000 | 95% (91%)     | BR          | Dog-show ensemble improv at its peak                           |
+| 13  | Ghostbusters                    | 1984 | 95% (88%)     | BR          | Effects-comedy landmark; wall-to-wall quotable                 |
+| 14  | Young Frankenstein              | 1974 | 94% (95%)     | DVD-only    | Brooks' loving Universal-horror parody, flawless               |
+| 15  | The Apartment                   | 1960 | 94% (94%)     | BR          | Best Picture bittersweet office comedy                         |
+| 16  | A Fish Called Wanda             | 1988 | 94% (89%)     | BR          | Python-meets-heist farce; Kline won an Oscar                   |
+| 17  | Being John Malkovich            | 1999 | 94% (91%)     | BR          | Kaufman's surreal comedy of identity                           |
+| 18  | Some Like It Hot                | 1959 | 93% (95%)     | BR          | AFI's #1 comedy; "nobody's perfect"                            |
+| 19  | Planes, Trains and Automobiles  | 1987 | 93% (87%)     | BR          | Martin/Candy road comedy with a gut-punch finish               |
+| 20  | Bringing Up Baby                | 1938 | 93% (91%)     | BR          | The screwball template; Grant, Hepburn, a leopard              |
+| 21  | Dazed and Confused              | 1993 | 92% (89%)     | BR          | Last-day-of-school hangout comedy, endlessly rewatchable       |
+| 22  | Waiting for Guffman             | 1996 | 92% (91%)     | BR          | Small-town-theater mockumentary, Guest at his driest           |
+| 23  | Shaun of the Dead               | 2004 | 92% (86%)     | BR          | Rom-zom-com that launched the Cornetto trilogy                 |
+| 24  | The Grand Budapest Hotel        | 2014 | 92% (86%)     | BR          | Anderson's most propulsive, most decorated caper               |
+| 25  | Hot Fuzz                        | 2007 | 91% (89%)     | BR          | Buddy-cop parody with real action chops                        |
+| 26  | Raising Arizona                 | 1987 | 91% (85%)     | BR          | Manic baby-heist Coen cartoon                                  |
+| 27  | The Producers                   | 1967 | 91% (91%)     | BR          | "Springtime for Hitler" — Brooks' original                     |
+| 28  | Little Miss Sunshine            | 2006 | 91% (87%)     | BR          | Dysfunctional-family road trip, VW bus and all                 |
+| 29  | Duck Soup                       | 1933 | 90% (93%)     | BR          | The Marx Brothers' anarchic war satire                         |
+| 30  | The Great Dictator              | 1940 | 90% (90%)     | BR          | Chaplin's fearless anti-fascist comedy                         |
+
+### Rom-Com
+
+_Ranked by RT (crit/aud), canon-weighted; SFPL Blu-ray preferred, no 4K UHD; franchises excluded.
+Streaming-only titles with no confirmable SFPL disc dropped._
+
+| #   | Title                                 | Year | RT (crit/aud) | SFPL format | Why                                                              |
+| --- | ------------------------------------- | ---- | ------------- | ----------- | ---------------------------------------------------------------- |
+| 1   | The Lady Eve                          | 1941 | 100% (93%)    | BR          | Sturges' con-woman screwball; Stanwyck at her sharpest           |
+| 2   | The Philadelphia Story                | 1940 | 100% (89%)    | BR          | Hepburn/Grant/Stewart; comedy-of-remarriage peak                 |
+| 3   | The Awful Truth                       | 1937 | 100% (89%)    | BR          | The divorce-and-reconcile template; Grant and Dunne              |
+| 4   | Ball of Fire                          | 1941 | 100% (85%)    | DVD-only    | Stanwyck vs. a houseful of professors; Wilder-scripted           |
+| 5   | The Shop Around the Corner            | 1940 | 99% (93%)     | BR          | Secret-pen-pals romance; the source for _You've Got Mail_        |
+| 6   | City Lights                           | 1931 | 98% (98%)     | BR          | The Tramp and the flower girl; silent romantic apex              |
+| 7   | It Happened One Night                 | 1934 | 98% (93%)     | BR          | The road-trip romcom that swept the Oscars, set the mold         |
+| 8   | Say Anything…                         | 1989 | 98% (91%)     | DVD-only    | Boombox-over-the-head; the definitive teen-romance gesture       |
+| 9   | The Big Sick                          | 2017 | 98% (88%)     | BR          | Real-life culture-clash courtship with a coma at its center      |
+| 10  | Broadcast News                        | 1987 | 98% (85%)     | BR          | Newsroom triangle where competence is the aphrodisiac            |
+| 11  | Roman Holiday                         | 1953 | 97% (93%)     | BR          | Hepburn's runaway princess; the bittersweet benchmark            |
+| 12  | Annie Hall                            | 1977 | 97% (91%)     | BR          | Best Picture-winning romantic comedy blueprint                   |
+| 13  | Sense and Sensibility                 | 1995 | 97% (88%)     | DVD-only    | Thompson's Austen; wit and heartbreak in balance                 |
+| 14  | Bull Durham                           | 1988 | 97% (82%)     | BR          | Minor-league triangle; smartest sports-romance written           |
+| 15  | Ninotchka                             | 1939 | 95% (89%)     | DVD-only    | "Garbo laughs!" — icy commissar thawed by Paris                  |
+| 16  | The Palm Beach Story                  | 1942 | 94% (81%)     | BR          | Sturges' marriage-and-money farce at breakneck speed             |
+| 17  | Moonstruck                            | 1987 | 93% (89%)     | BR          | Cher's Brooklyn-Italian love story; "Snap out of it!"            |
+| 18  | Groundhog Day                         | 1993 | 93% (87%)     | BR          | The time-loop romance that became a life metaphor                |
+| 19  | About a Boy                           | 2002 | 93% (85%)     | DVD-only    | Grant's cad grows up; the anti-romcom that's still one           |
+| 20  | Enchanted                             | 2007 | 93% (80%)     | DVD-only    | Fairy-tale princess loose in cynical NYC; genre-savvy            |
+| 21  | Eternal Sunshine of the Spotless Mind | 2004 | 92% (91%)     | BR          | Kaufman's memory-erasure romance; canon despite the ache         |
+| 22  | Silver Linings Playbook               | 2012 | 92% (86%)     | BR          | Two damaged people and a dance contest; Lawrence's Oscar         |
+| 23  | Four Weddings and a Funeral           | 1994 | 92% (76%)     | BR          | The British ensemble romcom that made Hugh Grant a star          |
+| 24  | When Harry Met Sally…                 | 1989 | 91% (92%)     | BR          | The can-they-be-friends benchmark; "I'll have what she's having" |
+| 25  | High Fidelity                         | 2000 | 91% (86%)     | BR          | Record-store top-fives and a man cataloguing his heartbreaks     |
+| 26  | Crazy Rich Asians                     | 2018 | 91% (76%)     | BR          | Lavish meet-the-family romance; a studio-romcom landmark         |
+| 27  | Trouble in Paradise                   | 1932 | 90% (90%)     | BR          | Jewel-thief lovers and "the Lubitsch touch" in full              |
+| 28  | Tootsie                               | 1982 | 90% (86%)     | BR          | Hoffman-in-drag comedy that's secretly a great romance           |
+| 29  | Roxanne                               | 1987 | 88% (63%)     | DVD-only    | Steve Martin's Cyrano; small-town charmer with a big nose        |
+| 30  | As Good as It Gets                    | 1997 | 85% (86%)     | DVD-only    | Nicholson's misanthrope softened; dual acting-Oscar romance      |
+| 31  | (500) Days of Summer                  | 2009 | 85% (84%)     | DVD-only    | The anti-romcom romcom; non-linear expectations vs. reality      |
+| 32  | Notting Hill                          | 1999 | 84% (82%)     | BR          | Bookshop-meets-movie-star; peak Richard Curtis                   |
+
+### Classics
+
+_Canonical pre-~1970 Hollywood, canon-weighted (Criterion/AFI/Sight & Sound). Noir/thriller overlaps
+ceded to Crime, romcom overlaps to Rom-Com. SFPL Blu-ray; no 4K UHD._
+
+| #   | Title                            | Year | RT (crit/aud) | SFPL format | Why                                                        |
+| --- | -------------------------------- | ---- | ------------- | ----------- | ---------------------------------------------------------- |
+| 1   | Witness for the Prosecution      | 1957 | 100% (94%)    | BR          | Wilder's twist-ending courtroom masterclass                |
+| 2   | Cool Hand Luke                   | 1967 | 100% (93%)    | BR          | "Failure to communicate"; peak Newman                      |
+| 3   | The Treasure of the Sierra Madre | 1948 | 100% (93%)    | BR          | Greed parable; "badges" line, AFI canon                    |
+| 4   | Anatomy of a Murder              | 1959 | 100% (92%)    | BR          | The template for the modern courtroom procedural           |
+| 5   | Rebecca                          | 1940 | 100% (91%)    | BR          | Hitchcock's only Best Picture winner; gothic dread         |
+| 6   | The Grapes of Wrath              | 1940 | 100% (91%)    | BR          | Ford/Fonda Depression epic; AFI canon                      |
+| 7   | All About Eve                    | 1950 | 99% (94%)     | BR          | Record 14 Oscar noms; "fasten your seatbelts"              |
+| 8   | On the Waterfront                | 1954 | 99% (92%)     | BR          | Brando's "coulda been a contender"; Method landmark        |
+| 9   | The Wizard of Oz                 | 1939 | 98% (89%)     | BR          | The Technicolor touchstone of American cinema              |
+| 10  | King Kong                        | 1933 | 98% (86%)     | BR          | The stop-motion spectacle that invented the blockbuster    |
+| 11  | The Best Years of Our Lives      | 1946 | 97% (93%)     | BR          | Post-WWII homecoming drama; Best Picture, deep-focus       |
+| 12  | A Streetcar Named Desire         | 1951 | 97% (90%)     | BR          | "STELLA!"; Brando rewrites screen acting                   |
+| 13  | Mr. Smith Goes to Washington     | 1939 | 96% (94%)     | BR          | The filibuster classic; Stewart's idealism at full voltage |
+| 14  | Paths of Glory                   | 1957 | 96% (94%)     | BR          | Kubrick's WWI anti-war indictment; Douglas incandescent    |
+| 15  | High Noon                        | 1952 | 96% (91%)     | BR          | Real-time Western allegory; Cooper alone against the clock |
+| 16  | In the Heat of the Night         | 1967 | 96% (91%)     | BR          | "They call me Mister Tibbs"; Best Picture, landmark        |
+| 17  | The Manchurian Candidate         | 1962 | 96% (90%)     | BR          | The brainwash-conspiracy thriller that still unnerves      |
+| 18  | It's a Wonderful Life            | 1946 | 94% (95%)     | BR          | The American Christmas myth; Stewart's Bailey              |
+| 19  | The Searchers                    | 1956 | 94% (89%)     | BR          | Ford/Wayne's dark Western; endlessly cited                 |
+| 20  | To Kill a Mockingbird            | 1962 | 93% (93%)     | BR          | Atticus Finch; AFI's #1 movie hero                         |
+| 21  | Rebel Without a Cause            | 1955 | 89% (86%)     | BR          | James Dean's defining role; the teen-alienation archetype  |
+| 22  | The Graduate                     | 1967 | 87% (89%)     | BR          | "Mrs. Robinson"; the generational-drift touchstone         |
+
+### Crime / Thriller / Prestige Drama
+
+_Ranked by RT (crit/aud), canon-weighted; SFPL Blu-ray preferred, no 4K UHD; franchises excluded.
+Foreign-language crime ceded to World Cinema._
+
+| #   | Title                    | Year | RT (crit/aud) | SFPL format | Why                                                              |
+| --- | ------------------------ | ---- | ------------- | ----------- | ---------------------------------------------------------------- |
+| 1   | 12 Angry Men             | 1957 | 100% (97%)    | BR          | The single-room jury drama; a staging masterclass                |
+| 2   | The Maltese Falcon       | 1941 | 100% (89%)    | BR          | Foundational American noir; Bogart's Spade defines the PI        |
+| 3   | The Third Man            | 1949 | 99% (93%)     | BR          | Zither, Dutch angles, sewers, Welles — peak postwar noir         |
+| 4   | High and Low             | 1963 | 99% (95%)     | BR          | Kurosawa's kidnap procedural; moral vertigo in two acts          |
+| 5   | L.A. Confidential        | 1997 | 99% (94%)     | BR          | Ellroy's corrupt-LAPD web, immaculately cast and plotted         |
+| 6   | Rear Window              | 1954 | 98% (95%)     | BR          | Voyeurism as suspense engine; a thriller from one window         |
+| 7   | Sunset Boulevard         | 1950 | 98% (95%)     | BR          | Hollywood as murder scene, narrated by the corpse                |
+| 8   | Strangers on a Train     | 1951 | 98% (89%)     | BR          | The swapped-murders premise, carousel-perfect menace             |
+| 9   | North by Northwest       | 1959 | 97% (95%)     | BR          | The wrong-man chase; crop-duster and Rushmore set pieces         |
+| 10  | Notorious                | 1946 | 97% (91%)     | BR          | Espionage romance with Hitchcock's tightest suspense             |
+| 11  | Double Indemnity         | 1944 | 97% (94%)     | BR          | The noir template: insurance, lust, the perfect murder undone    |
+| 12  | Spotlight                | 2015 | 97% (93%)     | BR          | Procedural journalism drama; ensemble at its most disciplined    |
+| 13  | Dog Day Afternoon        | 1975 | 96% (93%)     | BR          | A botched heist becomes a sweaty media circus; Pacino peak       |
+| 14  | The Conversation         | 1974 | 96% (92%)     | BR          | Surveillance paranoia; Hackman's whisper-quiet tour de force     |
+| 15  | The French Connection    | 1971 | 96% (86%)     | BR          | Gritty NYC cop chase; the car pursuit that reset the bar         |
+| 16  | The Social Network       | 2010 | 96% (87%)     | BR          | Sorkin/Fincher origin drama; betrayal at 100 words a minute      |
+| 17  | Anatomy of a Fall        | 2023 | 96% (88%)     | BR          | Courtroom drama as marriage autopsy; ambiguity to the last frame |
+| 18  | Touch of Evil            | 1958 | 95% (90%)     | BR          | Border noir opening on the greatest tracking shot                |
+| 19  | Infernal Affairs         | 2002 | 95% (90%)     | BR          | The dueling-moles thriller Scorsese remade as _The Departed_     |
+| 20  | The Irishman             | 2019 | 95% (86%)     | BR          | Elegiac mob epic; loyalty and mortality over 3.5 hours           |
+| 21  | 12 Years a Slave         | 2013 | 95% (90%)     | BR          | Unflinching slavery drama; Best Picture, reference-grade         |
+| 22  | Memento                  | 2000 | 94% (94%)     | BR          | Reverse-chronology revenge puzzle; structure as the point        |
+| 23  | Fargo                    | 1996 | 94% (93%)     | BR          | Snowbound crime black comedy; "you betcha" and a wood chipper    |
+| 24  | Blue Velvet              | 1986 | 94% (89%)     | BR          | Small-town underbelly noir; Lynch's severed-ear plunge           |
+| 25  | The Night of the Hunter  | 1955 | 93% (88%)     | BR          | LOVE/HATE knuckles; a one-of-a-kind nightmare fairy-tale         |
+| 26  | There Will Be Blood      | 2007 | 91% (86%)     | BR          | Oil, greed, and God; Day-Lewis as capitalism incarnate           |
+| 27  | Raging Bull              | 1980 | 92% (93%)     | BR          | Boxing as self-destruction; De Niro and B&W fury                 |
+| 28  | Network                  | 1976 | 92% (91%)     | BR          | "Mad as hell" media satire that predicted everything             |
+| 29  | The Departed             | 2006 | 90% (94%)     | BR          | Dueling-rats Boston crime drama; Scorsese's Best Picture         |
+| 30  | Reservoir Dogs           | 1992 | 90% (93%)     | BR          | Heist-gone-wrong in one warehouse; the debut that lit the fuse   |
+| 31  | Heat                     | 1995 | 88% (94%)     | BR          | Cop-vs-thief epic; the diner scene and the LA shootout           |
+| 32  | Se7en                    | 1995 | 82% (95%)     | BR          | Seven-deadly-sins serial-killer noir; "What's in the box?"       |
+| 33  | The Usual Suspects       | 1995 | 88% (95%)     | BR          | Con-man mystery built entirely around its final reveal           |
+| 34  | The Shawshank Redemption | 1994 | 89% (98%)     | BR          | The prison-hope drama; IMDb's perennial #1                       |
+| 35  | Zodiac                   | 2007 | 90% (76%)     | BR          | Obsessive unsolved-case procedural; Fincher's coldest, best      |
+
+### Action / Adventure / Sci-Fi / Fantasy
+
+_Ranked by RT (crit/aud); "demo disc" = reference A/V. SFPL Blu-ray preferred, no 4K UHD; franchises
+excluded._
+
+| #   | Title                              | Year | RT (crit/aud) | SFPL format | Why                                                        |
+| --- | ---------------------------------- | ---- | ------------- | ----------- | ---------------------------------------------------------- |
+| 1   | The Terminator                     | 1984 | 100% (90%)    | BR          | Lean, relentless sci-fi chase that launched a franchise    |
+| 2   | Mad Max 2: The Road Warrior        | 1981 | 100% (89%)    | BR          | Genre-defining vehicular action; post-apocalypse blueprint |
+| 3   | Aliens                             | 1986 | 98% (94%)     | BR          | Peak sci-fi action; "get away from her you bitch"          |
+| 4   | Godzilla Minus One                 | 2023 | 98% (98%)     | BR          | Oscar-winning VFX on a shoestring; demo disc               |
+| 5   | Brazil                             | 1985 | 98% (89%)     | BR          | Dystopian retro-future masterpiece                         |
+| 6   | E.T. the Extra-Terrestrial         | 1982 | 98% (72%)     | BR          | Definitive Spielberg wonder; timeless                      |
+| 7   | Mission: Impossible – Fallout      | 2018 | 97% (88%)     | BR          | Best-in-class practical stunt spectacle; demo disc         |
+| 8   | The Princess Bride                 | 1987 | 97% (94%)     | BR          | Perfect fantasy-adventure comfort watch                    |
+| 9   | Top Gun: Maverick                  | 2022 | 96% (99%)     | BR          | Real-jet IMAX thrill ride; reference demo disc             |
+| 10  | Gravity                            | 2013 | 96% (78%)     | BR          | Immersive orbital survival; demo disc                      |
+| 11  | Apollo 13                          | 1995 | 96% (87%)     | BR          | Gripping real-stakes space procedural                      |
+| 12  | The Fugitive                       | 1993 | 96% (88%)     | BR          | Immaculate chase thriller                                  |
+| 13  | Speed                              | 1994 | 95% (85%)     | BR          | Airtight high-concept action                               |
+| 14  | The Dark Knight                    | 2008 | 94% (94%)     | BR          | Genre-transcending; IMAX demo disc (non-MCU)               |
+| 15  | Arrival                            | 2016 | 94% (82%)     | BR          | Cerebral first-contact sci-fi                              |
+| 16  | Close Encounters of the Third Kind | 1977 | 94% (83%)     | BR          | Awe-driven UFO classic                                     |
+| 17  | Mission: Impossible – Rogue Nation | 2015 | 94% (89%)     | BR          | Opera + plane stunt; demo disc                             |
+| 18  | Logan                              | 2017 | 94% (90%)     | BR          | Grounded, brutal comic-book western (non-MCU)              |
+| 19  | Looper                             | 2012 | 93% (83%)     | BR          | Smart time-loop thriller                                   |
+| 20  | Terminator 2: Judgment Day         | 1991 | 91% (94%)     | BR          | Sci-fi action / VFX landmark; demo disc                    |
+| 21  | RoboCop                            | 1987 | 92% (86%)     | BR          | Satirical ultraviolent sci-fi                              |
+| 22  | Ex Machina                         | 2014 | 92% (86%)     | BR          | Sleek AI chamber piece; demo disc                          |
+| 23  | The Bourne Ultimatum               | 2007 | 92% (91%)     | BR          | Kinetic spy-action high point                              |
+| 24  | Blade Runner                       | 1982 | 89% (91%)     | BR          | Definitive cyberpunk; demo disc                            |
+| 25  | District 9                         | 2009 | 91% (81%)     | BR          | Gritty allegorical sci-fi                                  |
+| 26  | The Martian                        | 2015 | 91% (91%)     | BR          | Crowd-pleasing space survival; demo disc                   |
+| 27  | Predator                           | 1987 | 90% (83%)     | BR          | Muscular jungle sci-fi action                              |
+| 28  | Minority Report                    | 2002 | 90% (80%)     | BR          | Stylish pre-crime sci-fi                                   |
+| 29  | Inception                          | 2010 | 87% (91%)     | BR          | Blockbuster dream-heist; demo disc                         |
+| 30  | John Wick                          | 2014 | 86% (81%)     | BR          | Gun-fu action renaissance; demo disc                       |
+| 31  | Dune                               | 2021 | 83% (90%)     | BR          | Monumental scale; reference demo disc (Part One)           |
+| 32  | Interstellar                       | 2014 | 73% (86%)     | BR          | IMAX space spectacle; reference demo disc                  |
+
+### Epics
+
+_Grand-scale historical / war / spectacle. Ranked by RT (crit/aud); prefer extended/director's cuts
+where noted. SFPL Blu-ray preferred, no 4K UHD; franchises excluded._
+
+| #   | Title                          | Year | RT (crit/aud) | SFPL format | Why                                                                  |
+| --- | ------------------------------ | ---- | ------------- | ----------- | -------------------------------------------------------------------- |
+| 1   | War and Peace                  | 1966 | 100% (93%)    | BR          | Largest-scale battle spectacle ever filmed; Criterion restoration    |
+| 2   | The Battle of Algiers          | 1966 | 99% (95%)     | BR          | Documentary-real insurgency epic; still on military syllabi          |
+| 3   | Das Boot                       | 1981 | 98% (91%)     | BR          | Claustrophobic U-boat epic; director's-cut sound is a demo showpiece |
+| 4   | Crouching Tiger, Hidden Dragon | 2000 | 97% (86%)     | BR          | Wuxia epic that broke through worldwide; gorgeous scope              |
+| 5   | The Bridge on the River Kwai   | 1957 | 96% (95%)     | BR          | Best Picture; the WWII POW epic, immaculate restoration              |
+| 6   | Andrei Rublev                  | 1966 | 96% (94%)     | BR          | Medieval-Russia spiritual epic; Criterion                            |
+| 7   | The Last of the Mohicans       | 1992 | 96% (90%)     | BR          | Frontier war-romance; the finale + score are pure spectacle          |
+| 8   | 13 Assassins                   | 2010 | 96% (85%)     | BR          | Samurai epic building to a 45-minute battle; A/V showpiece           |
+| 9   | Once Upon a Time in the West   | 1968 | 95% (97%)     | BR          | The operatic Western; every frame a painting, Morricone peak         |
+| 10  | The Deer Hunter                | 1978 | 94% (94%)     | BR          | Best Picture; Vietnam epic of scale and intimacy                     |
+| 11  | Saving Private Ryan            | 1998 | 94% (95%)     | BR          | Omaha Beach = the reference war set-piece; demo audio                |
+| 12  | Hero                           | 2002 | 94% (89%)     | BR          | Color-coded wuxia epic; one of the great-looking discs               |
+| 13  | Glory                          | 1989 | 93% (93%)     | BR          | The 54th Massachusetts; Civil War epic with a perfect ending         |
+| 14  | The Great Escape               | 1963 | 93% (94%)     | BR          | The ensemble WWII escape epic; endlessly rewatchable                 |
+| 15  | Spartacus                      | 1960 | 93% (91%)     | BR          | The sword-and-sandal benchmark; restored to demo quality             |
+| 16  | The Ten Commandments           | 1956 | 93% (89%)     | BR          | The definition of Hollywood biblical spectacle; VistaVision          |
+| 17  | Barry Lyndon                   | 1975 | 93% (90%)     | BR          | Candlelit 18th-century epic; the ultimate cinematography demo        |
+| 18  | Dunkirk                        | 2017 | 92% (81%)     | BR          | IMAX survival epic; a top-tier home-theater A/V test                 |
+| 19  | Red Cliff                      | 2008 | 91% (88%)     | BR          | Three Kingdoms war epic; get the full international cut              |
+| 20  | Full Metal Jacket              | 1987 | 91% (94%)     | BR          | Two-act Vietnam epic; the boot-camp half is untouchable              |
+| 21  | Letters from Iwo Jima          | 2006 | 91% (89%)     | BR          | The war seen from the other side; near-monochrome epic               |
+| 22  | Downfall                       | 2004 | 91% (93%)     | BR          | Hitler's last days; claustrophobic historical epic                   |
+| 23  | Gone with the Wind             | 1939 | 90% (91%)     | BR          | The Civil War melodrama epic; Technicolor restoration                |
+| 24  | Lincoln                        | 2012 | 90% (82%)     | BR          | Political epic; Day-Lewis + a beautifully lit period disc            |
+| 25  | Gandhi                         | 1982 | 89% (92%)     | BR          | Best Picture; cradle-to-grave biographical epic, massive crowds      |
+| 26  | 1917                           | 2019 | 89% (88%)     | BR          | One-shot WWII epic; a premier surround + image demo disc             |
+| 27  | Amadeus                        | 1984 | 89% (93%)     | BR          | Best Picture; lavish period epic of genius and envy                  |
+| 28  | The Last Emperor               | 1987 | 89% (86%)     | BR          | Best Picture; Forbidden City on an overwhelming scale                |
+| 29  | Kagemusha                      | 1980 | 88% (89%)     | BR          | Feudal-Japan color epic; Criterion, a visual feast                   |
+| 30  | Platoon                        | 1986 | 88% (91%)     | BR          | Best Picture; the grunt's-eye Vietnam epic                           |
+| 31  | Ben-Hur                        | 1959 | 86% (91%)     | BR          | 11 Oscars; the chariot race is still a spectacle benchmark           |
+| 32  | Gladiator                      | 2000 | 80% (87%)     | BR          | Best Picture; the modern sword-and-sandal revival, demo A/V          |
+
+### Animation & Family
+
+_Non-Pixar (Pixar tracked separately). Ranked by RT (crit/aud). SFPL Blu-ray preferred, no 4K UHD._
+
+| #   | Title                                      | Year | RT (crit/aud) | SFPL format | Why                                                          |
+| --- | ------------------------------------------ | ---- | ------------- | ----------- | ------------------------------------------------------------ |
+| 1   | Grave of the Fireflies                     | 1988 | 100% (96%)    | BR          | The definitive anti-war film; Ghibli's most devastating work |
+| 2   | The Tale of the Princess Kaguya            | 2013 | 100% (88%)    | BR          | Watercolor-line masterpiece, Takahata's final film           |
+| 3   | How to Train Your Dragon                   | 2010 | 99% (91%)     | BR          | DreamWorks' peak; flight sequences + Powell score            |
+| 4   | Wolfwalkers                                | 2020 | 99% (91%)     | BR          | Cartoon Saloon's hand-drawn Irish folklore triumph           |
+| 5   | Song of the Sea                            | 2014 | 99% (87%)     | BR          | Selkie myth rendered in gorgeous 2D                          |
+| 6   | Your Name                                  | 2016 | 98% (94%)     | BR          | Body-swap romance, luminous frames, global phenomenon        |
+| 7   | Kubo and the Two Strings                   | 2016 | 97% (87%)     | BR          | Laika stop-motion at its most ambitious                      |
+| 8   | Ernest & Celestine                         | 2012 | 97% (87%)     | BR (French) | Watercolor charm; a perfect small film                       |
+| 9   | The Iron Giant                             | 1999 | 96% (91%)     | BR          | Brad Bird's beloved Cold War fable                           |
+| 10  | Persepolis                                 | 2007 | 96% (89%)     | BR (French) | B&W graphic-novel memoir of the Iranian Revolution           |
+| 11  | Spider-Man: Across the Spider-Verse        | 2023 | 95% (94%)     | BR          | Even bolder sequel; multi-style animation showcase           |
+| 12  | The Nightmare Before Christmas             | 1993 | 95% (91%)     | BR          | Stop-motion holiday perennial; Elfman songs                  |
+| 13  | Aladdin                                    | 1992 | 95% (90%)     | BR          | Disney Renaissance peak; Williams as Genie                   |
+| 14  | Wallace & Gromit: Curse of the Were-Rabbit | 2005 | 95% (87%)     | BR          | Aardman claymation feature; Oscar winner                     |
+| 15  | My Neighbor Totoro                         | 1988 | 94% (93%)     | BR          | Gentle Ghibli touchstone; the studio's mascot                |
+| 16  | Beauty and the Beast                       | 1991 | 94% (92%)     | BR          | First animated Best Picture nominee                          |
+| 17  | Princess Mononoke                          | 1997 | 93% (93%)     | BR          | Epic eco-fable; Miyazaki's grandest canvas                   |
+| 18  | The Lion King                              | 1994 | 93% (93%)     | BR          | Disney's highest-grossing hand-drawn film                    |
+| 19  | Fantastic Mr. Fox                          | 2009 | 93% (87%)     | BR          | Anderson's stop-motion Roald Dahl gem                        |
+| 20  | Isle of Dogs                               | 2018 | 90% (87%)     | BR          | Meticulous stop-motion; deadpan dystopia                     |
+| 21  | Coraline                                   | 2009 | 90% (74%)     | BR          | Laika's debut; genuinely eerie for kids                      |
+| 22  | The Wind Rises                             | 2013 | 89% (82%)     | BR          | Miyazaki's elegiac aviation biopic                           |
+| 23  | Shrek                                      | 2001 | 88% (90%)     | BR          | Genre-defining CG comedy; first Animated Oscar               |
+| 24  | ParaNorman                                 | 2012 | 88% (74%)     | BR          | Laika zombie-comedy with real heart                          |
+| 25  | Howl's Moving Castle                       | 2004 | 87% (91%)     | BR          | Sumptuous steampunk fantasy                                  |
+| 26  | The Prince of Egypt                        | 1998 | 80% (84%)     | BR          | DreamWorks' grand animated epic; "When You Believe"          |
+
+### Horror
+
+_Ranked by RT (crit/aud). SFPL Blu-ray preferred, no 4K UHD; franchises excluded._
+
+| #   | Title                        | Year | RT (crit/aud) | SFPL format | Why                                                      |
+| --- | ---------------------------- | ---- | ------------- | ----------- | -------------------------------------------------------- |
+| 1   | Let the Right One In         | 2008 | 98% (86%)     | BR          | Snowbound Swedish vampire romance; genre high-water mark |
+| 2   | The Babadook                 | 2014 | 98% (72%)     | BR          | Grief-as-monster; the modern arthouse-horror template    |
+| 3   | Nosferatu                    | 1922 | 97% (87%)     | BR          | Foundational silent vampire film; public-domain icon     |
+| 4   | Halloween                    | 1978 | 96% (89%)     | DVD-only    | Defined the slasher; Carpenter's synth score             |
+| 5   | Rosemary's Baby              | 1968 | 96% (87%)     | BR          | Slow-burn satanic paranoia; Criterion                    |
+| 6   | Night of the Living Dead     | 1968 | 96% (87%)     | BR          | Birth of the modern zombie; public domain                |
+| 7   | A Quiet Place                | 2018 | 96% (82%)     | BR          | Sound-design horror; taut, inventive                     |
+| 8   | It Follows                   | 2014 | 95% (66%)     | DVD-only    | Dread-logic premise; retro synth atmosphere              |
+| 9   | A Nightmare on Elm Street    | 1984 | 94% (78%)     | BR          | Dream-slasher that launched a franchise                  |
+| 10  | Us                           | 2019 | 93% (59%)     | BR          | Peele's ambitious doppelgänger horror                    |
+| 11  | The Fly                      | 1986 | 92% (83%)     | BR          | Body-horror apex; Goldblum's tragic transformation       |
+| 12  | The Cabin in the Woods       | 2011 | 92% (72%)     | BR          | Meta-horror deconstruction; Whedon-scripted              |
+| 13  | Hereditary                   | 2018 | 90% (71%)     | BR          | Aster's grief-and-cult debut; Collette unhinged          |
+| 14  | The Witch                    | 2015 | 90% (59%)     | BR          | Puritan folk-horror; meticulous period dread             |
+| 15  | The Shining                  | 1980 | 89% (94%)     | BR          | Kubrick's canonical haunted-hotel masterpiece            |
+| 16  | Evil Dead II                 | 1987 | 89% (84%)     | BR          | Splatstick perfection; Raimi's kinetic camera            |
+| 17  | The Texas Chain Saw Massacre | 1974 | 89% (82%)     | BR          | Raw, relentless; genre-defining                          |
+| 18  | 28 Days Later                | 2002 | 87% (85%)     | DVD-only    | Reinvented the fast zombie; digital dread                |
+| 19  | The Thing                    | 1982 | 84% (93%)     | BR          | Practical-FX paranoia masterpiece                        |
+| 20  | The Exorcist                 | 1973 | 84% (87%)     | DVD-only    | The most influential possession film ever made           |
+| 21  | Nope                         | 2022 | 83% (70%)     | BR          | Peele's spectacle-horror; IMAX-scale                     |
+| 22  | Midsommar                    | 2019 | 83% (62%)     | BR          | Daylight folk-horror; a bad-breakup nightmare            |
+
+### World Cinema
+
+_Non-English, acclaimed. Orphan SFPL sub-batch merged in and RT-ranked. SFPL Blu-ray preferred, no
+4K UHD; no-disc titles dropped._
+
+| #   | Title                      | Year | RT (crit/aud) | SFPL format     | Why                                                  |
+| --- | -------------------------- | ---- | ------------- | --------------- | ---------------------------------------------------- |
+| 1   | The 400 Blows              | 1959 | 100% (94%)    | BR              | French New Wave cornerstone; Criterion               |
+| 2   | Bicycle Thieves            | 1948 | 99% (95%)     | BR              | Italian neorealism's beating heart; Criterion        |
+| 3   | Shoplifters                | 2018 | 99% (91%)     | DVD-only        | Palme d'Or; tender chosen-family drama               |
+| 4   | Rashomon                   | 1950 | 98% (93%)     | BR              | Coined "the Rashomon effect"; Criterion              |
+| 5   | 8½                         | 1963 | 98% (92%)     | BR              | The definitive film-about-filmmaking; Criterion      |
+| 6   | Portrait of a Lady on Fire | 2019 | 98% (91%)     | BR              | Painterly queer romance; Criterion                   |
+| 7   | Come and See               | 1985 | 97% (96%)     | BR              | The most harrowing war film ever made; Criterion     |
+| 8   | Drive My Car               | 2021 | 97% (87%)     | BR              | Murakami adaptation; Best Intl Feature Oscar         |
+| 9   | The Handmaiden             | 2016 | 96% (91%)     | BR              | A triple-cross erotic con; ravishing and ruthless    |
+| 10  | Roma                       | 2018 | 96% (72%)     | BR (Criterion)  | B&W memory-piece; Best Director Oscar                |
+| 11  | Memories of Murder         | 2003 | 95% (94%)     | BR              | Bong's unsolved-serial-killer procedural masterpiece |
+| 12  | Burning                    | 2018 | 95% (89%)     | BR              | Slow-burn Murakami mystery; smoldering ambiguity     |
+| 13  | The Lives of Others        | 2006 | 93% (96%)     | BR              | Stasi surveillance drama; Best Foreign Oscar         |
+| 14  | The Seventh Seal           | 1957 | 93% (94%)     | BR              | Chess with Death; Criterion cornerstone              |
+| 15  | Y Tu Mamá También          | 2001 | 92% (89%)     | BR              | Road-trip coming-of-age; Criterion                   |
+| 16  | City of God                | 2002 | 91% (97%)     | BR (Portuguese) | Kinetic Rio favela crime epic                        |
+| 17  | Amélie                     | 2001 | 90% (95%)     | BR              | Whimsical Montmartre matchmaker chases her own love  |
+| 18  | Cinema Paradiso            | 1988 | 90% (93%)     | BR              | Nostalgic love letter to moviegoing; Morricone       |
+| 19  | Oldboy                     | 2003 | 82% (94%)     | DVD-only        | Vengeance shocker; the hallway fight                 |
+| 20  | Life Is Beautiful          | 1997 | 80% (96%)     | DVD-only        | Holocaust fable; Benigni's Best Actor Oscar          |
+
 ## Next actions
 
 **All ripping is gated on the UHD ripper** (03-026: LG WH16NS40 + OWC enclosure, **inbound**) being
