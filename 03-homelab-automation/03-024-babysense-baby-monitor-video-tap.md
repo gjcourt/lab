@@ -136,10 +136,26 @@ own rail — the unit self-powers from battery/USB-C).
 - [ ] Capture log; ID SoC/SDK + OS (RTOS vs Linux); note any U-Boot autoboot prompt
 - [ ] Only if a shell / U-Boot appears: add adapter-TX→board-RX and interact
 
+## SPI flash dump (rung 3) — programmer + clip
+
+Pull the **`W25Q256JV` (32 MB, 3.3 V)** firmware. Two parts — a **SOIC-8 test clip** (~$8,
+in-circuit, no desoldering) and a **3.3 V-safe SPI programmer**:
+
+- **Tigard or FT232H breakout (Adafruit 2264) + `flashrom`** — native **3.3 V**, no mods. The Tigard
+  also covers rung-1 UART, so it's the one-tool pick across both rungs.
+- **CH341A programmer (~$5)** — cheapest, but ⚠️ **most CH341A modules drive 5 V on the SPI/VCC
+  lines**, which can damage the 3.3 V flash. Use only a **3.3 V-modded / known-3.3 V** CH341A (or
+  add a level shifter). A stock 5 V CH341A → don't.
+- Software must handle **>16 MB / 4-byte addressing** (`flashrom` does; some old CH341A GUIs cap at
+  16 MB).
+- In-circuit tip: if the SoC contends for the bus, hold it in **RST** or lift the flash's VCC pin;
+  desolder only if in-circuit reads come back inconsistent (verify with 2–3 identical dumps).
+
 ## Exit Criteria
 
 - [ ] Model # / FCC ID confirmed; FCC test report pulled; transceiver PN identified
 - [ ] UART boot log captured; SoC/SDK + OS identified (shell / U-Boot reachable?)
+- [ ] `W25Q256` dumped (2–3 matching reads) + firmware triaged (strings / binwalk)
 - [ ] Decoded frames captured off the parent-unit parallel-RGB bus (proof of concept image)
 - [ ] Continuous frame reconstruction → encoded stream
 - [ ] Stream restreamed (go2rtc/MediaMTX) and visible as a camera in Home Assistant
@@ -147,8 +163,9 @@ own rail — the unit self-powers from battery/USB-C).
 
 ## Shopping list (~$80)
 
-- SOIC-8 test clip + CH341A programmer (~$15) — SPI flash dump. **Confirmed target: `W25Q256` (32
-  MB)** — use a reader/software that handles >16 MB (4-byte addressing)
+- SOIC-8 test clip (~$8) + a **3.3 V-safe** SPI programmer for the **`W25Q256` (32 MB)** dump —
+  Tigard / FT232H + `flashrom` (native 3.3 V), or a **3.3 V-modded** CH341A (stock CH341A is 5 V →
+  can kill the flash). Software must handle >16 MB (4-byte addr). See _SPI flash dump_ below
 - **3.3 V** USB-TTL / debug adapter for the labeled `GND/RX/TX/3.3V` header — **Tigard (~$35, also
   does the SPI dump)**, FTDI `TTL-232R-3V3` cable (~$20, foolproof), or a CP2102/CP2104 module
   (~$8). Avoid CH340 on macOS. See _UART bring-up_ below
