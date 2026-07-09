@@ -124,6 +124,314 @@ SFPL confirmed these concert/music docs on Blu-ray (curation batch): _Stop Makin
 Waltz_, _Gimme Shelter_, _Buena Vista Social Club_, _Jazz on a Summer's Day_, _Long Strange Trip_.
 Fold in if wanted.
 
+## Track 3b — Music acquisition (SFPL borrow-and-rip)
+
+**217 albums across a cross-genre Top-50 spine + six genre buckets**, deduped so nothing is listed
+twice. **127 are held at SFPL on CD** (the borrowable set — check out, rip losslessly, return) and
+**90 must be acquired elsewhere** (LINK+, purchase, or lossless digital). This is the music analogue
+of the movie **Augmented picks + genre buckets**: the **Top-50** is the cross-genre elite spine (the
+headline), and each genre bucket is **deduped against it** so the Top-50's own entries are never
+repeated below. Where an album fit two genres it is listed **once**, in its best-fit bucket (e.g.
+LCD Soundsystem's _Sound of Silver_ → Alternative & Indie, not Electronic; the soul records →
+Hip-Hop / R&B / Soul, not Rock). Ranked within each list by **album critical acclaim** — spine =
+[Acclaimed Music](https://www.acclaimedmusic.net) all-time aggregate; genre buckets blend Acclaimed
+Music / Rolling Stone 500 / Pitchfork / RYM / AllMusic; classical by Gramophone Hall of Fame /
+Penguin / benchmark-recording consensus (not pop charts). **SFPL CD** = a physical Music-CD holding
+verified via BiblioCommons (call number shown where the catalog printed one); `not held` = source
+elsewhere. Unlike the movie tracks (SFPL Blu-ray, capped at 1080p), music borrows from SFPL's **CD**
+collection — no format ceiling, just rip the disc to FLAC.
+
+> **The SFPL-held subset (127 albums) is the input to a future borrow-and-rip reservation pipeline**
+> — batch holds on BiblioCommons, grab them on one AV-Center run, rip into Navidrome, return. The 90
+> not-held titles route to LINK+ / purchase / lossless-digital instead. This is the music companion
+> to the movie "batch SFPL holds" action.
+
+### Top-50 (all-time, cross-genre) — the headline
+
+_34 held at SFPL / 50 total. Ranked by aggregate all-time critical acclaim (Acclaimed Music all-time
+album rank, shown as **AM #**). SFPL = CD holding for borrow-and-rip. This is the elite spine; the
+six genre buckets below dedup against it._
+
+| #   | Album                                         | Artist                      | Year | Acclaim                        | SFPL CD                 | Why                                                              |
+| --- | --------------------------------------------- | --------------------------- | ---- | ------------------------------ | ----------------------- | ---------------------------------------------------------------- |
+| 1   | Pet Sounds                                    | The Beach Boys              | 1966 | AM #1 — #1 all-time            | CD `CD ROCK BEAC`       | Most-acclaimed album ever measured; studio-as-instrument pop.    |
+| 2   | Nevermind                                     | Nirvana                     | 1991 | AM #2                          | CD `CD ROCK NIRV`       | Flipped the mainstream to alt-rock overnight; grunge's text.     |
+| 3   | Revolver                                      | The Beatles                 | 1966 | AM #3                          | CD `CD ROCK BEAT`       | The Beatles' most top-ranked LP; pop's leap into avant-garde.    |
+| 4   | The Velvet Underground & Nico                 | The Velvet Underground      | 1967 | AM #4                          | CD `CD ROCK VELV`       | Foundational art/proto-punk; the ur-text for indie.              |
+| 5   | What's Going On                               | Marvin Gaye                 | 1971 | AM #5 — #1 soul all-time       | CD `CD jSONGS GAYE`     | The soul canon's summit; social-conscience song-suite.           |
+| 6   | Sgt. Pepper's Lonely Hearts Club Band         | The Beatles                 | 1967 | AM #6                          | CD `CD ROCK BEAT`       | The album-as-statement landmark; psychedelic-pop artifact.       |
+| 7   | London Calling                                | The Clash                   | 1979 | AM #7                          | CD `CD ROCK CLAS`       | Punk's genre-devouring double album.                             |
+| 8   | OK Computer                                   | Radiohead                   | 1997 | AM #8                          | CD `CD ROCK RADI`       | Defining art-rock album of the '90s; modern acclaim benchmark.   |
+| 9   | Blonde on Blonde                              | Bob Dylan                   | 1966 | AM #9                          | CD `CD ROCK DYLA`       | Rock's first great double LP; Dylan's "thin wild mercury" peak.  |
+| 10  | Exile on Main St.                             | The Rolling Stones          | 1972 | AM #10                         | not held                | The Stones' ragged double-album masterpiece.                     |
+| 11  | Highway 61 Revisited                          | Bob Dylan                   | 1965 | AM #11                         | not held                | The electric-Dylan watershed; the folk-rock big bang.            |
+| 12  | Never Mind the Bollocks                       | Sex Pistols                 | 1977 | AM #12                         | not held                | Punk's year-zero manifesto.                                      |
+| 13  | The Beatles ("White Album")                   | The Beatles                 | 1968 | AM #13                         | CD `CD ROCK BEAT`       | The sprawling everything-at-once double.                         |
+| 14  | Are You Experienced                           | The Jimi Hendrix Experience | 1967 | AM #14                         | CD `CD ROCK HEND`       | The debut that rewrote the electric guitar's vocabulary.         |
+| 15  | Astral Weeks                                  | Van Morrison                | 1968 | AM #15                         | not held                | Impressionist chamber-folk touchstone.                           |
+| 16  | Born to Run                                   | Bruce Springsteen           | 1975 | AM #16                         | not held                | Heartland rock's grand statement; Spector-scale romanticism.     |
+| 17  | To Pimp a Butterfly                           | Kendrick Lamar              | 2015 | AM #17 — top hip-hop all-time  | CD `CD RAP LAMA`        | The modern hip-hop/jazz-rap landmark; top 21st-c. album.         |
+| 18  | It Takes a Nation of Millions to Hold Us Back | Public Enemy                | 1988 | AM #18                         | not held                | Hip-hop's dense, incendiary production peak.                     |
+| 19  | The Rise and Fall of Ziggy Stardust           | David Bowie                 | 1972 | AM #19                         | CD `CD ROCK BOWI`       | Glam's defining concept album; Bowie's persona-art breakthrough. |
+| 20  | Abbey Road                                    | The Beatles                 | 1969 | AM #20                         | CD `CD ROCK BEAT`       | The polished farewell; the side-two medley as a form.            |
+| 21  | The Dark Side of the Moon                     | Pink Floyd                  | 1973 | AM #21                         | CD `CD ROCK PINK`       | Prog's crossover colossus; a studio-craft benchmark.             |
+| 22  | Blood on the Tracks                           | Bob Dylan                   | 1975 | AM #22                         | CD `CD ROCK DYLA`       | The gold standard of the confessional break-up album.            |
+| 23  | Thriller                                      | Michael Jackson             | 1982 | AM #23                         | CD `CD ROCK JACK`       | Best-selling album ever; a pop/R&B production high-water mark.   |
+| 24  | Funeral                                       | Arcade Fire                 | 2004 | AM #24                         | not held                | The indie-rock canon's defining 2000s debut.                     |
+| 25  | Horses                                        | Patti Smith                 | 1975 | AM #25                         | CD `CD ROCK SMIT`       | Punk-poetry's founding document; where rock met the Beats.       |
+| 26  | My Beautiful Dark Twisted Fantasy             | Kanye West                  | 2010 | AM #26                         | not held                | The maximalist hip-hop opus topping decade lists.                |
+| 27  | The Queen Is Dead                             | The Smiths                  | 1986 | AM #27                         | CD `CD ROCK SMIT`       | Jangle-pop's crown jewel; the canonical Smiths album.            |
+| 28  | Marquee Moon                                  | Television                  | 1977 | AM #28                         | CD `CD ROCK TELE`       | Art-punk's guitar-interplay masterpiece.                         |
+| 29  | Kind of Blue                                  | Miles Davis                 | 1959 | AM #29 — best-selling jazz LP  | CD `CD JAZZ DAVI`       | The most famous jazz album ever; modal jazz's statement.         |
+| 30  | Sign 'O' the Times                            | Prince                      | 1987 | AM #30                         | not held                | Prince's sprawling double-album peak.                            |
+| 31  | Electric Ladyland                             | The Jimi Hendrix Experience | 1968 | AM #31                         | CD `CD ROCK HEND`       | Hendrix's studio-expansive double; psychedelic guitar.           |
+| 32  | Rubber Soul                                   | The Beatles                 | 1965 | AM #32                         | CD `CD ROCK BEAT`       | The pivot from pop group to studio artists; folk-rock maturity.  |
+| 33  | Led Zeppelin IV                               | Led Zeppelin                | 1971 | AM #33                         | CD `CD ROCK LED`        | Hard rock's most enduring album; "Stairway" and the blueprint.   |
+| 34  | Is This It                                    | The Strokes                 | 2001 | AM #34                         | not held                | The garage-rock-revival spark of the 2000s.                      |
+| 35  | Kid A                                         | Radiohead                   | 2000 | AM #35                         | CD `CD ROCK RADI`       | Rock's electronic/experimental left turn.                        |
+| 36  | The Doors                                     | The Doors                   | 1967 | AM #36                         | CD `CD ROCK DOOR`       | The psychedelic-rock debut fusing blues, theater, menace.        |
+| 37  | Remain in Light                               | Talking Heads               | 1980 | AM #37                         | CD `CD ROCK TALK`       | Afrobeat-driven post-punk landmark; Eno-era art-funk peak.       |
+| 38  | Who's Next                                    | The Who                     | 1971 | AM #38                         | CD `CD ROCK WHO`        | Synth-and-power-chord hard rock at its most anthemic.            |
+| 39  | Beggars Banquet                               | The Rolling Stones          | 1968 | AM #39                         | CD `CD ROCK ROLL`       | The Stones' return-to-roots blues-rock rebirth.                  |
+| 40  | The Joshua Tree                               | U2                          | 1987 | AM #40                         | CD `CD ROCK UTWO`       | Stadium rock's most acclaimed album; Americana-tinged and vast.  |
+| 41  | Ramones                                       | Ramones                     | 1976 | AM #41                         | not held                | Punk's minimalist blueprint (SFPL holds later LPs, not debut).   |
+| 42  | Let It Bleed                                  | The Rolling Stones          | 1969 | AM #42                         | CD `CD ROCK ROLL`       | Dark, apocalyptic blues-rock; "Gimme Shelter" bookends.          |
+| 43  | Blue Lines                                    | Massive Attack              | 1991 | AM #43 — trip-hop origin       | not held                | The album that codified trip-hop; downtempo cornerstone.         |
+| 44  | 'Live' at the Apollo                          | James Brown                 | 1963 | AM #44                         | not held                | The most celebrated live album in soul/R&B.                      |
+| 45  | Songs in the Key of Life                      | Stevie Wonder               | 1976 | AM #45                         | not held                | Wonder's ambitious double-album summit of classic soul.          |
+| 46  | Automatic for the People                      | R.E.M.                      | 1992 | AM #46                         | CD `CD ROCK REM`        | Alt-rock's melancholy masterpiece; R.E.M. at their most durable. |
+| 47  | Purple Rain                                   | Prince and The Revolution   | 1984 | AM #47                         | CD `CD SOUNDTRACK PRIN` | Prince's synth-funk/rock crossover blockbuster.                  |
+| 48  | Innervisions                                  | Stevie Wonder               | 1973 | AM #48                         | not held                | The tight, socially charged peak of Wonder's classic period.     |
+| 49  | Blue                                          | Joni Mitchell               | 1971 | AM #49 — top singer-songwriter | not held                | The confessional singer-songwriter benchmark.                    |
+| 50  | A Love Supreme                                | John Coltrane               | 1965 | AM #52 — spiritual-jazz apex   | CD `CD JAZZ COLT`       | Jazz's spiritual masterwork; swapped in for genre breadth.       |
+
+### Jazz
+
+_15 held at SFPL / 32 total. Ranked by album critical acclaim (Acclaimed Music / AllMusic / RS500 /
+RYM / Penguin). SFPL = CD holding for borrow-and-rip; deduped vs the Top-50 (Kind of Blue and A Love
+Supreme live there, not here)._
+
+| #   | Album                               | Artist                            | Year | Acclaim                   | SFPL CD  | Why                                                       |
+| --- | ----------------------------------- | --------------------------------- | ---- | ------------------------- | -------- | --------------------------------------------------------- |
+| 1   | Mingus Ah Um                        | Charles Mingus                    | 1959 | AllMusic 5★; RYM top-jazz | not held | Gospel/blues big-band writing; "Goodbye Pork Pie Hat."    |
+| 2   | The Shape of Jazz to Come           | Ornette Coleman                   | 1959 | RS500 #248                | CD       | The free-jazz manifesto that broke chord-changes open.    |
+| 3   | Time Out                            | The Dave Brubeck Quartet          | 1959 | AllMusic 5★; RS500        | CD       | Odd-meter crossover landmark ("Take Five").               |
+| 4   | Blue Train                          | John Coltrane                     | 1957 | AllMusic 5★               | CD       | Coltrane's hard-bop Blue Note peak.                       |
+| 5   | Giant Steps                         | John Coltrane                     | 1960 | AllMusic 5★               | CD       | "Sheets of sound"; the Coltrane-changes benchmark.        |
+| 6   | Saxophone Colossus                  | Sonny Rollins                     | 1956 | AllMusic 5★; Penguin Core | not held | Thematic-improv masterpiece ("St. Thomas").               |
+| 7   | Bitches Brew                        | Miles Davis                       | 1970 | RS500 #94                 | CD       | The jazz-fusion big bang; electric, studio-collaged.      |
+| 8   | Brilliant Corners                   | Thelonious Monk                   | 1957 | AllMusic 5★               | not held | Monk's angular compositional genius fully realized.       |
+| 9   | Birth of the Cool                   | Miles Davis                       | 1957 | AllMusic 5★               | CD       | Nonet sessions that launched cool jazz.                   |
+| 10  | My Favorite Things                  | John Coltrane                     | 1961 | AllMusic 5★               | CD       | Soprano-sax modal reinvention of the show tune.           |
+| 11  | Sketches of Spain                   | Miles Davis                       | 1960 | RS500; AllMusic 5★        | CD       | Gil Evans orchestral collab; third-stream high point.     |
+| 12  | Getz/Gilberto                       | Stan Getz & João Gilberto         | 1964 | RS500 #454; Grammy AOTY   | CD       | Bossa-nova crossover ("Girl from Ipanema").               |
+| 13  | Head Hunters                        | Herbie Hancock                    | 1973 | RS500 #248                | not held | Funk-fusion breakthrough ("Chameleon").                   |
+| 14  | In a Silent Way                     | Miles Davis                       | 1969 | AllMusic 5★               | CD       | The ambient-electric hinge into Bitches Brew.             |
+| 15  | Speak No Evil                       | Wayne Shorter                     | 1966 | AllMusic 5★; Penguin Core | not held | Shorter's finest Blue Note date; harmonically luminous.   |
+| 16  | Maiden Voyage                       | Herbie Hancock                    | 1965 | AllMusic 5★               | not held | Oceanic modal suite; a post-bop standard-setter.          |
+| 17  | Out to Lunch!                       | Eric Dolphy                       | 1964 | AllMusic 5★; RYM          | not held | Avant-bop apex; jagged, elastic, singular.                |
+| 18  | Moanin'                             | Art Blakey & the Jazz Messengers  | 1959 | AllMusic 5★               | not held | Definitive hard bop; the soul-jazz template.              |
+| 19  | Somethin' Else                      | Cannonball Adderley               | 1958 | AllMusic 5★; Penguin Core | not held | Adderley date with Miles; blues-drenched hard bop.        |
+| 20  | The Black Saint and the Sinner Lady | Charles Mingus                    | 1963 | RYM top-jazz              | not held | Through-composed ballet suite; his most ambitious work.   |
+| 21  | Ellington at Newport                | Duke Ellington                    | 1956 | AllMusic 5★               | not held | The career-reviving live set.                             |
+| 22  | Money Jungle                        | Ellington / Mingus / Roach        | 1963 | AllMusic 5★; Penguin Core | CD       | Cross-generational trio summit; combustible.              |
+| 23  | Song for My Father                  | Horace Silver                     | 1965 | AllMusic 5★               | not held | Latin-tinged hard bop; the riff Steely Dan borrowed.      |
+| 24  | Free Jazz                           | Ornette Coleman                   | 1961 | RYM                       | not held | Double-quartet collective improvisation; named the genre. |
+| 25  | The Köln Concert                    | Keith Jarrett                     | 1975 | best-selling solo-piano   | not held | The improvised solo-piano touchstone.                     |
+| 26  | Sunday at the Village Vanguard      | Bill Evans Trio                   | 1961 | AllMusic 5★; Penguin Core | CD       | Interactive-trio benchmark (held in the Complete box).    |
+| 27  | Lady in Satin                       | Billie Holiday                    | 1958 | AllMusic 5★               | not held | Late-voice, string-backed emotional devastation.          |
+| 28  | Ella and Louis                      | Ella Fitzgerald & Louis Armstrong | 1956 | AllMusic 5★               | not held | Vocal-duet standard-bearer (comp held, not standalone).   |
+| 29  | The Sidewinder                      | Lee Morgan                        | 1964 | AllMusic 5★; Blue Note    | CD       | Boogaloo-groove crossover smash; soul-jazz staple.        |
+| 30  | Empyrean Isles                      | Herbie Hancock                    | 1964 | AllMusic 5★; Penguin Core | not held | Lean quartet post-bop ("Cantaloupe Island").              |
+| 31  | The Epic                            | Kamasi Washington                 | 2015 | Pitchfork 8.6             | CD       | Sprawling spiritual-jazz revival; modern-canon entry.     |
+| 32  | Black Radio                         | Robert Glasper Experiment         | 2012 | Grammy Best R&B           | CD       | Jazz/hip-hop/neo-soul fusion; genre-blurring landmark.    |
+
+### Rock & Classic Rock
+
+_11 held at SFPL / 14 total. Deduped hard against the Top-50 (which is rock-heavy — Beatles, Dylan,
+Stones, Zeppelin, Hendrix, Bowie's Ziggy, Floyd's DSOTM all live there), so this bucket is the
+canonical rock **not** already showcased above. Ranked by album critical acclaim (Acclaimed Music /
+RS500)._
+
+| #   | Album                            | Artist             | Year | Acclaim                 | SFPL CD  | Why                                                       |
+| --- | -------------------------------- | ------------------ | ---- | ----------------------- | -------- | --------------------------------------------------------- |
+| 1   | Physical Graffiti                | Led Zeppelin       | 1975 | AM top-60; RS500 top-70 | CD       | Sprawling double-LP showing their full range.             |
+| 2   | Hunky Dory                       | David Bowie        | 1971 | AM top-40               | CD       | Songwriting high-water mark; "Life on Mars?", "Changes."  |
+| 3   | Low                              | David Bowie        | 1977 | AM top-30               | CD       | Berlin-era art-rock; most critically revered Bowie LP.    |
+| 4   | After the Gold Rush              | Neil Young         | 1970 | AM top-40; RS500 top-80 | not held | Fragile, essential Neil; a folk-rock benchmark.           |
+| 5   | Harvest                          | Neil Young         | 1972 | RS500 top-80            | CD       | His biggest and most beloved; "Heart of Gold."            |
+| 6   | Rumours                          | Fleetwood Mac      | 1977 | RS500 top-10            | CD       | Pop-rock craftsmanship; one of the best-sellers ever.     |
+| 7   | Sticky Fingers                   | The Rolling Stones | 1971 | AM top-60               | CD       | Loose, bluesy peak; opens the Exile-era run.              |
+| 8   | The Wall                         | Pink Floyd         | 1979 | RS500 top-130           | CD       | The rock opera as blockbuster; "Comfortably Numb."        |
+| 9   | Wish You Were Here               | Pink Floyd         | 1975 | RS500 top-200           | CD       | Elegiac Floyd; "Shine On You Crazy Diamond."              |
+| 10  | Led Zeppelin II                  | Led Zeppelin       | 1969 | RS500 top-80            | CD       | The heavy-riff blueprint; "Whole Lotta Love."             |
+| 11  | Darkness on the Edge of Town     | Bruce Springsteen  | 1978 | AM top-100              | not held | Leaner, darker Springsteen; a critics' favorite.          |
+| 12  | The Band                         | The Band           | 1969 | RS500 top-50            | CD       | Americana bedrock; "The Night They Drove Old Dixie Down." |
+| 13  | A Night at the Opera             | Queen              | 1975 | RS500 top-130           | CD       | Maximalist rock; "Bohemian Rhapsody."                     |
+| 14  | In the Court of the Crimson King | King Crimson       | 1969 | RS500 top-300           | not held | The prog-rock founding document.                          |
+
+### Alternative & Indie
+
+_13 held at SFPL / 28 total. Ranked by album critical acclaim (Acclaimed Music / Pitchfork / RYM /
+Metacritic). SFPL = CD holding for borrow-and-rip; deduped vs the Top-50 (OK Computer, Kid A, The
+Queen Is Dead, Nevermind, Automatic for the People, Funeral, Is This It live there)._
+
+| #   | Album                         | Artist              | Year | Acclaim                       | SFPL CD                | Why                                                          |
+| --- | ----------------------------- | ------------------- | ---- | ----------------------------- | ---------------------- | ------------------------------------------------------------ |
+| 1   | Doolittle                     | Pixies              | 1989 | Acclaimed top-20              | CD `CD ROCK PIXI`      | The record that taught Nirvana its dynamics.                 |
+| 2   | In the Aeroplane Over the Sea | Neutral Milk Hotel  | 1998 | RYM top-10 all-time           | CD `CD ROCK NEUT`      | Lo-fi/folk-punk masterwork; cult devotion.                   |
+| 3   | Loveless                      | My Bloody Valentine | 1991 | the shoegaze bible            | not held               | Guitar-texture landmark, endlessly influential.              |
+| 4   | Yankee Hotel Foxtrot          | Wilco               | 2002 | Pitchfork/AllMusic; RS500     | CD `CD ROCK WILC`      | Alt-country dissolving into art-rock.                        |
+| 5   | Daydream Nation               | Sonic Youth         | 1988 | Library of Congress registry  | not held               | Noise-rock double-LP high-water mark.                        |
+| 6   | Surfer Rosa                   | Pixies              | 1988 | Albini production canon       | CD `CD ROCK PIXI`      | Raw, seismic debut.                                          |
+| 7   | Sound of Silver               | LCD Soundsystem     | 2007 | Pitchfork 9.2                 | not held               | Dance-punk peak; placed here (best-fit) over Electronic.     |
+| 8   | Slanted and Enchanted         | Pavement            | 1992 | lo-fi/slacker touchstone      | CD `CD ROCK PAVE`      | Defined '90s American indie.                                 |
+| 9   | Illinois                      | Sufjan Stevens      | 2005 | Metacritic 90; Pitchfork AOTY | not held               | Baroque-folk maximalism.                                     |
+| 10  | Boxer                         | The National        | 2007 | critics top-of-decade         | not held               | Slow-burn precision; the band's breakthrough.                |
+| 11  | In Rainbows                   | Radiohead           | 2007 | Pitchfork 9.3                 | CD `CD ROCK RADI`      | Warm, human counterweight to Kid A.                          |
+| 12  | In Utero                      | Nirvana             | 1993 | Acclaimed top-tier; RS500     | CD `CD ROCK NIRV`      | Abrasive, uncompromised follow-up.                           |
+| 13  | Murmur                        | R.E.M.              | 1983 | Acclaimed top-tier; RS500     | CD `CD ROCK REM`       | The jangly birth of American college rock.                   |
+| 14  | Odelay                        | Beck                | 1996 | Grammy; Dust Bros. collage    | not held               | Genre-blender that made Beck a star (SFPL holds Sea Change). |
+| 15  | Modern Vampires of the City   | Vampire Weekend     | 2013 | Metacritic 87                 | not held               | Ornate, mortality-haunted third act.                         |
+| 16  | The Bends                     | Radiohead           | 1995 | Acclaimed top-tier; RS500     | CD `TEEN CD ROCK RADI` | The guitar record before the reinvention.                    |
+| 17  | Let England Shake             | PJ Harvey           | 2011 | Mercury Prize; Metacritic 87  | CD `CD ROCK HARV`      | War-poetry song cycle; her critical apex.                    |
+| 18  | The Smiths                    | The Smiths          | 1984 | foundational indie debut      | not held               | Where the jangle-pop template starts.                        |
+| 19  | Unknown Pleasures             | Joy Division        | 1979 | post-punk cornerstone         | not held               | Cold, cavernous, endlessly imitated.                         |
+| 20  | Turn on the Bright Lights     | Interpol            | 2002 | Pitchfork 9.5                 | not held               | Taut, atmospheric NYC debut.                                 |
+| 21  | The Moon & Antarctica         | Modest Mouse        | 2000 | critics top-of-decade         | not held               | Cosmic, sprawling indie-rock statement.                      |
+| 22  | Either/Or                     | Elliott Smith       | 1997 | singer-songwriter touchstone  | CD `CD ROCK SMIT`      | Intimate, devastating songcraft.                             |
+| 23  | If You're Feeling Sinister    | Belle and Sebastian | 1996 | twee/indie-pop canon          | not held               | Wry, literate chamber-pop.                                   |
+| 24  | The Suburbs                   | Arcade Fire         | 2010 | Grammy AOTY; Metacritic 87    | not held               | Sprawling concept-album peak.                                |
+| 25  | Carrie & Lowell               | Sufjan Stevens      | 2015 | Pitchfork 9.3                 | CD `CD ROCK STEV`      | Hushed, autobiographical devastation.                        |
+| 26  | Vampire Weekend               | Vampire Weekend     | 2008 | Metacritic 84; buzz debut     | CD `CD ROCK VAMP`      | Afropop-inflected preppy indie-pop.                          |
+| 27  | High Violet                   | The National        | 2010 | Metacritic 85                 | not held               | The band's fullest, most anthemic set.                       |
+| 28  | Fleet Foxes                   | Fleet Foxes         | 2008 | Metacritic 87; Pitchfork      | not held               | Harmony-drenched baroque-folk revival.                       |
+
+### Hip-Hop / R&B / Soul
+
+_20 held at SFPL / 31 total. Ranked by album critical acclaim (RS500 2020 / Acclaimed Music /
+Pitchfork / RYM). SFPL = CD holding for borrow-and-rip; deduped vs the Top-50 (What's Going On, To
+Pimp a Butterfly, Songs in the Key of Life, Innervisions, MBDTF, Nation of Millions live there)._
+
+| #   | Album                                  | Artist                        | Year | Acclaim                   | SFPL CD                 | Why                                                             |
+| --- | -------------------------------------- | ----------------------------- | ---- | ------------------------- | ----------------------- | --------------------------------------------------------------- |
+| 1   | Illmatic                               | Nas                           | 1994 | RYM #1 hip-hop            | CD `CD RAP NAS`         | The template for lyrical East-Coast rap; near-flawless.         |
+| 2   | The Miseducation of Lauryn Hill        | Lauryn Hill                   | 1998 | RS500 #10                 | CD `CD RAP HILL`        | Soul/hip-hop fusion; defining neo-soul statement.               |
+| 3   | Enter the Wu-Tang (36 Chambers)        | Wu-Tang Clan                  | 1993 | RS500 #27                 | CD `CD RAP WUTA`        | Raw, gritty blueprint for the NY hardcore era.                  |
+| 4   | Ready to Die                           | The Notorious B.I.G.          | 1994 | RS500 #22                 | CD `CD RAP NOTO`        | Street narrative meets pop craft; an East-Coast pillar.         |
+| 5   | The Low End Theory                     | A Tribe Called Quest          | 1991 | top jazz-rap              | CD `CD RAP TRIB`        | Jazz-rap high-water mark; bass-and-boom-bap perfection.         |
+| 6   | Midnight Marauders                     | A Tribe Called Quest          | 1993 | Acclaimed Music high      | CD `CD RAP TRIB`        | Tighter, hookier companion to Low End Theory.                   |
+| 7   | good kid, m.A.A.d city                 | Kendrick Lamar                | 2012 | RS500 #115; Pitchfork     | CD `CD RAP LAMA`        | Cinematic Compton coming-of-age concept album.                  |
+| 8   | Voodoo                                 | D'Angelo                      | 2000 | RYM top R&B               | CD `CD R&B DANG`        | Loose, groove-drunk neo-soul landmark.                          |
+| 9   | Madvillainy                            | Madvillain (MF DOOM & Madlib) | 2004 | top underground rap       | not held                | Abstract sample-collage cult classic; DOOM at his peak.         |
+| 10  | There's a Riot Goin' On                | Sly & the Family Stone        | 1971 | RS500 #82                 | CD `CD R&B SLY`         | Dark, druggy funk that inverted '60s optimism.                  |
+| 11  | Let's Get It On                        | Marvin Gaye                   | 1973 | RS500 #165                | not held                | The definitive sensual-soul record (comps only at SFPL).        |
+| 12  | The Chronic                            | Dr. Dre                       | 1992 | RS500 #137                | CD `CD RAP DR`          | G-funk blueprint that defined West-Coast rap.                   |
+| 13  | I Never Loved a Man the Way I Love You | Aretha Franklin               | 1967 | RS500 top-tier            | not held                | The arrival of the Queen of Soul (comps only at SFPL).          |
+| 14  | Blond                                  | Frank Ocean                   | 2016 | Pitchfork #1 of the 2010s | not held (never on CD)  | Fractured, intimate art-R&B; rip from a lossless source.        |
+| 15  | Channel Orange                         | Frank Ocean                   | 2012 | RS500 #148; Pitchfork     | CD `TEEN CD R&B OCEA`   | Genre-bending R&B breakthrough.                                 |
+| 16  | Super Fly                              | Curtis Mayfield               | 1972 | RS500 #72                 | CD `CD SOUNDTRACK MAYF` | Socially charged funk-soul; a full album, not a score.          |
+| 17  | Talking Book                           | Stevie Wonder                 | 1972 | RS500 #59                 | not held                | "Superstition"; the classic run begins (no Wonder LPs at SFPL). |
+| 18  | Liquid Swords                          | GZA                           | 1995 | RYM top Wu solo           | CD `CD RAP GENI`        | Chess-dark RZA production; the sharpest Wu solo record.         |
+| 19  | Aquemini                               | OutKast                       | 1998 | RS500 #49                 | CD `CD POP OUTK`        | Southern rap's expansive, funk-drenched apex.                   |
+| 20  | The Blueprint                          | Jay-Z                         | 2001 | RS500 #50                 | not held                | Soul-sample renaissance; Jay's most cohesive album.             |
+| 21  | 3 Feet High and Rising                 | De La Soul                    | 1989 | RS500 #100                | CD `CD RAP DE`          | Playful, sample-dense Daisy-Age counterpoint.                   |
+| 22  | The Infamous                           | Mobb Deep                     | 1995 | RYM top hardcore rap      | not held                | Bleak, minimalist Queensbridge classic.                         |
+| 23  | Ctrl                                   | SZA                           | 2017 | top modern R&B            | CD `CD R&B SZA`         | Confessional alt-R&B that defined a generation's sound.         |
+| 24  | Doggystyle                             | Snoop Doggy Dogg              | 1993 | RS500 #170                | CD `CD RAP SNOO`        | G-funk at its most effortless.                                  |
+| 25  | Hot Buttered Soul                      | Isaac Hayes                   | 1969 | top soul                  | not held                | Orchestral, long-form soul that broke the 3-minute mold.        |
+| 26  | Otis Blue                              | Otis Redding                  | 1965 | RS500 #78                 | not held                | The definitive Stax soul statement.                             |
+| 27  | Baduizm                                | Erykah Badu                   | 1997 | top neo-soul              | not held                | Founding document of neo-soul.                                  |
+| 28  | Donuts                                 | J Dilla                       | 2006 | top instrumental hip-hop  | not held                | Beat-tape as art; the producer's-producer touchstone.           |
+| 29  | Stankonia                              | OutKast                       | 2000 | RS500 #64                 | CD `CD RAP OUTK`        | Frenetic, futuristic Southern rap; "B.O.B." / "Ms. Jackson."    |
+| 30  | DAMN.                                  | Kendrick Lamar                | 2017 | Pulitzer Prize for Music  | CD `CD RAP LAMA`        | The only rap album to win the Pulitzer.                         |
+| 31  | Greatest Hits                          | Al Green                      | 1975 | RS500 #135                | CD `CD R&B GREE`        | The canonical Al Green single-disc; Hi Records soul.            |
+
+### Electronic
+
+_8 held at SFPL / 30 total. Ranked by album critical acclaim (Acclaimed Music / RYM / Pitchfork /
+Resident Advisor). SFPL = CD holding for borrow-and-rip; deduped vs the Top-50 (Blue Lines lives
+there) and vs Alt & Indie (LCD Soundsystem placed there). SFPL's CD collection is thin on electronic
+— most of this bucket routes to acquire-elsewhere._
+
+| #   | Album                           | Artist                                 | Year | Acclaim                      | SFPL CD                 | Why                                                     |
+| --- | ------------------------------- | -------------------------------------- | ---- | ---------------------------- | ----------------------- | ------------------------------------------------------- |
+| 1   | Dummy                           | Portishead                             | 1994 | Mercury Prize winner         | CD `CD ROCK PORT`       | Definitive trip-hop; noir soul over dusty breaks.       |
+| 2   | Endtroducing.....               | DJ Shadow                              | 1996 | RYM #1 instrumental hip-hop  | not held                | All-sample masterwork; canonical downtempo/turntablism. |
+| 3   | Mezzanine                       | Massive Attack                         | 1998 | RYM top-100                  | CD `CD POP MASS`        | Dark, dubby trip-hop apex.                              |
+| 4   | Selected Ambient Works 85–92    | Aphex Twin                             | 1992 | RYM #1 electronic all-time   | not held                | Foundational ambient-techno; the IDM cornerstone.       |
+| 5   | Discovery                       | Daft Punk                              | 2001 | Pitchfork best-of-2000s      | CD `CD POP DAFT`        | French-house / filter-disco touchstone.                 |
+| 6   | Music Has the Right to Children | Boards of Canada                       | 1998 | RYM top IDM                  | not held                | Warm, hauntological ambient IDM benchmark.              |
+| 7   | Trans-Europe Express            | Kraftwerk                              | 1977 | foundational                 | not held                | Ur-text of all electronic pop/techno.                   |
+| 8   | Untrue                          | Burial                                 | 2007 | RA / Pitchfork best-of-2000s | not held                | Genre-defining dubstep/2-step; modern canon.            |
+| 9   | Another Green World             | Brian Eno                              | 1975 | Acclaimed Music very high    | CD `CD ROCK ENO`        | Bridge from art-rock to ambient/proto-electronic.       |
+| 10  | Homework                        | Daft Punk                              | 1997 | Resident Advisor             | CD `CD POP DAFT`        | Raw filter-house debut; "Da Funk."                      |
+| 11  | Richard D. James Album          | Aphex Twin                             | 1996 | RYM top IDM                  | not held                | Drill-'n'-bass meets melody; IDM peak.                  |
+| 12  | Ambient 1: Music for Airports   | Brian Eno                              | 1978 | coined "ambient"             | not held                | The album that named the genre.                         |
+| 13  | Since I Left You                | The Avalanches                         | 2000 | RYM top plunderphonics       | CD `CD POP AVAL`        | Sample-collage magnum opus.                             |
+| 14  | Dubnobasswithmyheadman          | Underworld                             | 1994 | NME classic                  | not held                | Progressive-house/techno landmark.                      |
+| 15  | Dig Your Own Hole               | The Chemical Brothers                  | 1997 | Pitchfork best-of-90s        | CD `CD POP CHEM`        | Big-beat high-water mark.                               |
+| 16  | Orbital 2 (Brown Album)         | Orbital                                | 1993 | critical consensus           | not held                | Melodic UK techno peak.                                 |
+| 17  | Moon Safari                     | Air                                    | 1998 | Acclaimed Music; Pitchfork   | not held                | Lush French downtempo/lounge landmark.                  |
+| 18  | Rounds                          | Four Tet                               | 2003 | Pitchfork best-of-2000s      | not held                | Folktronica / melodic IDM benchmark.                    |
+| 19  | Maxinquaye                      | Tricky                                 | 1995 | NME Album of the Year        | not held                | Paranoid, sensual trip-hop classic.                     |
+| 20  | Tri Repetae                     | Autechre                               | 1995 | RYM top IDM                  | not held                | Abstract Warp-era IDM cornerstone.                      |
+| 21  | The Fat of the Land             | The Prodigy                            | 1997 | #1 in 25 countries           | not held                | Big-beat/breakbeat crossover monster.                   |
+| 22  | You've Come a Long Way, Baby    | Fatboy Slim                            | 1998 | multi-platinum               | not held                | Defining big-beat party record.                         |
+| 23  | In Colour                       | Jamie xx                               | 2015 | RA best-of                   | not held                | Modern UK dance/rave-nostalgia standout.                |
+| 24  | Swim                            | Caribou                                | 2010 | Pitchfork; RA best-of        | not held                | Organic dance-pop / psych-electronic peak.              |
+| 25  | Immunity                        | Jon Hopkins                            | 2013 | Mercury Prize nominee        | not held                | Cinematic techno/ambient arc.                           |
+| 26  | Geogaddi                        | Boards of Canada                       | 2002 | Pitchfork best-of-2000s      | not held                | Darker companion to MHTRTC.                             |
+| 27  | Cosmogramma                     | Flying Lotus                           | 2010 | Pitchfork best-of; RA        | not held                | Jazz-fusion electronic / beat-scene apex.               |
+| 28  | Syro                            | Aphex Twin                             | 2014 | Pitchfork BNM; Grammy        | not held                | Comeback proof the master still leads IDM.              |
+| 29  | Third                           | Portishead                             | 2008 | Pitchfork BNM                | not held                | Krautrock-tinged return; a critical darling.            |
+| 30  | Promises                        | Floating Points, Pharoah Sanders & LSO | 2021 | Pitchfork BNM; RA best-of    | CD `CD ORCHESTRAL FLOA` | Ambient-jazz-electronic crossover of the decade.        |
+
+### Classical & Piano
+
+_26 held at SFPL / 32 total (2 not held, 4 unverified). Ranked by canonical status +
+benchmark-recording acclaim (Gramophone Hall of Fame / Penguin rosettes / reference consensus),
+**not** pop-style charts. Rows keep the source's Work | Composer | Recording shape — the named
+performer/conductor is the target. SFPL classical cards seldom print the performer, so **CD (alt)**
+= the work is on CD but the benchmark artist is unconfirmed (check the disc at pickup), **CD
+(benchmark)** = the exact reference disc confirmed held, **unverified** = only compilations/recitals
+surfaced. No Top-50 overlap (the spine carries no classical)._
+
+| #   | Work                            | Composer     | Recording (artist / cond.)              | Acclaim                       | SFPL CD        | Why                                                                  |
+| --- | ------------------------------- | ------------ | --------------------------------------- | ----------------------------- | -------------- | -------------------------------------------------------------------- |
+| 1   | Goldberg Variations, BWV 988    | J.S. Bach    | Glenn Gould (1981, Sony)                | Gramophone Hall of Fame       | CD (alt)       | The desert-island keyboard record; Gould's valedictory re-recording. |
+| 2   | Der Ring des Nibelungen         | Wagner       | Solti / Vienna Phil (Decca)             | "Greatest recording" polls    | not held       | The landmark studio Ring; the foundation of the opera shelf.         |
+| 3   | Symphonies 5 & 7                | Beethoven    | Carlos Kleiber / Vienna Phil (DG)       | Gramophone Hall of Fame       | CD (alt)       | Electric, propulsive; held only via complete cycles.                 |
+| 4   | Tosca                           | Puccini      | Callas / de Sabata / La Scala (1953)    | The canonical opera recording | unverified     | Callas's Tosca; only comps surfaced — buy the de Sabata.             |
+| 5   | Cello Concerto in E minor       | Elgar        | du Pré / Barbirolli / LSO (EMI)         | Gramophone Hall of Fame       | CD (alt)       | The definitive account; SFPL holds other soloists.                   |
+| 6   | Symphony No. 9 "Choral"         | Beethoven    | Furtwängler / Bayreuth (1951, EMI)      | Perennial "greatest Ninth"    | CD (alt)       | The mythic reopening-of-Bayreuth performance.                        |
+| 7   | Symphony No. 9                  | Mahler       | Karajan / Berlin Phil (live, DG)        | Gramophone Hall of Fame       | CD (alt)       | The great modern Mahler 9; the live remake is the one.               |
+| 8   | Cello Suites, BWV 1007–1012     | J.S. Bach    | Casals (1936–39) / or Rostropovich      | Historic canon                | CD (alt)       | Casals rescued the Suites; grab Casals or Rostropovich.              |
+| 9   | Le nozze di Figaro              | Mozart       | Erich Kleiber / Vienna Phil (Decca)     | Penguin rosette               | not held       | The warm benchmark Figaro; no complete on SFPL CD.                   |
+| 10  | Nocturnes (complete)            | Chopin       | Arthur Rubinstein (RCA)                 | Reference Chopin Nocturnes    | unverified     | Aristocratic, definitive; only recital discs surfaced.               |
+| 11  | Symphony No. 6 "Pathétique"     | Tchaikovsky  | Mravinsky / Leningrad Phil (DG)         | Canonical reference           | CD (alt)       | Ferocious, idiomatic; the Russian benchmark.                         |
+| 12  | Préludes / Images               | Debussy      | Michelangeli (DG)                       | Gramophone Hall of Fame       | unverified     | Tonal-color perfection; only French recitals surfaced.               |
+| 13  | Symphony No. 4                  | Brahms       | Carlos Kleiber / Vienna Phil (DG)       | Benchmark Brahms 4            | CD (alt)       | Kleiber's rhythmic fire; held via a Brahms complete set.             |
+| 14  | Violin Concerto in D            | Beethoven    | Heifetz / Munch / Boston (RCA)          | Canonical                     | CD (alt)       | Heifetz's aristocratic sweep; SFPL holds other soloists.             |
+| 15  | St Matthew Passion              | J.S. Bach    | Karl Richter (Archiv) / or Gardiner     | Canon                         | CD (alt)       | The summit of sacred music; pick your school.                        |
+| 16  | Symphony No. 2 "Resurrection"   | Mahler       | Klemperer / Philharmonia (EMI)          | Penguin-lauded                | CD (alt)       | Granitic, overwhelming finale.                                       |
+| 17  | Symphony No. 9 "New World"      | Dvořák       | Kertész / Vienna Phil (Decca)           | Penguin reference             | CD (alt)       | Lyrical, glowing benchmark New World.                                |
+| 18  | Piano Sonatas (complete / late) | Beethoven    | Wilhelm Kempff (DG stereo)              | Canonical cycle               | CD (benchmark) | Poetic, humane Beethoven; the benchmark disc is confirmed.           |
+| 19  | Don Giovanni                    | Mozart       | Giulini / Philharmonia (EMI)            | Penguin / canon benchmark     | CD (alt)       | Star-cast, dramatically taut; a complete set is held.                |
+| 20  | Piano Concertos 2 & 3           | Rachmaninoff | Rachmaninoff plays Rachmaninoff (RCA)   | Composer-as-pianist canon     | CD (benchmark) | Definitive by authorial authority; confirmed at SFPL.                |
+| 21  | String Quintet in C, D956       | Schubert     | Casals/Stern / or Amadeus Quartet       | Chamber-music canon           | unverified     | The greatest chamber work by many; only a Busch box surfaced.        |
+| 22  | Requiem (Messa da Requiem)      | Verdi        | Giulini / Philharmonia (EMI)            | Gramophone benchmark          | CD (alt)       | Operatic power and hush; a reference Verdi Requiem.                  |
+| 23  | Ballades / Preludes             | Chopin       | Zimerman / or Pollini (DG)              | Gramophone-lauded             | CD (alt)       | Poised virtuoso Chopin; SFPL holds historic Chopin.                  |
+| 24  | Violin Concerto in D            | Brahms       | Oistrakh / Klemperer (EMI) / or Heifetz | Canonical                     | CD (alt)       | Big-boned, noble Brahms; SFPL holds Menuhin.                         |
+| 25  | Gymnopédies / Gnossiennes       | Satie        | Pascal Rogé (Decca)                     | Reference Satie piano         | CD (alt)       | Calm, perfectly weighted; SFPL holds a Satie piano-works disc.       |
+| 26  | Requiem in D minor, K626        | Mozart       | Karl Böhm / Vienna Phil (DG)            | Canonical                     | CD (alt)       | Weighty, classical Mozart Requiem; Böhm not confirmed.               |
+| 27  | Symphonies 2 & 5                | Sibelius     | Karajan (EMI/DG) / or Berglund          | Reference Sibelius            | CD (alt)       | Nordic grandeur and the great Fifth finale.                          |
+| 28  | Piano Concerto No. 5 "Emperor"  | Beethoven    | Pollini / Böhm (DG) / or Gilels         | Canonical                     | CD (alt)       | Grand, patrician Emperor; held via concerto sets.                    |
+| 29  | The Four Seasons                | Vivaldi      | Il Giardino Armonico / or Carmignola    | Benchmark HIP                 | CD (alt)       | Vivid period-instrument fireworks; performer unconfirmed.            |
+| 30  | Winterreise                     | Schubert     | Fischer-Dieskau / Moore (DG)            | Reference song cycle          | CD (alt)       | The summit of Lieder singing; singer unconfirmed.                    |
+| 31  | The Well-Tempered Clavier       | J.S. Bach    | Richter / or Gould                      | Canonical keyboard bible      | CD (alt)       | The "Old Testament" of piano; performer unconfirmed.                 |
+| 32  | Preludes (op.23 / op.32)        | Rachmaninoff | Vladimir Ashkenazy (Decca)              | Reference Rachmaninoff piano  | CD (alt)       | The great Romantic miniatures; held via a complete set.              |
+
 ## Augmented picks — highly-rated films at SFPL (ranked)
 
 The 6-franchise wishlist is a personal target list, not "the best of what SFPL stocks." This is the
