@@ -6,7 +6,7 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 
 | Number | Project                                                                                                                        | Status      | Difficulty | Time Commitment |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------- | ---------- | --------------- |
-| 03-001 | [eBPF-based Network Traffic Analyzer](03-001-ebpf-based-network-traffic-analyzer.md)                                           | Not Started | Hard       | Months          |
+| 03-001 | [eBPF-based Network Traffic Analyzer](03-001-ebpf-based-network-traffic-analyzer.md)                                           | Done        | Hard       | Months          |
 | 03-002 | [K8s Operator for Home Assistant Deployments](03-002-k8s-operator-for-home-assistant-deployments.md)                           | Not Started | Hard       | Months          |
 | 03-003 | [Multi-zone BLE Presence Detection](03-003-multi-zone-ble-presence-detection.md)                                               | Not Started | Easy       | 1-2 days        |
 | 03-004 | [Custom ESP32 Smart Thermostat](03-004-custom-esp32-smart-thermostat.md)                                                       | Not Started | Medium     | 1-4 weeks       |

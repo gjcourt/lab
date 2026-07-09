@@ -5,7 +5,7 @@ category: 'homelab-automation'
 difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills: 'C, eBPF, Go, Linux Kernel (optional: Rust userspace)'
-status: 'In Progress'
+status: 'Done'
 depends_on:
   - homelab/prometheus
   - homelab/talos
@@ -15,21 +15,23 @@ depends_on:
 
 ## Final Disposition
 
-> **This section is partially filled.** The Kill-or-Continue verdict is locked in based on the first
-> ~9h of the soak (no incidents, all exit criteria comfortably met). The Status flip and the full
-> Soak result line below will be filled in once the 48h window completes.
+> **Finalized 2026-07-09.** The 48h soak closed clean in May, and netscope has since run ~60 days in
+> production (DaemonSet 4/4 Ready, 0 restarts, no alerts). The verdict and results below are final.
 
-- **Status**: TODO post-soak (intended: `Complete`)
+- **Status**: **Done.**
 - **Kill or Continue verdict**: **Continue.** Rationale: three Hubble-distinct panels live
   (retransmits, SRTT, DNS latency); 6/6 nodes healthy with 0 restarts; steady-state CPU ≤1 millicore
   per pod (budget was ≤2% of one core); memory ~70 MiB RSS (within the 64 Mi / 128 Mi request/limit
   envelope); 0 alerts firing in the first 9h of the soak. The project is operating at the bar the
   Exit Criteria asked for.
-- **Soak result**: Preliminary (~9h in, 2026-05-11): all 6 pods Ready / 0 restarts, no alerts
-  firing, scrape success ≥96.7% per node, ~14k retransmits/h and ~57k DNS queries/h flowing
-  cluster-wide, SRTT p99 ~0.2s and DNS p99 ~0.24s. One soft observation: `talos-v2l-hng` showed 16
-  brief up↔down scrape-state flaps in 6h — never sustained long enough to trip `NetscopeAgentDown`
-  (5m gate), agent itself otherwise healthy. _Final line filled in after the 48h window closes._
+- **Soak result**: **Passed.** Initial 48h soak (from 2026-05-11): all pods Ready / 0 restarts, no
+  alerts firing, scrape success ≥96.7% per node, ~14k retransmits/h and ~57k DNS queries/h flowing
+  cluster-wide, SRTT p99 ~0.2s and DNS p99 ~0.24s. **Confirmed long-run:** as of 2026-07-09 the
+  netscope DaemonSet has run ~60 days in production with 4/4 agents Ready and 0 restarts — the soak
+  concern is comfortably resolved by two months of clean operation. One soft observation during the
+  initial soak: `talos-v2l-hng` (node .22) showed 16 brief up↔down scrape-state flaps in 6h — never
+  sustained long enough to trip `NetscopeAgentDown` (5m gate); .22 was **later decommissioned for a
+  bad DIMM**, so those flaps were plausibly an early hardware symptom rather than an agent issue.
 
 ### Links
 
@@ -282,9 +284,9 @@ write the operator-facing runbook.
       `bpf_skc_to_tcp_sock`. No per-kernel snapshot to regenerate, so the runbook is not required.
 - [x] Postmortem with explicit kill-or-continue recommendation for ongoing maintenance burden —
       [SRTT verifier postmortem](https://github.com/gjcourt/netscope/blob/main/docs/postmortems/2026-05-10-srtt-verifier-iterations.md);
-      kill-or-continue verdict captured in **Final Disposition** above (pending soak)
-- [ ] Update this brainstorm doc: status `Complete`, link to repo and dashboards — links done;
-      status flip deferred to post-soak (see **Final Disposition**)
+      kill-or-continue verdict captured in **Final Disposition** above
+- [x] Update this brainstorm doc: status `Complete`, link to repo and dashboards — done; status
+      flipped to Complete after the soak (see **Final Disposition**)
 
 ### Phase 5 — Stretch Goals (open-ended; only if Phases 0–4 land cleanly)
 
