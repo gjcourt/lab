@@ -107,9 +107,39 @@ grantee `2AQVL`) — it hands you the hop parameters (channels/spacing/dwell/spa
 you confirm the PHY inside the `DW-V7130` can: **A7121** (plaintext era) vs **A7130/A7157**
 (possible AES-128).
 
+## UART bring-up (rung 1) — adapter + checklist
+
+The board's labeled `GND / RX / TX / 3.3V` pad group is the manufacturer's debug console — cheapest,
+non-destructive way in. **Must use a 3.3 V-logic adapter** (5 V can damage the SoC).
+
+**Adapter picks:**
+
+- **Best all-rounder — Tigard (~$35–40):** FT2232H multitool, switchable 1.8/3.3/5 V; does UART now
+  **and** the `W25Q256` SPI dump later (rung 3, via `flashrom`) + JTAG/SWD. One buy covers two
+  rungs; great macOS support.
+- **Foolproof — genuine FTDI `TTL-232R-3V3` cable (~$20):** 3.3 V _fixed_ (can't mis-set to 5 V),
+  flying leads, native macOS driver.
+- **Cheap — Adafruit CP2104 Friend / any CP2102 (~$8):** 3.3/5 V jumper → set 3.3 V and **verify on
+  VCCIO with a meter** first.
+- **Avoid CH340** boards on macOS (extra WCH driver). CP210x / FTDI enumerate cleanly.
+
+**Hookup:** solder a 4-pin 0.1″ header to the pads (or pogo/test-hooks for read-only). Wire
+**GND→GND, board TX→adapter RX, board RX→adapter TX; leave `3.3V` unconnected** (it's the board's
+own rail — the unit self-powers from battery/USB-C).
+
+**Checklist:**
+
+- [ ] Adapter set/verified to **3.3 V** (meter on VCCIO)
+- [ ] GND + board-TX→adapter-RX only (receive-only first, zero risk)
+- [ ] `picocom -b 115200 /dev/tty.usbserial-*`; power-cycle; watch the boot log
+- [ ] Garbage → sweep baud (57600 / 9600 / 921600); silent → swap TX/RX
+- [ ] Capture log; ID SoC/SDK + OS (RTOS vs Linux); note any U-Boot autoboot prompt
+- [ ] Only if a shell / U-Boot appears: add adapter-TX→board-RX and interact
+
 ## Exit Criteria
 
 - [ ] Model # / FCC ID confirmed; FCC test report pulled; transceiver PN identified
+- [ ] UART boot log captured; SoC/SDK + OS identified (shell / U-Boot reachable?)
 - [ ] Decoded frames captured off the parent-unit parallel-RGB bus (proof of concept image)
 - [ ] Continuous frame reconstruction → encoded stream
 - [ ] Stream restreamed (go2rtc/MediaMTX) and visible as a camera in Home Assistant
@@ -119,8 +149,9 @@ you confirm the PHY inside the `DW-V7130` can: **A7121** (plaintext era) vs **A7
 
 - SOIC-8 test clip + CH341A programmer (~$15) — SPI flash dump. **Confirmed target: `W25Q256` (32
   MB)** — use a reader/software that handles >16 MB (4-byte addressing)
-- USB-TTL UART adapter (3.3 V, ~$8) — the board has a **labeled `GND/RX/TX/3.3V` header**; boot-log
-  capture, shell likely worth a real try
+- **3.3 V** USB-TTL / debug adapter for the labeled `GND/RX/TX/3.3V` header — **Tigard (~$35, also
+  does the SPI dump)**, FTDI `TTL-232R-3V3` cable (~$20, foolproof), or a CP2102/CP2104 module
+  (~$8). Avoid CH340 on macOS. See _UART bring-up_ below
 - Cheap logic analyzer (Saleae clone) or ~$50 FPGA — the `SoC → SSD2828` parallel-RGB capture
 - A **second/sacrificial parent unit** for the destructive display tap
 
