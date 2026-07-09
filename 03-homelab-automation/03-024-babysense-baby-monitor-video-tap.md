@@ -7,7 +7,7 @@ time_commitment: 'Weeks'
 target_skills:
   'Hardware teardown, Logic analyzer/FPGA, SPI flash dump, Parallel-RGB (DPI) capture, SDR
   (optional), go2rtc/MediaMTX'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - hardware/babysense-unit
   - hardware/sacrificial-parent-unit
@@ -44,6 +44,48 @@ walls:
 - **LCD = ~40-pin parallel RGB888 (DPI)** — _not_ MIPI-DSI → tappable with a logic analyzer/FPGA
 - _(V65 is an older Hisense lineage — none of the above confirmed for it.)_
 
+> ⚠️ **Superseded in part by the teardown below** — the RX unit on hand is MIPI-DSI (via a bridge),
+> the flash is 32 MB, and there's a labeled UART. See the confirmed values next.
+
+## Teardown — actual hardware (parent / RX unit, 2026-07-08)
+
+Physically opened the **parent/receiver** unit. Board: **`VB55-PCB-RX-MAIN-V1.8_2L`**, dated
+2023-10-10. Confirms the silicon family and pins exact part numbers — with three corrections to the
+recon assumptions above.
+
+**Confirmed / identified:**
+
+- **Main SoC: SONiX `SN93701AFG`** (100-pin QFP) — the H.264 + FHSS controller. ✅ as predicted.
+- **RF: `DW-V7130-B-V02`** shielded can + antenna wire = the 2.4 GHz radio. The PHY die (AMICCOM
+  A71xx-class) is _inside the shield_ — PN not yet visible; open the can or pull the FCC report to
+  settle **A7121 (plaintext)** vs **A7157 (AES-128)**.
+- **SPI NOR flash: Winbond `W25Q256JV` (32 MB)** — 2× the assumed size (recon guessed W25Q128 / 16
+  MB). A second Winbond 25-series part sits near the RF can → possibly separate RF-module firmware.
+  Re-spec the reader for 25Q256 (>16 MB addressing).
+
+**Corrections that change the tap plan:**
+
+- ⚠️ **The panel is MIPI-DSI, _not_ parallel-RGB at the flex.** There's a Solomon **`SSD2828QN4`**
+  on the board = a **parallel-RGB → MIPI-DSI bridge**, and the LCD flex is **24-pin MIPI**. So do
+  **not** tap the LCD connector. **But the RGB bus still exists** — as the **SoC → SSD2828 input**
+  on the PCB. That becomes the new tap point: the parallel-RGB (PCLK / HSYNC / VSYNC / DE / data)
+  lines between `SN93701` and `SSD2828`, reachable at the dense test-point field around both chips.
+  The display-tap strategy survives; only the tap point relocates from the flex to the SoC-side bus.
+- 🎯 **Labeled UART present.** A silkscreened **`GND / RX / TX / 3.3V`** pad group sits near the SoC
+  — a real console candidate. Upgrades "no shell expected" → **boot log likely, shell possible**.
+  This is now the cheapest first move.
+- **USB-C has `DM/DP` pads populated** → a USB-device / DFU path worth probing, beyond the DC4.7V
+  charge rail. (The unit is a portable parent: LiPo `BAT+`, speaker, mic, Vol± / RST / PWR.)
+
+**Revised attack ladder (cheapest → destructive):**
+
+1. **UART** on the `GND/RX/TX/3.3V` header — solder a header, USB-TTL at 3.3 V, sweep bauds
+   (115200-8N1 first), capture the boot log, ID the SoC/SDK, look for a shell.
+2. **USB-C `DM/DP`** — check for USB enumeration / DFU / mass-storage exposed by the SoC.
+3. **SPI dump** the `W25Q256` (in-circuit SOIC-8 clip, else desolder) — pull firmware; hunt the hop
+   table, pairing key, and codec/SDK strings.
+4. **RGB tap** at the `SoC → SSD2828` bus on a _sacrificial_ unit — frames → ffmpeg → go2rtc → HA.
+
 ## Recommended path — display-bus tap (bypass RF entirely)
 
 The parent unit already follows the hops, demodulates, and decodes the codec into pixels for its
@@ -52,11 +94,18 @@ LCD. **Tap the decoded video off the parallel-RGB bus** on a _sacrificial_ paren
 encode (ffmpeg) → restream via **go2rtc / MediaMTX** → Home Assistant. This is mechanical +
 logic-analyzer work (days–weeks), high success probability, no RF/codec RE.
 
+> **Tap point (per teardown):** on this RX unit the RGB bus is **`SN93701` SoC → `SSD2828` bridge
+> input** (the panel itself is MIPI — don't tap the 24-pin flex). Probe the test-point field between
+> those two chips. But work the UART/flash rungs of the attack ladder _first_ — a firmware dump or a
+> shell may expose the video far more cheaply than the destructive RGB tap.
+
 ## Step 0 (before buying anything)
 
-Read the **model # / FCC ID** off the unit, then pull the **FCC test report** (fcc.report, grantee
-`2AQVL`) — it hands you the hop parameters (channels/spacing/dwell/span) for free, and lets you
-confirm the transceiver: **A7121** (plaintext era) vs **A7130/A7157** (possible AES-128).
+Read the **model # / FCC ID** off the unit's housing label (the PCB is `VB55-PCB-RX-MAIN-V1.8`, but
+the product model / FCC ID lives on the case), then pull the **FCC test report** (fcc.report,
+grantee `2AQVL`) — it hands you the hop parameters (channels/spacing/dwell/span) for free, and lets
+you confirm the PHY inside the `DW-V7130` can: **A7121** (plaintext era) vs **A7130/A7157**
+(possible AES-128).
 
 ## Exit Criteria
 
@@ -68,9 +117,11 @@ confirm the transceiver: **A7121** (plaintext era) vs **A7130/A7157** (possible 
 
 ## Shopping list (~$80)
 
-- SOIC-8 test clip + CH341A programmer (~$15) — SPI flash dump (W25Q128-class)
-- USB-TTL UART adapter (~$8) — boot-log/chip-ID recon (no shell expected)
-- Cheap logic analyzer (Saleae clone) or ~$50 FPGA — the parallel-RGB capture
+- SOIC-8 test clip + CH341A programmer (~$15) — SPI flash dump. **Confirmed target: `W25Q256` (32
+  MB)** — use a reader/software that handles >16 MB (4-byte addressing)
+- USB-TTL UART adapter (3.3 V, ~$8) — the board has a **labeled `GND/RX/TX/3.3V` header**; boot-log
+  capture, shell likely worth a real try
+- Cheap logic analyzer (Saleae clone) or ~$50 FPGA — the `SoC → SSD2828` parallel-RGB capture
 - A **second/sacrificial parent unit** for the destructive display tap
 
 ## Pragmatic fallback (the "cheating" win)
@@ -88,7 +139,11 @@ and restream via go2rtc → HA. One hour, better image quality. (Keep a baby cam
 ## Progress
 
 - [x] Feasibility + silicon recon (2026-06-27) — display tap is the achievable path
-- [ ] Step 0: model/FCC ID + test report
-- [ ] Teardown + flash dump + UART recon
-- [ ] Parallel-RGB capture POC
+- [x] Teardown of the RX/parent unit (2026-07-08) — PNs confirmed (`SN93701AFG`, `SSD2828QN4`,
+      `W25Q256JV`, `DW-V7130` RF can); panel is MIPI (tap relocates to SoC→bridge); **labeled UART
+      found**
+- [ ] Step 0: product model / FCC ID off the housing label + FCC test report
+- [ ] UART boot-log recon on the `GND/RX/TX/3.3V` header (+ USB-C DM/DP probe)
+- [ ] SPI dump the `W25Q256` + firmware analysis
+- [ ] Parallel-RGB capture POC at the `SoC → SSD2828` bus
 - [ ] Reconstruct → restream → HA
