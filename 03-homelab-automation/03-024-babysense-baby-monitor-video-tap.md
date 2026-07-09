@@ -7,7 +7,7 @@ time_commitment: 'Weeks'
 target_skills:
   'Hardware teardown, Logic analyzer/FPGA, SPI flash dump, Parallel-RGB (DPI) capture, SDR
   (optional), go2rtc/MediaMTX'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - hardware/babysense-unit
   - hardware/sacrificial-parent-unit
@@ -44,6 +44,48 @@ walls:
 - **LCD = ~40-pin parallel RGB888 (DPI)** — _not_ MIPI-DSI → tappable with a logic analyzer/FPGA
 - _(V65 is an older Hisense lineage — none of the above confirmed for it.)_
 
+> ⚠️ **Superseded in part by the teardown below** — the RX unit on hand is MIPI-DSI (via a bridge),
+> the flash is 32 MB, and there's a labeled UART. See the confirmed values next.
+
+## Teardown — actual hardware (parent / RX unit, 2026-07-08)
+
+Physically opened the **parent/receiver** unit. Board: **`VB55-PCB-RX-MAIN-V1.8_2L`**, dated
+2023-10-10. Confirms the silicon family and pins exact part numbers — with three corrections to the
+recon assumptions above.
+
+**Confirmed / identified:**
+
+- **Main SoC: SONiX `SN93701AFG`** (100-pin QFP) — the H.264 + FHSS controller. ✅ as predicted.
+- **RF: `DW-V7130-B-V02`** shielded can + antenna wire = the 2.4 GHz radio. The PHY die (AMICCOM
+  A71xx-class) is _inside the shield_ — PN not yet visible; open the can or pull the FCC report to
+  settle **A7121 (plaintext)** vs **A7157 (AES-128)**.
+- **SPI NOR flash: Winbond `W25Q256JV` (32 MB)** — 2× the assumed size (recon guessed W25Q128 / 16
+  MB). A second Winbond 25-series part sits near the RF can → possibly separate RF-module firmware.
+  Re-spec the reader for 25Q256 (>16 MB addressing).
+
+**Corrections that change the tap plan:**
+
+- ⚠️ **The panel is MIPI-DSI, _not_ parallel-RGB at the flex.** There's a Solomon **`SSD2828QN4`**
+  on the board = a **parallel-RGB → MIPI-DSI bridge**, and the LCD flex is **24-pin MIPI**. So do
+  **not** tap the LCD connector. **But the RGB bus still exists** — as the **SoC → SSD2828 input**
+  on the PCB. That becomes the new tap point: the parallel-RGB (PCLK / HSYNC / VSYNC / DE / data)
+  lines between `SN93701` and `SSD2828`, reachable at the dense test-point field around both chips.
+  The display-tap strategy survives; only the tap point relocates from the flex to the SoC-side bus.
+- 🎯 **Labeled UART present.** A silkscreened **`GND / RX / TX / 3.3V`** pad group sits near the SoC
+  — a real console candidate. Upgrades "no shell expected" → **boot log likely, shell possible**.
+  This is now the cheapest first move.
+- **USB-C has `DM/DP` pads populated** → a USB-device / DFU path worth probing, beyond the DC4.7V
+  charge rail. (The unit is a portable parent: LiPo `BAT+`, speaker, mic, Vol± / RST / PWR.)
+
+**Revised attack ladder (cheapest → destructive):**
+
+1. **UART** on the `GND/RX/TX/3.3V` header — solder a header, USB-TTL at 3.3 V, sweep bauds
+   (115200-8N1 first), capture the boot log, ID the SoC/SDK, look for a shell.
+2. **USB-C `DM/DP`** — check for USB enumeration / DFU / mass-storage exposed by the SoC.
+3. **SPI dump** the `W25Q256` (in-circuit SOIC-8 clip, else desolder) — pull firmware; hunt the hop
+   table, pairing key, and codec/SDK strings.
+4. **RGB tap** at the `SoC → SSD2828` bus on a _sacrificial_ unit — frames → ffmpeg → go2rtc → HA.
+
 ## Recommended path — display-bus tap (bypass RF entirely)
 
 The parent unit already follows the hops, demodulates, and decodes the codec into pixels for its
@@ -52,15 +94,68 @@ LCD. **Tap the decoded video off the parallel-RGB bus** on a _sacrificial_ paren
 encode (ffmpeg) → restream via **go2rtc / MediaMTX** → Home Assistant. This is mechanical +
 logic-analyzer work (days–weeks), high success probability, no RF/codec RE.
 
+> **Tap point (per teardown):** on this RX unit the RGB bus is **`SN93701` SoC → `SSD2828` bridge
+> input** (the panel itself is MIPI — don't tap the 24-pin flex). Probe the test-point field between
+> those two chips. But work the UART/flash rungs of the attack ladder _first_ — a firmware dump or a
+> shell may expose the video far more cheaply than the destructive RGB tap.
+
 ## Step 0 (before buying anything)
 
-Read the **model # / FCC ID** off the unit, then pull the **FCC test report** (fcc.report, grantee
-`2AQVL`) — it hands you the hop parameters (channels/spacing/dwell/span) for free, and lets you
-confirm the transceiver: **A7121** (plaintext era) vs **A7130/A7157** (possible AES-128).
+Read the **model # / FCC ID** off the unit's housing label (the PCB is `VB55-PCB-RX-MAIN-V1.8`, but
+the product model / FCC ID lives on the case), then pull the **FCC test report** (fcc.report,
+grantee `2AQVL`) — it hands you the hop parameters (channels/spacing/dwell/span) for free, and lets
+you confirm the PHY inside the `DW-V7130` can: **A7121** (plaintext era) vs **A7130/A7157**
+(possible AES-128).
+
+## UART bring-up (rung 1) — adapter + checklist
+
+The board's labeled `GND / RX / TX / 3.3V` pad group is the manufacturer's debug console — cheapest,
+non-destructive way in. **Must use a 3.3 V-logic adapter** (5 V can damage the SoC).
+
+**Adapter picks:**
+
+- **Best all-rounder — Tigard (~$35–40):** FT2232H multitool, switchable 1.8/3.3/5 V; does UART now
+  **and** the `W25Q256` SPI dump later (rung 3, via `flashrom`) + JTAG/SWD. One buy covers two
+  rungs; great macOS support.
+- **Foolproof — genuine FTDI `TTL-232R-3V3` cable (~$20):** 3.3 V _fixed_ (can't mis-set to 5 V),
+  flying leads, native macOS driver.
+- **Cheap — Adafruit CP2104 Friend / any CP2102 (~$8):** 3.3/5 V jumper → set 3.3 V and **verify on
+  VCCIO with a meter** first.
+- **Avoid CH340** boards on macOS (extra WCH driver). CP210x / FTDI enumerate cleanly.
+
+**Hookup:** solder a 4-pin 0.1″ header to the pads (or pogo/test-hooks for read-only). Wire
+**GND→GND, board TX→adapter RX, board RX→adapter TX; leave `3.3V` unconnected** (it's the board's
+own rail — the unit self-powers from battery/USB-C).
+
+**Checklist:**
+
+- [ ] Adapter set/verified to **3.3 V** (meter on VCCIO)
+- [ ] GND + board-TX→adapter-RX only (receive-only first, zero risk)
+- [ ] `picocom -b 115200 /dev/tty.usbserial-*`; power-cycle; watch the boot log
+- [ ] Garbage → sweep baud (57600 / 9600 / 921600); silent → swap TX/RX
+- [ ] Capture log; ID SoC/SDK + OS (RTOS vs Linux); note any U-Boot autoboot prompt
+- [ ] Only if a shell / U-Boot appears: add adapter-TX→board-RX and interact
+
+## SPI flash dump (rung 3) — programmer + clip
+
+Pull the **`W25Q256JV` (32 MB, 3.3 V)** firmware. Two parts — a **SOIC-8 test clip** (~$8,
+in-circuit, no desoldering) and a **3.3 V-safe SPI programmer**:
+
+- **Tigard or FT232H breakout (Adafruit 2264) + `flashrom`** — native **3.3 V**, no mods. The Tigard
+  also covers rung-1 UART, so it's the one-tool pick across both rungs.
+- **CH341A programmer (~$5)** — cheapest, but ⚠️ **most CH341A modules drive 5 V on the SPI/VCC
+  lines**, which can damage the 3.3 V flash. Use only a **3.3 V-modded / known-3.3 V** CH341A (or
+  add a level shifter). A stock 5 V CH341A → don't.
+- Software must handle **>16 MB / 4-byte addressing** (`flashrom` does; some old CH341A GUIs cap at
+  16 MB).
+- In-circuit tip: if the SoC contends for the bus, hold it in **RST** or lift the flash's VCC pin;
+  desolder only if in-circuit reads come back inconsistent (verify with 2–3 identical dumps).
 
 ## Exit Criteria
 
 - [ ] Model # / FCC ID confirmed; FCC test report pulled; transceiver PN identified
+- [ ] UART boot log captured; SoC/SDK + OS identified (shell / U-Boot reachable?)
+- [ ] `W25Q256` dumped (2–3 matching reads) + firmware triaged (strings / binwalk)
 - [ ] Decoded frames captured off the parent-unit parallel-RGB bus (proof of concept image)
 - [ ] Continuous frame reconstruction → encoded stream
 - [ ] Stream restreamed (go2rtc/MediaMTX) and visible as a camera in Home Assistant
@@ -68,9 +163,13 @@ confirm the transceiver: **A7121** (plaintext era) vs **A7130/A7157** (possible 
 
 ## Shopping list (~$80)
 
-- SOIC-8 test clip + CH341A programmer (~$15) — SPI flash dump (W25Q128-class)
-- USB-TTL UART adapter (~$8) — boot-log/chip-ID recon (no shell expected)
-- Cheap logic analyzer (Saleae clone) or ~$50 FPGA — the parallel-RGB capture
+- SOIC-8 test clip (~$8) + a **3.3 V-safe** SPI programmer for the **`W25Q256` (32 MB)** dump —
+  Tigard / FT232H + `flashrom` (native 3.3 V), or a **3.3 V-modded** CH341A (stock CH341A is 5 V →
+  can kill the flash). Software must handle >16 MB (4-byte addr). See _SPI flash dump_ below
+- **3.3 V** USB-TTL / debug adapter for the labeled `GND/RX/TX/3.3V` header — **Tigard (~$35, also
+  does the SPI dump)**, FTDI `TTL-232R-3V3` cable (~$20, foolproof), or a CP2102/CP2104 module
+  (~$8). Avoid CH340 on macOS. See _UART bring-up_ below
+- Cheap logic analyzer (Saleae clone) or ~$50 FPGA — the `SoC → SSD2828` parallel-RGB capture
 - A **second/sacrificial parent unit** for the destructive display tap
 
 ## Pragmatic fallback (the "cheating" win)
@@ -88,7 +187,11 @@ and restream via go2rtc → HA. One hour, better image quality. (Keep a baby cam
 ## Progress
 
 - [x] Feasibility + silicon recon (2026-06-27) — display tap is the achievable path
-- [ ] Step 0: model/FCC ID + test report
-- [ ] Teardown + flash dump + UART recon
-- [ ] Parallel-RGB capture POC
+- [x] Teardown of the RX/parent unit (2026-07-08) — PNs confirmed (`SN93701AFG`, `SSD2828QN4`,
+      `W25Q256JV`, `DW-V7130` RF can); panel is MIPI (tap relocates to SoC→bridge); **labeled UART
+      found**
+- [ ] Step 0: product model / FCC ID off the housing label + FCC test report
+- [ ] UART boot-log recon on the `GND/RX/TX/3.3V` header (+ USB-C DM/DP probe)
+- [ ] SPI dump the `W25Q256` + firmware analysis
+- [ ] Parallel-RGB capture POC at the `SoC → SSD2828` bus
 - [ ] Reconstruct → restream → HA
