@@ -432,6 +432,179 @@ surfaced. No Top-50 overlap (the spine carries no classical)._
 | 31  | The Well-Tempered Clavier       | J.S. Bach    | Richter / or Gould                      | Canonical keyboard bible      | CD (alt)       | The "Old Testament" of piano; performer unconfirmed.                 |
 | 32  | Preludes (op.23 / op.32)        | Rachmaninoff | Vladimir Ashkenazy (Decca)              | Reference Rachmaninoff piano  | CD (alt)       | The great Romantic miniatures; held via a complete set.              |
 
+## Track 3c — Taste-gap buckets (swing · funk/soul · blues · vocal-trad jazz)
+
+**106 albums across four genres the acclaim-based Track 3b under-covered — the owner's top-listening
+lanes (swing/big-band, funk/deep-soul, blues, and vocal/trad jazz).** These are the **taste-gap
+additions _beyond_ Track 3b**: every album here is deduped against the Top-50 and the six Track 3b
+buckets, so nothing already listed above repeats (12 Track 3b cross-overs dropped — see per-section
+notes). Where an album fits two of these gap genres it is listed once in its best-fit bucket
+(Sinatra's _Songs for Swingin' Lovers!_ and _Sinatra at the Sands_ land in vocal/trad jazz, not
+swing). **44 of the 106 are held at SFPL on CD** — the borrow-and-rip subset that feeds the same
+reservation pipeline as Track 3b; the other 62 route to LINK+ / purchase / lossless-digital. Ranked
+best-first within each genre by canonical/album acclaim (blend of Acclaimed Music, AllMusic, Rolling
+Stone 500, Penguin Jazz Guide). **SFPL CD** = a Music-CD holding verified in BiblioCommons
+(`f_FORMAT=MUSIC_CD`): `CD` + call # = the album is held; `CD (comp)` = a rip-able compilation or
+alternate edition standing in for a pre-CD-era catalog; `not held` = source elsewhere; `unverified`
+= catalog inconclusive (only anthologies/errors surfaced). **SFPL's CD shelf is thin on funk/soul**
+(only 5 of 21 held — most of that bucket is buy-elsewhere); swing and vocal/trad jazz fare better
+via jazz-reissue comps.
+
+### Swing / Big-Band
+
+_27 albums / **10 held at SFPL on CD**. Fills the library's zero-swing/big-band lane despite it
+being a top listening lane. Deduped vs Track 3b (Ellington at Newport dropped — it lives in the Jazz
+bucket) and vs the vocal/trad bucket below (two Sinatra big-band vocal sets placed there). Ranked by
+canonical acclaim (Penguin Jazz Guide / AllMusic / Acclaimed Music). Duke Ellington has 27 CDs on
+SFPL under `CD JAZZ ELLI` and Sinatra 30 under `CD POP SINA`, so several "not held"/"unverified"
+classics may exist under alternate editions — worth a shelf/LINK+ check before buying._
+
+| #   | Album                                          | Artist                             | Year    | Acclaim                           | SFPL CD                                           | Why                                                                                       |
+| --- | ---------------------------------------------- | ---------------------------------- | ------- | --------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| 1   | The Atomic Mr. Basie (Complete Atomic Basie)   | Count Basie                        | 1958    | Penguin Crown; AllMusic 5★        | not held (Basie Orch. on CD, `CD JAZZ COUN`)      | The definitive modern big-band statement; Neal Hefti charts, "Whirly-Bird."               |
+| 2   | Never No Lament: The Blanton-Webster Band      | Duke Ellington                     | 1940–42 | Penguin Core; AllMusic 5★         | not held (Ellington broadly held, `CD JAZZ ELLI`) | Greatest edition of the greatest band — "Ko-Ko," "Cotton Tail"; his compositional peak.   |
+| 3   | The Famous 1938 Carnegie Hall Jazz Concert     | Benny Goodman                      | 1938    | AllMusic 5★; canonical            | CD `CD JAZZ GOOD`                                 | The night swing entered the concert hall; "Sing, Sing, Sing."                             |
+| 4   | The Far East Suite                             | Duke Ellington                     | 1966    | Grammy; AllMusic 5★; Penguin Core | unverified                                        | Late-Ellington/Strayhorn suite; mature, exotic big-band writing.                          |
+| 5   | The Original American Decca Recordings         | Count Basie                        | 1937–39 | Penguin Core; AllMusic 5★         | not held                                          | The Kansas City engine room — Lester Young, one-take swing, "Jumpin' at the Woodside."    |
+| 6   | The Essential Artie Shaw (Begin the Beguine)   | Artie Shaw                         | 1938–45 | AllMusic 4.5★; canonical          | CD `CD JAZZ SHAW`                                 | Goodman's smoother rival; "Begin the Beguine," clarinet elegance.                         |
+| 7   | Live on the Air 1938–1942                      | Glenn Miller                       | 1938–42 | genre-defining                    | CD `CD JAZZ MILL`                                 | The best-selling swing sound — "In the Mood," "Moonlight Serenade."                       |
+| 8   | Such Sweet Thunder                             | Duke Ellington                     | 1957    | AllMusic 5★; Penguin Core         | CD `CD JAZZ ELLI`                                 | Ellington/Strayhorn Shakespeare suite; sophisticated late-'50s orchestral swing.          |
+| 9   | Duke Ellington & John Coltrane                 | Duke Ellington                     | 1962    | AllMusic 4.5★; Acclaimed Music    | CD `CD JAZZ ELLI`                                 | Cross-generation summit; "In a Sentimental Mood."                                         |
+| 10  | A Study in Frustration                         | Fletcher Henderson                 | 1923–38 | Penguin Core; foundational        | unverified                                        | The blueprint every swing band copied; Henderson's arrangements built the genre.          |
+| 11  | Blowin' Up a Storm! / The Thundering Herds     | Woody Herman                       | 1945–47 | Penguin Core; AllMusic 4.5★       | not held                                          | First & Second Herds — "Caldonia," "Four Brothers"; bebop-informed big band.              |
+| 12  | Cab Calloway & His Orchestra, Vol. 1 (1930–34) | Cab Calloway                       | 1930–34 | AllMusic 4.5★; canonical          | CD `CD JAZZ CALL v.1`                             | Harlem hi-de-ho showmanship; the Cotton Club's wildest bandleader.                        |
+| 13  | The Wildest!                                   | Louis Prima                        | 1956    | AllMusic 4.5★; genre-defining     | CD `CD WINDS PRIM`                                | Vegas jump-swing with Keely Smith & Sam Butera; "Just a Gigolo."                          |
+| 14  | The Best of Louis Jordan                       | Louis Jordan                       | 1942–51 | AllMusic 5★; Acclaimed Music      | not held                                          | The jump-blues king, "father of R&B"; "Caldonia," "Choo Choo Ch'Boogie."                  |
+| 15  | Tempo and Swing / Midnight Sun                 | Lionel Hampton                     | 1937–47 | Penguin Core; AllMusic 4.5★       | not held                                          | Vibraphone-driven, hardest-swinging small-big-band; "Flying Home."                        |
+| 16  | Spinnin' the Webb / Ella & Chick               | Chick Webb                         | 1935–39 | Penguin Core; canonical           | unverified                                        | The Savoy drum king who launched Ella; dance-floor swing defined.                         |
+| 17  | Sings the Duke Ellington Song Book             | Ella Fitzgerald                    | 1957    | AllMusic 5★; Acclaimed Music      | unverified                                        | The band-forward songbook, recorded live-in-studio with Ellington's orchestra.            |
+| 18  | 50th Anniversary Collection                    | The Andrews Sisters                | 1937–51 | canonical                         | not held                                          | The definitive close-harmony vocal swing; "Boogie Woogie Bugle Boy."                      |
+| 19  | Yes, Indeed! / The Best of Tommy Dorsey        | Tommy Dorsey                       | 1935–45 | AllMusic 4★; canonical            | unverified                                        | "The Sentimental Gentleman of Swing"; smooth trombone, launched Sinatra.                  |
+| 20  | Drummin' Man / The Best of Gene Krupa          | Gene Krupa                         | 1938–49 | AllMusic 4★; canonical            | unverified                                        | The showman drummer who made rhythm a solo instrument; "Drum Boogie."                     |
+| 21  | The New Classics                               | Scott Bradlee's Postmodern Jukebox | 2017    | genre-crossover                   | CD `CD JAZZ BRAD`                                 | Modern pop reimagined as vintage swing/jazz — the owner's electro-swing gateway.          |
+| 22  | Robot (<\|>)                                   | Caravan Palace                     | 2015    | electro-swing landmark            | CD `CD POP CARA`                                  | French electro-swing flagship; gypsy-jazz guitar over house beats.                        |
+| 23  | Louie Louie Louie                              | Big Bad Voodoo Daddy               | 2017    | swing-revival staple              | CD `CD JAZZ BIG`                                  | Neo-swing revival mainstays — "Go Daddy-O."                                               |
+| 24  | The Dirty Boogie                               | Brian Setzer Orchestra             | 1998    | AllMusic 4★; multi-platinum       | not held (Setzer on CD, `CD ROCK SETZ`)           | The swing-revival smash — "Jump, Jive an' Wail"; a 17-piece band with a rockabilly heart. |
+| 25  | Hot                                            | Squirrel Nut Zippers               | 1996    | AllMusic 4.5★; Acclaimed Music    | not held (band otherwise on CD)                   | Hot-jazz/calypso revival; "Hell" — essential to the '90s swing wave.                      |
+| 26  | The Birth of Swing / Sing, Sing, Sing          | Benny Goodman                      | 1935–38 | foundational                      | unverified                                        | The studio "King of Swing"; the recordings that ignited the swing era.                    |
+| 27  | Rhythm Is Our Business / For Dancers Only      | Jimmie Lunceford                   | 1934–42 | Penguin Core; AllMusic 4.5★       | unverified                                        | The most polished, showmanship-driven '30s band; influenced Basie & Ellington.            |
+
+### Funk / Soul
+
+_21 albums / **only 5 held at SFPL on CD** — the catalog's funk/deep-soul CD shelf is thin, so 16
+are buy-elsewhere (LINK+ / purchase / lossless digital). Deduped vs Track 3b's Hip-Hop/R&B/Soul
+bucket + Top-50 (**9 overlaps dropped**: There's a Riot Goin' On, Innervisions, Super Fly, I Never
+Loved a Man, Talking Book, Otis Blue, Hot Buttered Soul, Let's Get It On, 'Live' at the Apollo).
+Owner-favorite artists (Betty Davis, Vulfpeck, Billy Preston) included. Ranked by album acclaim
+(Acclaimed Music / RS500 / RYM)._
+
+| #   | Album                                | Artist                 | Year             | Acclaim                       | SFPL CD                   | Why                                                                       |
+| --- | ------------------------------------ | ---------------------- | ---------------- | ----------------------------- | ------------------------- | ------------------------------------------------------------------------- |
+| 1   | Maggot Brain                         | Funkadelic             | 1971             | Acclaimed Music; RS500 #479   | not held                  | Psychedelic acid-funk apex; Eddie Hazel's ten-minute guitar elegy.        |
+| 2   | Mothership Connection                | Parliament             | 1975             | Acclaimed Music; RS500 #274   | not held                  | P-Funk cosmology launched; the horn-and-groove blueprint sampled forever. |
+| 3   | Stand!                               | Sly & the Family Stone | 1969             | RS500 #118; AllMusic 5★       | not held (hits comp only) | Utopian, integrated party-funk at its peak — "I Want to Take You Higher." |
+| 4   | Let's Stay Together                  | Al Green               | 1972             | RS500 #241; AllMusic 5★       | CD `CD R&B GREE`          | Willie Mitchell's Hi Records sound; the smoothest soul ever cut.          |
+| 5   | Live                                 | Donny Hathaway         | 1972             | Acclaimed Music; AllMusic 5★  | not held                  | The gold standard of live soul; audience and singer as one.               |
+| 6   | Still Bill                           | Bill Withers           | 1972             | Acclaimed Music; AllMusic 5★  | CD `CD R&B WITH`          | Plainspoken songcraft — "Use Me," "Lean on Me"; understated funk grit.    |
+| 7   | Betty Davis                          | Betty Davis            | 1973             | RYM top-funk; reappraisal     | not held                  | Ferocious proto-punk funk; the uncompromising owner-favorite debut.       |
+| 8   | Amazing Grace                        | Aretha Franklin        | 1972             | best-selling gospel LP        | CD `CD GOSPEL FRAN`       | Aretha's return to church; the biggest-selling live gospel album ever.    |
+| 9   | Call Me                              | Al Green               | 1973             | AllMusic 5★; Acclaimed Music  | not held                  | Often called Green's most complete album; country-soul crossovers.        |
+| 10  | Rejuvenation                         | The Meters             | 1974             | Acclaimed Music; RYM top-funk | not held                  | New Orleans syncopation perfected — "Hey Pocky A-Way."                    |
+| 11  | Live at the Harlem Square Club, 1963 | Sam Cooke              | 1985 (rec. 1963) | AllMusic 5★; landmark         | not held                  | The raw, sweat-soaked Cooke his label buried; electrifying live soul.     |
+| 12  | One Nation Under a Groove            | Funkadelic             | 1978             | RS500 #480; AllMusic 5★       | not held                  | The dancefloor-uniting P-Funk anthem album; tighter, hookier Funkadelic.  |
+| 13  | They Say I'm Different               | Betty Davis            | 1974             | RYM top-funk; reappraisal     | not held                  | The second Betty Davis salvo; even wilder — core to the owner's lane.     |
+| 14  | Shaft                                | Isaac Hayes            | 1971             | RS500; Oscar/Grammy winner    | CD `CD SOUNDTRACK SHAF`   | The wah-guitar theme that defined an era; symphonic funk-soul.            |
+| 15  | Fulfillingness' First Finale         | Stevie Wonder          | 1974             | Grammy AOTY; AllMusic 5★      | CD `CD POP WOND`          | The quieter classic-period gem — "Boogie On Reggae Woman."                |
+| 16  | Just as I Am                         | Bill Withers           | 1971             | AllMusic 5★; Acclaimed Music  | not held                  | The debut with "Ain't No Sunshine"; folk-soul intimacy.                   |
+| 17  | Thrill of the Arts                   | Vulfpeck               | 2015             | RYM modern-funk; owner pick   | not held                  | The breakout indie-funk statement; the owner's core modern-funk band.     |
+| 18  | The Beautiful Game                   | Vulfpeck               | 2016             | RYM; owner pick               | not held                  | Tighter, hookier Vulfpeck — "Dean Town"; a pocket clinic.                 |
+| 19  | I Wrote a Simple Song                | Billy Preston          | 1971             | AllMusic 4.5★; owner pick     | not held                  | The keyboardist's A&M funk-gospel breakout — "Outa-Space."                |
+| 20  | Good Things                          | Aloe Blacc             | 2010             | neo-soul; owner pick          | not held                  | Stones Throw retro-soul — "I Need a Dollar"; modern deep-soul revival.    |
+| 21  | Scary Goldings                       | Scary Goldings         | 2018             | modern-funk cult; owner pick  | not held                  | Larry Goldings + Vulf-orbit organ-funk instrumentals; Vulfpeck-adjacent.  |
+
+### Blues
+
+_30 albums / **14 held at SFPL on CD** (7 as the album itself, 7 via a rip-able artist compilation
+standing in for the pre-CD catalog). **No Track 3b overlap** — the buildout carried no blues. Spans
+Delta/Chicago, hill-country/juke, blues-rock, and modern blues; The Record Company is an existing
+owner favorite, included regardless. Several "not held" rows note that other titles by the same
+artist (Buddy Guy, R.L. Burnside, Gary Clark Jr., Joe Bonamassa) are on the shelf — LINK+/ILL
+fallbacks. Ranked by album acclaim (Acclaimed Music / AllMusic / RS500)._
+
+| #   | Album                                                 | Artist                      | Year        | Acclaim                                      | SFPL CD                      | Why                                                                                              |
+| --- | ----------------------------------------------------- | --------------------------- | ----------- | -------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| 1   | King of the Delta Blues Singers / Complete Recordings | Robert Johnson              | 1961 / 1990 | RS500; AllMusic 5★; foundational             | CD (comp) `CD BLUES JOHN`    | The Delta wellspring; every later blues traces back here.                                        |
+| 2   | Muddy Waters at Newport 1960                          | Muddy Waters                | 1960        | AllMusic 5★; canonical live                  | CD `CD BLUES MUDD`           | The definitive live document of electric Chicago blues — "Got My Mojo Working."                  |
+| 3   | Howlin' Wolf ("the rockin' chair album")              | Howlin' Wolf                | 1962        | AllMusic 5★; Acclaimed Music                 | CD (comp) `CD BLUES HOWL`    | Wolf + Willie Dixon songbook — "Spoonful," "Wang Dang Doodle."                                   |
+| 4   | Live at the Regal                                     | B.B. King                   | 1965        | AllMusic 5★; canonical                       | CD `CD BLUES KING`           | Widely called the greatest live blues album; B.B. at his peak.                                   |
+| 5   | Folk Singer                                           | Muddy Waters                | 1964        | AllMusic 5★; audiophile canon                | not held (comp on CD)        | Muddy unplugged with young Buddy Guy; intimate acoustic landmark.                                |
+| 6   | The Ultimate Collection / boogie comp                 | John Lee Hooker             | 1948–62     | AllMusic 5★; foundational                    | CD (comp) `CD BLUES HOOK`    | The hypnotic one-chord Detroit boogie.                                                           |
+| 7   | Texas Flood                                           | Stevie Ray Vaughan          | 1983        | RS500; AllMusic 5★                           | CD `CD ROCK VAUG`            | The record that reignited electric blues-rock; SRV's debut firestorm.                            |
+| 8   | The Best of Little Walter                             | Little Walter               | 1958        | AllMusic 5★; canonical                       | not held                     | The amplified-harmonica canon; template for every blues harp player since.                       |
+| 9   | Born Under a Bad Sign                                 | Albert King                 | 1967        | AllMusic 5★; RS500-adjacent                  | CD (comp) `CD BLUES KING`    | Stax rhythm section + string-bending guitar Clapton/SRV lifted wholesale.                        |
+| 10  | Damn Right, I've Got the Blues                        | Buddy Guy                   | 1991        | Grammy; AllMusic 4.5★                        | not held (later Guy on CD)   | The comeback that made Guy an elder statesman.                                                   |
+| 11  | Blues Breakers with Eric Clapton ("Beano")            | John Mayall's Bluesbreakers | 1966        | AllMusic 5★; RS500                           | not held                     | The British-blues Rosetta Stone; Clapton's Les Paul + Marshall tone born here.                   |
+| 12  | At Last!                                              | Etta James                  | 1960        | AllMusic 5★; Grammy Hall of Fame             | CD `CD BLUES JAME`           | Blues/R&B crossover cornerstone; the title track is standard repertoire.                         |
+| 13  | The Sky Is Crying: The History of Elmore James        | Elmore James                | 1959–63     | AllMusic 5★; slide canon                     | CD (comp) `CD BLUES JAME`    | The slide-guitar bloodline — "Dust My Broom."                                                    |
+| 14  | Father of the Delta Blues: Complete 1965 Sessions     | Son House                   | 1965        | AllMusic 5★; Delta primary source            | CD `CD BLUES HOUS`           | Raw, preacher-intense country blues from a first-generation Delta master.                        |
+| 15  | The Paul Butterfield Blues Band                       | Paul Butterfield Blues Band | 1965        | AllMusic 5★; RS500                           | CD `CD BLUES PAUL`           | Integrated Chicago band that bridged blues to the rock audience.                                 |
+| 16  | The Complete Imperial Recordings / comp               | T-Bone Walker               | 1950–54     | AllMusic 5★; origin of electric blues guitar | not held                     | The man who plugged the blues in; the vocabulary B.B. and Chuck Berry inherited.                 |
+| 17  | The Anthology / Complete Plantation Recordings        | Muddy Waters                | 1941–72     | AllMusic 5★; canonical                       | CD (comp) `CD BLUES MUDD`    | The full arc from Library-of-Congress field cuts to Chess electric.                              |
+| 18  | Mojo Hand                                             | Lightnin' Hopkins           | 1960        | AllMusic; Texas country-blues canon          | CD `CD BLUES HOPK`           | Loose, spontaneous Texas country blues; a giant of the idiom.                                    |
+| 19  | Hoodoo Man Blues                                      | Junior Wells                | 1965        | AllMusic 5★; Chicago canon                   | not held (Wells comps on CD) | Landmark working-band Chicago blues with Buddy Guy on guitar.                                    |
+| 20  | Getting Ready / Texas guitar comp                     | Freddie King                | 1961–71     | AllMusic 5★; "Three Kings"                   | CD (comp) `CD BLUES KING`    | Instrumental-driven Texas blues guitar — "Hide Away."                                            |
+| 21  | The Cobra Recordings / Right Place, Wrong Time        | Otis Rush                   | 1956–71     | AllMusic 5★; West Side Chicago               | not held                     | Minor-key, string-bending "West Side" sound; a guitarist's guitarist.                            |
+| 22  | Strong Persuader                                      | Robert Cray                 | 1986        | Grammy; AllMusic 4.5★                        | not held                     | The album that carried polished modern blues onto mainstream radio.                              |
+| 23  | A Ass Pocket of Whiskey                               | R.L. Burnside               | 1996        | AllMusic 4★; hill-country landmark           | not held (Burnside on CD)    | North-Mississippi juke-joint grit with Jon Spencer; the Fat Possum sound.                        |
+| 24  | All Night Long                                        | Junior Kimbrough            | 1992        | AllMusic 4.5★; hill-country foundational     | not held                     | Droning, trance-like Holly Springs juke blues; the other Fat Possum pillar.                      |
+| 25  | Couldn't Stand the Weather                            | Stevie Ray Vaughan          | 1984        | AllMusic 4.5★; RS-listed                     | not held                     | SRV's fully realized follow-up — "Voodoo Chile."                                                 |
+| 26  | Then Play On                                          | Fleetwood Mac               | 1969        | AllMusic 5★; Peter Green era                 | not held                     | Peter Green's blues-to-art-rock peak; "Oh Well."                                                 |
+| 27  | Give It Back to You                                   | The Record Company          | 2016        | Grammy-nominated (Contemp. Blues)            | not held                     | **Owner favorite.** Stripped-down slide-and-groove blues-rock; the breakout. Acquire regardless. |
+| 28  | Blak and Blu                                          | Gary Clark Jr.              | 2012        | Grammy; AllMusic 4★                          | not held (Clark on CD)       | The modern face of blues-rock — fuzz, soul, hip-hop.                                             |
+| 29  | Shake Hands with Shorty                               | North Mississippi Allstars  | 2000        | Grammy-nominated; AllMusic 4.5★              | not held (later NMA on CD)   | Hill-country repertoire revved into jam-blues.                                                   |
+| 30  | Blues Deluxe                                          | Joe Bonamassa               | 2003        | AllMusic 4★; modern-blues flagship           | not held (Vol. 2 on CD)      | The commercial standard-bearer of 21st-century blues-rock.                                       |
+
+### Vocal & Traditional Jazz
+
+_28 albums / **15 held at SFPL on CD** (4 as the album itself, 11 via a comp/alternate edition). The
+vocal/trad complement to Track 3b's modern-instrumental Jazz bucket. Deduped vs Track 3b Jazz
+(**Lady in Satin and Ella and Louis dropped** — both live there) and absorbs the two Sinatra
+big-band vocal sets that also appeared on the swing list. `CD (comp)` = the album itself isn't on
+the shelf but a compilation/strong same-artist substitute is (SFPL's jazz-reissue cataloging is
+inconsistent — treat comp as "close-enough on the shelf"). Ranked by canonical acclaim (Penguin Jazz
+Guide / AllMusic / Acclaimed Music)._
+
+| #   | Album                                     | Artist                    | Year      | Acclaim                        | SFPL CD                  | Why                                                                                     |
+| --- | ----------------------------------------- | ------------------------- | --------- | ------------------------------ | ------------------------ | --------------------------------------------------------------------------------------- |
+| 1   | The Hot Fives & Sevens                    | Louis Armstrong           | 1925–28   | Penguin crown; AllMusic 5★     | not held                 | The birth of the jazz solo and of swing phrasing; foundational.                         |
+| 2   | In the Wee Small Hours                    | Frank Sinatra             | 1955      | AllMusic 5★; Acclaimed Music   | not held                 | The first true concept album — a 3 a.m. song cycle; Sinatra/Riddle at their peak.       |
+| 3   | Sings the Cole Porter Song Book           | Ella Fitzgerald           | 1956      | Penguin core; AllMusic 5★      | CD (comp) `CD JAZZ FITZ` | Launched the Songbook series and the Great American Songbook canon.                     |
+| 4   | Songs for Swingin' Lovers!                | Frank Sinatra             | 1956      | AllMusic 5★; Acclaimed Music   | not held                 | The up-tempo Sinatra/Riddle template — "I've Got You Under My Skin." (Also fits swing.) |
+| 5   | Sarah Vaughan (w/ Clifford Brown)         | Sarah Vaughan             | 1954      | AllMusic 5★; Penguin core      | CD (comp) `CD JAZZ VAUG` | Vaughan's warmest small-group date, Clifford Brown on trumpet.                          |
+| 6   | Chet Baker Sings                          | Chet Baker                | 1954      | Acclaimed Music; benchmark     | CD `CD JAZZ BAKE`        | The fragile, androgynous cool-vocal touchstone — "My Funny Valentine."                  |
+| 7   | Love Is the Thing                         | Nat King Cole             | 1957      | #1 LP; AllMusic 4.5★           | CD (comp) `CD JAZZ COLE` | Cole's lush Gordon Jenkins ballad set; his only #1 album.                               |
+| 8   | Little Girl Blue                          | Nina Simone               | 1959      | AllMusic 4.5★; debut classic   | CD `CD JAZZ SIMO`        | Her debut — jazz, classical, blues fused; "My Baby Just Cares for Me."                  |
+| 9   | Sings the George & Ira Gershwin Song Book | Ella Fitzgerald           | 1959      | Grammy Hall of Fame            | not held                 | The Nelson Riddle summit of the Songbook project; the deepest of the set.               |
+| 10  | Birth of the Hot (Red Hot Peppers)        | Jelly Roll Morton         | 1926–27   | Penguin core; canonical        | not held                 | The first great jazz composer-arranger; orchestrated New Orleans jazz.                  |
+| 11  | The Quintessential Billie Holiday         | Billie Holiday            | 1930s–40s | Penguin core; canonical        | CD (comp) `CD JAZZ HOLI` | Her peak Columbia small-group sides with Lester Young.                                  |
+| 12  | Plays W.C. Handy                          | Louis Armstrong           | 1954      | AllMusic 5★; canonical         | not held                 | The finest Armstrong All-Stars album; trad repertoire reinvented — "St. Louis Blues."   |
+| 13  | John Coltrane and Johnny Hartman          | Coltrane / Johnny Hartman | 1963      | AllMusic 5★; Penguin core      | CD (comp) `CD JAZZ HART` | The great baritone-and-tenor ballad album; Hartman's only Coltrane date.                |
+| 14  | Sinatra at the Sands                      | Frank Sinatra             | 1966      | canonical live; w/ Basie       | not held                 | Sinatra fronting the Basie band, Quincy Jones conducting. (Also fits swing.)            |
+| 15  | Wild Is the Wind                          | Nina Simone               | 1966      | AllMusic 4.5★                  | CD (comp) `CD JAZZ SIMO` | Simone's most emotionally raw Philips set — "Four Women."                               |
+| 16  | After Midnight                            | Nat King Cole             | 1957      | AllMusic 4.5★                  | not held                 | Cole back at the piano leading a swinging small combo; his jazziest vocal album.        |
+| 17  | The Tony Bennett/Bill Evans Album         | Tony Bennett & Bill Evans | 1975      | AllMusic 5★                    | CD `CD JAZZ BENN`        | Voice-and-piano duets of rare intimacy.                                                 |
+| 18  | Anita Sings the Most                      | Anita O'Day               | 1957      | AllMusic 4.5★; Penguin         | CD (comp) `CD JAZZ ODAY` | O'Day's rhythmic daring with the Oscar Peterson trio.                                   |
+| 19  | Sassy Swings the Tivoli                   | Sarah Vaughan             | 1963      | Penguin crown                  | not held                 | The best live document of Vaughan's instrument-like control and swing.                  |
+| 20  | Carmen Sings Monk                         | Carmen McRae              | 1988      | AllMusic 4.5★                  | not held                 | McRae setting lyrics to Monk's tunes — a late-career triumph of phrasing.               |
+| 21  | Dinah Jams                                | Dinah Washington          | 1954      | AllMusic 4.5★; Penguin         | CD `CD JAZZ WASH`        | Washington jamming live with Clifford Brown and Max Roach; blues-drenched.              |
+| 22  | Abbey Is Blue                             | Abbey Lincoln             | 1959      | Penguin core                   | not held                 | Lincoln's breakthrough — dramatic, politically charged vocal jazz.                      |
+| 23  | The Audience with Betty Carter            | Betty Carter              | 1979      | Penguin crown                  | not held                 | The most adventurous vocalist of her generation, live; radical phrasing freedom.        |
+| 24  | Blue Light 'Til Dawn                      | Cassandra Wilson          | 1993      | AllMusic 4.5★; modern landmark | not held                 | Reinvented vocal jazz for the '90s — earthy, blues-and-folk-rooted, atmospheric.        |
+| 25  | For One to Love                           | Cécile McLorin Salvant    | 2015      | Grammy Best Jazz Vocal         | CD (comp) `CD JAZZ SALV` | The leading vocalist of the current generation; storytelling and dynamic range.         |
+| 26  | Liquid Spirit                             | Gregory Porter            | 2013      | Grammy Best Jazz Vocal         | CD (comp) `CD JAZZ PORT` | Warm gospel-soul-jazz baritone; the modern crossover vocal hit.                         |
+| 27  | When I Look in Your Eyes                  | Diana Krall               | 1999      | Grammy; AllMusic 4.5★          | CD (comp) `CD JAZZ KRAL` | The polished piano-and-voice standards album that made Krall a star.                    |
+| 28  | My Favorite Things                        | Joey Alexander            | 2015      | 2× Grammy nom; prodigy debut   | CD (comp) `CD JAZZ ALEX` | Modern-trad piano prodigy (in the owner's likes); swinging, standards-forward.          |
+
 ## Augmented picks — highly-rated films at SFPL (ranked)
 
 The 6-franchise wishlist is a personal target list, not "the best of what SFPL stocks." This is the
