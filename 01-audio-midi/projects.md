@@ -1,4 +1,4 @@
-# Audio & MIDI Projects (15)
+# Audio & MIDI Projects (16)
 
 This category focuses on digital signal processing (DSP), custom MIDI controllers, and audio
 hardware.
@@ -22,3 +22,4 @@ hardware.
 | 01-013 | [MIDI to CV Converter](01-013-midi-to-cv-converter.md)                                                 | Not Started | Medium     | 1-4 weeks       |
 | 01-014 | [Networked Audio Intercom](01-014-networked-audio-intercom.md)                                         | Not Started | Medium     | 1-4 weeks       |
 | 01-015 | [Generative Ambient Music Player](01-015-generative-ambient-music-player.md)                           | Not Started | Medium     | 1-4 weeks       |
+| 01-016 | [DIY Digital-Domain Streamer (Snapcast to External DAC/DSP)](01-016-diy-digital-domain-streamer.md)    | In Progress | Medium     | 1-4 weeks       |
