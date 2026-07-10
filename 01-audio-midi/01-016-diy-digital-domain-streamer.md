@@ -197,6 +197,43 @@ output latency — `Pi → USB → D90 III` vs. `Pi → USB → DSPi (up to 85 m
 vs. a HAT room — so rooms will drift out of sync unless each client's Snapcast **`latency` offset**
 is tuned to a common target. "In sync" across mixed topologies is a calibration step, not automatic.
 
+## Volume control (Home Assistant)
+
+The one thing worth preserving from the HiFiBerry WebUI is its volume slider — and it drove the
+card's **ALSA hardware mixer**, not a Snapcast control, so it doesn't come for free with the
+streamer OS. There are two independent volume layers, and both can live in HASS (the house control
+plane):
+
+| Layer        | What it is                                                                                       | Path into HASS                                                                                      |
+| ------------ | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **Software** | Snapcast per-client digital volume (Snapweb at `snapcast.burntbytes.com`, usually left at 100 %) | Native **HASS Snapcast integration** (server control port `1705`) — each client is a `media_player` |
+| **Hardware** | The Pi's **ALSA mixer** volume (the DAC/card's own level — what the HiFiBerry WebUI drove)       | A small **MQTT bridge** on each endpoint → a HASS `number` slider (via MQTT discovery)              |
+
+**Keep them independent:** run snapclient with `--mixer software` (default).
+`--mixer hardware:'<control>'` would make the Snapcast slider _become_ the ALSA hardware control —
+one merged slider, the opposite of exposing both.
+
+**Hardware slider — MQTT bridge.** A small systemd service per endpoint, reusing the existing
+mosquitto + HASS MQTT stack (no SSH-from-HASS):
+
+1. On start, publish a HASS discovery config → a slider auto-appears:
+   `homeassistant/number/<room>_hw_vol/config` with `command_topic`/`state_topic`, `min:0 max:100`.
+2. On command: `amixer -c <card> set '<control>' <value>%`.
+3. Publish state from `amixer get` (on change / periodic).
+
+Result: two sliders per room — `<Room> Volume` (Snapcast/software) and `<Room> HW Volume`
+(ALSA/hardware) — both in HASS.
+
+**Per-room caveat.** The hardware slider only exists where the output device exposes an ALSA volume
+— confirm with `amixer -c <card> scontrols`:
+
+- USB DAC with UAC volume, or a HiFiBerry DAC+ chip → both sliders.
+- **D90 III (likely no host volume) or a Digi/S-PDIF output** → no ALSA control to bridge; that room
+  gets the **software slider only**, and its true analog volume lives on the DAC's knob/remote
+  (bring that into HASS via an IR blaster if wanted).
+
+So "expose both" is really _software everywhere, hardware where the device exposes a mixer_.
+
 ## Test plan (validate on a spare Pi, zero risk to the 2 live rooms)
 
 1. Flash **DietPi** on a spare Pi.
@@ -218,6 +255,8 @@ is tuned to a common target. "In sync" across mixed topologies is a calibration 
 - [ ] D90 III Discrete on-board PEQ configured (Topping Tune) and confirmed applied on the USB
       input.
 - [ ] Decision recorded: which rooms move to external-DAC-via-USB vs. stay HAT-based.
+- [ ] Volume control wired in HASS: Snapcast integration (software) + per-endpoint MQTT ALSA bridge
+      (hardware, where the device exposes an `amixer` control).
 - [ ] Migration runbook written into `homelab` (supersedes the patched `snapcast-hifiberry` image
       for migrated rooms).
 
