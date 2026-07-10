@@ -23,9 +23,11 @@ keep passive" path — a **refinement of a validated design**, not a redesign. T
 redesign is a separate project ([`01-010`](01-010-active-crossover-network-for-speakers.md)).
 
 **Hardware on hand:** a built pair using the **old, now-discontinued paper woofers** (baseline /
-reference only — not worth further investment), plus an **unbuilt ULD kit** — Purifi
-**PTT6.5W08-NFA-01** midbasses ×4 + Peerless/Scan-Speak tweeter + the ULD crossover parts. Amps:
-Purifi Eigentakt. Measurement: UMIK-1 + REW. A crossover is already modeled in **KiCad on the
+reference only — not worth further investment), plus an **unbuilt ULD kit purchased 2021** (still
+boxed): **8× Purifi PTT6.5W08-NFA-01** ULD woofers (4/speaker, ~15,300 kr) + **2× Scan-Speak
+Discovery D2608/9130** textile-dome tweeters (the schematic's Peerless alternate is _not_ used) +
+the ULD crossover parts. The Purifi driver is still current, so no obsolescence risk on this path.
+Amps: Purifi Eigentakt. Measurement: UMIK-1 + REW. A crossover is already modeled in **KiCad on the
 Windows box** (retrieve when powered on — likely this ULD network).
 
 ## The design (EL-6 ULD, from the schematic)
