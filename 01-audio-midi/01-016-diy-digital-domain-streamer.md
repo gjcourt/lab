@@ -110,8 +110,12 @@ drive a power amp directly. ~$999.
 
 ## Interface layer — pick the wire first
 
-If 24/192 covers the library (it covers all Snapcast-streamed sources here), **coax or USB** are the
-sane picks. Reach past S/PDIF only for DSD or >192 kHz PCM — which only USB or I2S can carry.
+**For a Snapcast endpoint the format ceiling barely matters.** Snapserver streams a single fixed PCM
+format (commonly 48 kHz) to every client, so no client DAC ever sees >48 kHz _from Snapcast_ — the
+high USB/I2S ceilings below only pay off for a hypothetical non-Snapcast/direct-hi-res path this
+system doesn't have. Usefully, that also means **DSPi's 24/48 cap costs nothing here.** The table
+below is for completeness; in practice the choice reduces to a robust, low-fuss wire — **coax or
+USB**.
 
 | Interface     | Ceiling          | For                                           | Against                                       |
 | ------------- | ---------------- | --------------------------------------------- | --------------------------------------------- |
@@ -188,6 +192,11 @@ Downstream, pick per room:
 
 Snapcast mixes these freely — every client is independent, so the house can be heterogeneous.
 
+**The price of that heterogeneity: per-client latency calibration.** Different chains have different
+output latency — `Pi → USB → D90 III` vs. `Pi → USB → DSPi (up to 85 ms delay + processing) → DAC`
+vs. a HAT room — so rooms will drift out of sync unless each client's Snapcast **`latency` offset**
+is tuned to a common target. "In sync" across mixed topologies is a calibration step, not automatic.
+
 ## Test plan (validate on a spare Pi, zero risk to the 2 live rooms)
 
 1. Flash **DietPi** on a spare Pi.
@@ -197,12 +206,15 @@ Snapcast mixes these freely — every client is independent, so the house can be
    `snapclient --host <snapserver-ip> -s <usb-alsa-card>`.
 5. Confirm it joins the group in Snapweb, plays **in sync** with kitchen/living-room, and audio
    exits the USB DAC.
-6. If green: this is the migration recipe for the other rooms.
+6. Calibrate the client's Snapcast **`latency` offset** so it aligns with the existing rooms (the
+   USB/DAC chain latency differs from the HAT chain — expect to nudge this).
+7. If green: this is the migration recipe for the other rooms.
 
 ## Exit Criteria
 
 - [ ] Spare-Pi test passes: DietPi + `snapclient` + USB DAC joins the existing Snapcast group and
-      plays in sync with the two HiFiBerry rooms.
+      plays in sync with the two HiFiBerry rooms (per-client `latency` offset calibrated for the
+      USB/DAC chain).
 - [ ] D90 III Discrete on-board PEQ configured (Topping Tune) and confirmed applied on the USB
       input.
 - [ ] Decision recorded: which rooms move to external-DAC-via-USB vs. stay HAT-based.
