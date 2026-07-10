@@ -23,10 +23,10 @@ freedom that unlocks to fix the design's one open weakness — **vertical direct
 going a **true 3-way**. This is the redesign path; the "keep one amp, refine the passive" path is a
 separate project ([`01-017`](01-017-elsinore-passive-crossover-refinement.md)).
 
-**Target drivers:** the unbuilt **ULD kit** — Purifi PTT6.5W08-NFA-01 ×4 + tweeter (the built pair
-uses discontinued paper woofers = baseline only). **Amps today:** one Purifi Eigentakt stereo pair —
-enough for _one passive speaker pair_ and no more, so this project's gating cost is **more amplifier
-channels**.
+**Target drivers:** the unbuilt **ULD kit** (bought 2021) — **8× Purifi PTT6.5W08-NFA-01** + **2×
+Scan-Speak Discovery D2608/9130** tweeters (the built pair uses discontinued paper woofers =
+baseline only). **Amps today:** one Purifi Eigentakt stereo pair — enough for _one passive speaker
+pair_ and no more, so this project's gating cost is **more amplifier channels**.
 
 ## Why this can't be "one amp + active"
 
