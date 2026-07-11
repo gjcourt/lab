@@ -60,7 +60,7 @@ AFTER   (★ = added;  stock control board left alone)
                                                                   so the stock board must switch the pump via a
                                                                   mechanical relay to trigger it reliably
   data in:    pressure sensor → ★[ito ADC]
-              stock GICAR meter → ★[CD4011 NAND + PC817 opto] → ★[ito IMPULSE]   (reuse machine's meter, isolated)
+              stock GICAR meter → ★[CD4011 NAND buffer @5V] → ★[ito IMPULSE]   (reuse machine's meter; opto optional)
 ```
 
 ## Reading it
@@ -72,8 +72,8 @@ AFTER   (★ = added;  stock control board left alone)
 - **Electrical — interposition, not a rebuild.** The ito **`Relay 1`** (a solid-state relay) slips
   into the pump's mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead
   for zero-cross timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011
-  NAND + PC817 optocoupler** (galvanic isolation; NAND powered from the meter's ~14.8 V rail, as
-  blondica built it); and the module shares **one switched-mains tap** with the plumb-in solenoid,
+  NAND buffer on ito's 5 V rail** (opto optional — galvanic isolation only; blondica's proven build
+  is the bare NAND); and the module shares **one switched-mains tap** with the plumb-in solenoid,
   downstream of the machine's power switch.
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
   [06-012](../06-012-leva-pid-temperature-takeover.md)), low-water float switch (dry-run

@@ -26,9 +26,15 @@
    internally** (measured: +14.3 V rail, signal 0↔5 V); the 14.8 V meter rail must **never** touch
    ito (5 V + 0.5 V input max) (#13, #26).
 4. **Share the stock meter; don't stack a second in series.** A second (kit) meter before the pump
-   added a restricting nozzle that cut free flow ~10 % (575→640 mL/min once removed) (#31). blondica
-   bridged the stock meter to ito via a **CD4011 NAND gate + PC817 optocoupler** for isolation
-   (#25–#27).
+   added a restricting nozzle that cut free flow ~10 % (575→640 mL/min once removed) (#31).
+   **Interface — the working circuit runs at 5 V, not 14.8 V.** blondica's _first_ attempt powered a
+   NAND + opto on the **14.8 V rail and it interfered/failed** (#25); scoping the meter (#26) showed
+   the **output is a 5 V open-collector signal** (14.3 V is only the VCC pin). His **bench-proven**
+   build (ITO thread t61709 #26) is **one CD4011B gate as a buffer on ito's 5 V rail** — share the
+   meter's `o` (output) + `−` (GND) to both controllers, keep `+`/VCC on the Vivaldi **ONLY**, **no
+   opto** (opto is optional, for galvanic isolation only). sandc's simpler, untested variant
+   (#28–#29): skip the IC, direct-share `o` + `−`, and desolder ito's R6 (10 K) + C8 (100 N). ⚠️ The
+   14.3–14.8 V meter rail must **never** touch an ito input (5 V + 0.5 V max).
 5. **The pressure pre-test won't run out of the box:** the stock board drops the SNS signal on
    "inactivity". Fix with a temporary **SNS↔L jumper**, or just **press the shot button first, then
    start the test** (#12–#14). Test data survives firmware upgrades.
