@@ -224,10 +224,10 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 - If the solenoid is **24 V DC**: feed a 24 V DC wall-wart from the switched-mains rail, then run
   the low-voltage leads to the coil. Lower-risk; preferred.
 - Result: machine on ⇒ coil live ⇒ valve open. Machine off **or** power loss ⇒ NC valve closed.
-- ito can't drive the valve itself (both its on-board relays are committed to the pump and the 3-way
-  brew valve), so the valve keeps its own coil supply off the rail. Optional: an ESP32 tapping the
-  same rail adds Home Assistant control (leak-sensor auto-shutoff, scheduling) — not required for
-  the fail-safe.
+- ito can't drive the valve itself (both its switchable outputs are committed — `SSR 1` to the pump
+  via phase-angle, `SSR 2` to the 3-way brew valve), so the valve keeps its own coil supply off the
+  rail. Optional: an ESP32 tapping the same rail adds Home Assistant control (leak-sensor
+  auto-shutoff, scheduling) — not required for the fail-safe.
 
 **Two separate supplies — don't confuse them.** The 24 V solenoid coil runs off its **own 24 V DC
 supply**, _not_ the ito's 5 V PSU (the ito's HLK-PM01 is **5 V / 0.6 A** — wrong voltage and far too
@@ -320,15 +320,16 @@ just a coincidence:
   an **atmospheric inlet** — exactly what float-fill preserves. An **inlet-side direct plumb**
   (pressurized pump inlet) would change pump behavior and complicate profile calibration. So the
   robustness choice here is also the right choice for a future profiler.
-- leva!'s **flow meter installs on the tank→pump line** (before the pump). Float-fill leaves that
-  line intact — the meter goes downstream of where the float valve tops up the tank, unaffected.
+- 06-001 now **reuses the machine's own stock (GICAR) flow meter via an electrical tap** — no added
+  in-line meter — so float-fill doesn't interact with flow sensing at all. (The earlier plan put a
+  Digmesa on the tank→pump line; that's been dropped — see 06-001 BOM.)
 - Heads-up for later: the Mini V2 has a **brew over-pressure bypass valve** returning water to the
   pump inlet. It's irrelevant to this plumb-in but matters for profiling (set it >9 bar; see
   06-001).
 - **The fill-solenoid interlock reuses ito's wiring:** power the coil from the machine's
   switched-mains rail — the same L/N that feeds ito's **N/L** input. ito can't drive the valve (both
-  its relays are taken by the pump + 3-way valve), so the valve gets its own coil supply off that
-  rail. Tap it during the ito install to avoid opening the machine twice.
+  its outputs are taken — `SSR 1` = pump, `SSR 2` = 3-way valve), so the valve gets its own coil
+  supply off that rail. Tap it during the ito install to avoid opening the machine twice.
 
 Net: do this project freely now; it does not foreclose — and arguably enables — 06-001 later.
 

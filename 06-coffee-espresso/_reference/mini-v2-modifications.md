@@ -5,10 +5,11 @@ Combined before/after of the **fluid** and **electrical** paths across the two m
 [06-011 direct plumb-in](../06-011-mini-v2-direct-plumb-in.md). Both are done in **one teardown**
 (panels off → pump/boiler/wiring exposed).
 
-Every `★` is something you add; everything unmarked stays stock. The water side gains **three
-taps**; the electrical side is pure **interposition** — the ito slips into the pump's mains circuit
-and rides the same switched-mains rail that also powers the plumb-in solenoid. The stock control
-board, the low-water float switch, the boilers, and the pump itself are **untouched**.
+Every `★` is something you add; everything unmarked stays stock. The water side gains **two taps**
+(no added flow meter — the machine's own stock GICAR meter is reused electrically); the electrical
+side is pure **interposition** — the ito slips into the pump's mains circuit and rides the same
+switched-mains rail that also powers the plumb-in solenoid. The stock control board, the low-water
+float switch, the boilers, and the pump itself are **untouched**.
 
 ```text
 ════════════════════════ FLUID PATH ════════════════════════
@@ -35,9 +36,10 @@ AFTER   (★ = added / changed)
    └─────┬─────┘
          │ gravity  (still stock)
          ▼
-  ★[FLOW METER] → [VIBE PUMP] → ★[PRESSURE TEE] → [brew boiler] → [group] → PF
-   (tank→pump)          ▲
-                        └── [bypass] ★ set >9 bar
+   [VIBE PUMP] → ★[PRESSURE TEE] → [brew boiler] → [group] → PF
+        ▲
+        └── [bypass] ★ set >9 bar
+   (no added in-line meter — flow is read off the machine's own stock GICAR meter; see Electrical)
 
 
 ═════════════════════ ELECTRICAL PATH ═════════════════════
@@ -53,18 +55,24 @@ AFTER   (★ = added;  stock control board left alone)
                                                 ├─► ★ ito power (N/L)
                                                 └─► ★ solenoid coil supply   (plumb-in interlock)
 
-  pump run:   [pump switch] → ★[ito RELAY 1/2] → [VIBE PUMP]    ← leva! phase-angle control
-  sense:      pump-switch L → ★[ito SNS]                        ← zero-cross + "pump on"
-  data in:    pressure sensor → ★[ito ADC]      flow meter → ★[ito IMPULSE]
+  pump run:   ★[ito SSR/triac 1] → [VIBE PUMP]                  ← leva! phase-angle control (a triac, not a relay)
+  sense:      controller pump-on lead → ★[ito SNS]             ← zero-cross + "pump on"; ito SNS is an opto input,
+                                                                  so the stock board must switch the pump via a
+                                                                  mechanical relay to trigger it reliably
+  data in:    pressure sensor → ★[ito ADC]
+              stock GICAR meter → ★[CD4011 NAND + PC817 opto] → ★[ito IMPULSE]   (reuse machine's meter, isolated)
 ```
 
 ## Reading it
 
-- **Water — three taps + one setting.** Solenoid/regulator/float valve upstream of the tank
-  (06-011); a flow meter on the tank→pump line and a pressure tee on the brew line (06-001); the
-  existing over-pressure bypass dialed to crack just above 9 bar.
-- **Electrical — interposition, not a rebuild.** The ito relay slips into the pump's mains circuit
-  for phase-angle control, `SNS` reads the pump-switch L phase for zero-cross timing, and the module
+- **Water — two taps + one setting.** Solenoid/regulator/float valve upstream of the tank (06-011)
+  and a single pressure tee on the brew line (06-001); the existing over-pressure bypass dialed to
+  crack just above 9 bar. **Flow is read off the machine's own stock GICAR meter — no added in-line
+  meter** (a second meter in series restricted free flow ~10 %, t56816 #31).
+- **Electrical — interposition, not a rebuild.** The ito **triac (SSR 1)** slips into the pump's
+  mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead for zero-cross
+  timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011 NAND + PC817
+  optocoupler** (galvanic isolation, powered from the meter's own 14.8 V rail); and the module
   shares **one switched-mains tap** with the plumb-in solenoid, downstream of the machine's power
   switch.
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
@@ -78,7 +86,7 @@ AFTER   (★ = added;  stock control board left alone)
 
 ## Shared teardown
 
-Because the float valve (06-011) and the flow meter + pressure tee (06-001) are all reachable once
-the panels are off, and the single switched-mains tap serves both the ito and the solenoid, **do
-both projects' in-machine work in one session.** Panel removal:
+Because the float valve (06-011) and the pressure tee + stock-meter tap (06-001) are all reachable
+once the panels are off, and the single switched-mains tap serves both the ito and the solenoid,
+**do both projects' in-machine work in one session.** Panel removal:
 [Clive — LUCCA A53 / Mini / Vivaldi: Panel Removal](https://support.clivecoffee.com/en/la-spaziale-lucca-a53-panel-removal).
