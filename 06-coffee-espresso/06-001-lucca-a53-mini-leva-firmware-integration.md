@@ -40,9 +40,12 @@ in-repo synthesis is
 > II … I have mine set up to read the pressure, flow, and temperature (group head block)."_ Cost was
 > ~$200 for the kit, shipped to family in the EU and hand-carried to the US (it isn't sold here).
 
-**See also:** [Mini V2 modifications at a glance](_reference/mini-v2-modifications.md) —
-before/after of the fluid + electrical paths across this project and
-[06-011](06-011-mini-v2-direct-plumb-in.md) (one shared teardown).
+**See also:** [Mini V2 control-board wiring](_reference/mini-v2-control-board-wiring.md) — the
+authoritative M5 terminal map (which tab is pump / phase / neutral, and the "no switched rail"
+gotcha), shared by every project on this machine; and
+[Mini V2 modifications at a glance](_reference/mini-v2-modifications.md) — before/after of the fluid +
+electrical paths across this project and [06-011](06-011-mini-v2-direct-plumb-in.md) (one shared
+teardown).
 
 ## Scope
 
@@ -236,14 +239,19 @@ manual — see **Tuning** below and `_reference/leva/`.
    fires the output at a computed delay after each `SNS`-detected zero-cross (that delay _is_ the
    phase angle), which a mechanical relay can't do. Then move the controller's **"pump-on" lead onto
    `SNS`** for zero-cross detection + "pump on" (leva! reads the voltage at `SNS` as the
-   controller's "run the pump" command; see the Pre-flight relay check). **As-built on a Mini
-   Vivaldi II** (t56816 #35): ito `L` → the mains **L phase (the 3rd cable from the bottom** on the
-   MV control board; 1st & 2nd are N); the MV board's **switched pump output → `SNS`**; **`Relay 1`
-   → pump**. Optionally, a later step moves the **group-head solenoid feed (4th from bottom) onto
-   `Relay 2`** to unlock dosing / backflush / shot control — this hands the valve to ito (the
-   "secondary-controller" trade-off; dosing stays off until you do it). → **Do steps 2–3 in the same
-   machine-open session as [06-011](06-011-mini-v2-direct-plumb-in.md)'s switched-mains solenoid
-   interlock** — identical wiring area, one teardown.
+   controller's "run the pump" command; see the Pre-flight relay check). **Which wire is the pump**
+   is decoded from the manual's M5 terminal strip — top→bottom: **`A` EV.AL · `2` EV.H · PUMP
+   (unlabeled) · `1` EV.GR · `F` PHASE · N · N** (full map + always-live caveat in
+   [`_reference/mini-v2-control-board-wiring.md`](_reference/mini-v2-control-board-wiring.md)). So:
+   **cut the PUMP wire** (the unlabeled 3rd-from-top tab; confirm by meter — hot during _both_ a brew
+   and a steam-boiler autofill) at the pump → route its **control-board side to `SNS`**, and drive the
+   pump from **`Relay 1`**. ito `L`/`N` power comes off **`F`/PHASE + a Neutral tab** — ⚠️ `F` is
+   **always live** (120 V even in standby; the pad only toggles ON/standby, there is no switched
+   rail). Optionally, a later step moves the **group solenoid (`1`/EV.GR) onto `Relay 2`** to unlock
+   dosing / backflush / shot control — this hands the valve to ito (dosing stays off until you do it).
+   → **Do steps 2–3 in the same machine-open session as
+   [06-011](06-011-mini-v2-direct-plumb-in.md)'s fill-solenoid tap** — identical wiring area (both use
+   the PUMP output), one teardown.
 4. **Install the sensors.** Pressure sensor → **ADC** header — **tee a T-fitting into the brew
    line** (cap the spare branch for an optional gauge; file the adapter if it's tight); mount
    **vibration-free** and cool-ish (125 °C-rated — heat is fine, vibration kills it; never at the

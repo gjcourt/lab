@@ -73,8 +73,10 @@ AFTER   (★ = added;  stock control board left alone)
   into the pump's mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead
   for zero-cross timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011
   NAND buffer on ito's 5 V rail** (opto optional — galvanic isolation only; blondica's proven build
-  is the bare NAND); and the module shares **one switched-mains tap** with the plumb-in solenoid,
-  downstream of the machine's power switch.
+  is the bare NAND); and both ito's `SNS` and the plumb-in solenoid's PSU tap the control-board
+  **PUMP output** — there is **no switched mains rail** on this machine (`F`/PHASE is always live;
+  full M5 terminal map in
+  [control-board wiring](mini-v2-control-board-wiring.md)).
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
   [06-012](../06-012-leva-pid-temperature-takeover.md)), low-water float switch (dry-run
   protection), boilers, group, and pump.

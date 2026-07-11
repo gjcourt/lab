@@ -40,8 +40,8 @@ modification.
         │
         ├─ ( 1/4" ball valve )     ─ OPTIONAL local cutoff (upstream valve already isolates)
         │
-        ├─ 1/4" NC brass solenoid  ─ 24 V, fail-closed; coil on the machine's SWITCHED-MAINS
-        │   [2× JG PP010822WP]        rail → open only when the machine is ON
+        ├─ 1/4" NC brass solenoid  ─ 12 V, fail-closed; 12 VDC PSU fed off the control-board
+        │   [2× JG PP010822WP]        PUMP output → open only while the pump draws from the tank
         │
         ├─ 1/4" pressure regulator ─ gauged, ~20–25 PSI (mount to the wall, not the line)
         │
@@ -65,7 +65,11 @@ mechanical **float valve** controls fill, not pump enable.
 
 > **See also:** [Mini V2 modifications at a glance](_reference/mini-v2-modifications.md) —
 > before/after of the fluid + electrical paths across this project and
-> [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) (one shared teardown).
+> [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) (one shared teardown). For the
+> authoritative M5 terminal map and the **always-live** finding (the machine has **no** switched
+> mains rail), see
+> [Mini V2 control-board wiring reference](_reference/mini-v2-control-board-wiring.md) — the
+> solenoid-interlock detail below defers to it rather than re-deriving the terminals.
 
 ## Why this is "robust"
 
@@ -76,15 +80,20 @@ mechanical **float valve** controls fill, not pump enable.
    - Stuck-open float valve → tank overfills → drip tray catches the overflow.
    - Stuck-closed float valve → tank slowly drains → original low-water switch trips → exact same
      failure mode as today.
-   - Hose burst / fitting failure → only possible while machine is on (NC solenoid closes the line
-     whenever machine is off); unattended flood risk is eliminated.
+   - Hose burst / fitting failure → only possible during the seconds the pump is actually drawing
+     from the tank (the NC solenoid is open only while the pump runs, and closes the line whenever
+     the machine is idle, off, or unplugged); unattended flood risk is eliminated.
 4. Reversible: disconnect at the regulator, refill manually, machine is back to stock.
 5. Pressure-tolerant: even if the regulator fails high, the tank can't be over-pressurized (it's
    vented). Worst case is float-valve hammering / chatter and accelerated float-seat wear, which is
    loud and obvious — not a silent flood.
-6. Fail-safe on power loss **and machine-off**: the coil is fed from the machine's switched-mains
-   rail (BoM 2a), so the NC valve closes whenever the machine is switched off or loses power — no
-   dependence on a smart plug or the wall outlet being cut.
+6. Fail-safe whenever the machine isn't actively pumping: the coil's 12 VDC PSU is fed from the
+   control-board **PUMP output** (BoM 2a), so the NC valve is energized open **only while the pump
+   draws from the tank** (brew / autofill / hot-water) and closes the moment the machine goes idle,
+   is put in standby, is switched off, or is unplugged — with **no** smart-plug or wall-outlet
+   dependency. (Note the Mini V2 has no hard mains switch and `F`/PHASE + Neutral stay live whenever
+   it's plugged in — see the control-board wiring reference — so a "switched-mains" tap does not
+   exist to gate on.)
 
 ## Pre-flight: verify source-water hardness
 
@@ -140,9 +149,9 @@ braided adapter for the BSP equivalent.
 | #   | Item                                                                  | Spec                                                                                                                                            | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | --- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | 1/4" inline shut-off ball valve **(optional)**                        | Full-port, push-to-connect or compression                                                                                                       | **Optional.** An **upstream shutoff (e.g. your Claryum-feed valve)** already covers service isolation, and the NC solenoid handles automatic shutoff — so a local valve is redundant-but-convenient. [John Guest PPSV040808W](https://www.amazon.com/Speedfit-Connect-Plastic-Plumbing-PPSV040808W/dp/B003YKF2E2) (~$8) if you want a cutoff right at the stack.                                                                                                                                                                                                                                                                                                                                                                                                             |
-| 2   | NC brass solenoid valve                                               | 1/4" NPT, normally-closed, brass, Viton (FKM), direct-acting (0 psi min), 24 V DC; **continuous-duty coil** if the machine is ever left on >8 h | **Continuous-duty (recommended):** [WIC 2BCK-1/4-D](https://wicvalve.com/1-4-Inch-Fast-Response-Direct-Acting-Electric-Solenoid-Valve-2BCK-1-4-D.htm) (1/4" NPT, 24 V DC, 100% ED coil, ~$30–45). Short-session only: [U.S. Solid 1/4" 24 V DC brass NC](https://ussolid.com/products/u-s-solid-electric-solenoid-valve-1-4-24v-dc-solenoid-valve-brass-body-normally-closed-viton-seal-html) (~$16) — coil is **not** continuous-duty (>8 h energized risks burnout). Both are 1/4" NPT female → need 2× PP010822WP adapters + PTFE tape. Install **flow-arrow toward the reservoir**, observe DC polarity. Not NSF-61 (fine for a cold feed). NC = fail-closed on power loss.                                                                                              |
-| 2a  | **Machine-on interlock** — switched-mains tap (⚠️ _not_ a smart plug) | Splice off the machine's **switched-mains rail** (live only when its own power switch is on)                                                    | ⚠️ **Correction:** a smart plug does **not** gate this safely — outlet power ≠ machine-on (the Mini V2 has its own power switch), so the solenoid would sit open with the machine off. Feed the coil supply (row 2b) from the machine's switched-mains rail — the same rail the **ito** module powers from (its **N/L** input, "only live when machine on"; see [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) connector map). Machine on ⇒ coil live ⇒ valve open; off / power loss ⇒ NC closed. Tap L/N **downstream of the machine's power switch** (full mains — not a logic rail, not ito's supply). Cleanest done during the ito install. A smart plug or ESP32 is **optional**, only for a Home Assistant layer (leak-sensor auto-shutoff, scheduling). |
-| 2b  | Solenoid coil supply                                                  | 24 V DC wall-wart, **≥2 A** (covers ~1.8 A inrush — a 1 A supply can brown out at pull-in)                                                      | Solenoid has bare lead wires → splice to the wall-wart (cut the barrel or use a barrel-to-screw-terminal adapter); observe polarity. **Power the wall-wart from the machine's switched-mains rail (row 2a), not a wall outlet**, so the coil is live only when the machine is on. Mount wiring in a small junction box near the machine's mains entry.                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2   | NC brass solenoid valve                                               | 1/4" NPT, normally-closed, brass, Viton (FKM), direct-acting (0 psi min), 12 V DC; **continuous-duty coil** if you take the smart-plug alternative (row 2a) and ever leave the machine on >8 h | **Continuous-duty (recommended):** [WIC 2BCK-1/4-D](https://wicvalve.com/1-4-Inch-Fast-Response-Direct-Acting-Electric-Solenoid-Valve-2BCK-1-4-D.htm) (1/4" NPT, **12 V DC**, 100% ED coil, ~$30–45). Short-session only: [U.S. Solid 1/4" 12 V DC brass NC](https://ussolid.com/products/u-s-solid-electric-solenoid-valve-1-4-12v-dc-solenoid-valve-brass-body-normally-closed-viton-seal-html) (~$16) — coil is **not** continuous-duty (>8 h energized risks burnout). Both are 1/4" NPT female → need 2× PP010822WP adapters + PTFE tape. Install **flow-arrow toward the reservoir**, observe DC polarity. Not NSF-61 (fine for a cold feed). NC = fail-closed on power loss.                                                                                              |
+| 2a  | **Pump-driven interlock** — 12 VDC PSU off the control-board PUMP output (⚠️ _no_ smart plug) | 12 VDC PSU **Line → PUMP tab** (M5 pos 3, unlabeled), **Neutral → a white NEUTRAL tab**; see the [control-board wiring reference](_reference/mini-v2-control-board-wiring.md)                     | Derive the coil supply (row 2b) from the control-board **PUMP output** — the unlabeled tab at M5 position 3 (top→bottom: `A`=EV.AL autofill, `2`=EV.H hot-water, **PUMP**, `1`=EV.GR group, `F`=PHASE, then two white NEUTRALs). Pump draws from the tank ⇒ PUMP tab live ⇒ PSU on ⇒ coil energized ⇒ valve open; machine idle / standby / off / unplugged ⇒ PUMP tab dead ⇒ NC valve closed. Genuinely **fail-safe with no smart-plug dependency**. This is the **same tab 06-001 taps for ito's `SNS` sense** — a few-watt PSU in parallel is negligible on that relay, behind the 5 A fuse. Cleanest done during the ito install. **Alternative:** power the whole machine from a smart plug on `F`/`N` (valve then sits continuously open while the machine is on) — simpler wiring but reintroduces the external smart-plug dependency this project set out to avoid. |
+| 2b  | Solenoid coil supply                                                  | 12 V DC PSU, **≥2 A** (covers ~1.8 A inrush — a 1 A supply can brown out at pull-in)                                                            | Solenoid has bare lead wires → splice to the PSU (cut the barrel or use a barrel-to-screw-terminal adapter); observe polarity. **Feed the PSU's AC input from the control-board PUMP output (row 2a), not a wall outlet**, so the coil is live only while the pump draws from the tank. Mount wiring in a small junction box near the machine's mains entry.                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 3   | Pressure regulator                                                    | 1/4" JG push-fit, **gauge'd**, set to ~20–25 PSI                                                                                                | **Recommended: [Chris' Coffee regulator w/ gauge](https://www.chriscoffee.com/products/pressure-regulator-valve)** (~$100, JG 1/4") — ships preset ~50 psi, **dial down to ~25 before trusting it**; the gauge is what lets you verify, which is why it beats the value pick for error-proofing. Value alt: [JG Micro regulator](https://www.wb.coffee/shop/john-guest-micro-pressure-regulator-valve-1-8-1-4-43588) (~$29; 0–4 bar adjustable, **no gauge → set blind**, ships from the EU). Skip the [Flojet → JG kit](https://www.espressoparts.com/products/flojet-water-pressure-regulator-to-john-guest-kit) — non-adjustable 1750-series pump regulator, vendor-rated "temporary use."                                                                                |
 | 4   | Reservoir float valve                                                 | Plastic RO float valve with a threaded mounting shank + 1/4" inlet                                                                              | [Example: LiquaGen RO float valve](https://www.amazon.com/LiquaGen-Reverse-Osmosis-Filtration-Systems/dp/B07DGX3NGB) (~$10). Brass/quarter-turn unnecessary — service shut-off is line 1. The reservoir is a **five-sided open-top drawer (no lid to drill)**, so mount the valve to a bracket on a wall/rim and drape the supply line over the open rim — no vessel penetration. Close ~1/2" below the rim. **Test-fit before committing** (see install §4).                                                                                                                                                                                                                                                                                                                |
 | 5   | 1/4" LLDPE polyethylene tubing                                        | **1/4" OD (0.25") imperial — NOT 6 mm**                                                                                                         | ⚠️ JG sells imperial _and_ metric; 6 mm tube leaks in a 1/4" collet. Buy 1/4" OD. Routes easier than braided; takes JG fittings cleanly.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -166,11 +175,11 @@ vendor (robust path: continuous-duty solenoid + gauge'd regulator):
 | Float valve           | LiquaGen, threaded stem + nut, 1/4" push (B07DGX3NGB) | $10    |
 | 1/4" LLDPE tubing     | 25 ft roll — **1/4" OD, not 6 mm**                    | $10    |
 | JG fittings           | elbows + spare collets (1/4" imperial)                | $10    |
-| Smart plug (optional) | Kasa EP25 — only for the optional ESP32/HA layer      | $13    |
-| 24 V DC wall-wart     | **≥2 A** DC supply for the coil                       | $12    |
+| Smart plug (optional) | Kasa EP25 — only for the alt/HA layer, not the interlock | $13  |
+| 12 V DC PSU           | **≥2 A** DC supply for the coil                       | $12    |
 | Water test            | API GH/KH titration kit (B003SNCHMA)                  | $8     |
 
-**WIC Valve:** continuous-duty solenoid WIC 2BCK-1/4-D (1/4" NPT, 24 V DC) — ~$30–45. **Chris'
+**WIC Valve:** continuous-duty solenoid WIC 2BCK-1/4-D (1/4" NPT, 12 V DC) — ~$30–45. **Chris'
 Coffee:** gauge'd JG regulator — ~$100.
 
 **Robust-path total ≈ $230** (continuous-duty solenoid + gauge'd regulator). Dropping to the EU
@@ -200,7 +209,7 @@ In order, downstream of the existing Aquasana output:
 
 1. **Inline shut-off** (close it now while building the rest).
 2. **NC solenoid valve** — installed upstream of the regulator and the long run to the reservoir, so
-   a downstream hose burst still triggers shut-off when the machine cycles off. Flow arrow on the
+   a downstream hose burst is closed off whenever the pump isn't drawing. Flow arrow on the
    valve body points downstream. Verify thread standard (NPT vs. BSPP) matches the adjacent
    fittings; transition with a brass adapter + PTFE tape (NPT) or fiber washer (BSPP) as needed.
 3. **Pressure regulator** — bench-set to ~25 PSI **before** mounting.
@@ -209,43 +218,49 @@ In order, downstream of the existing Aquasana output:
 Mount the regulator stack against the cabinet wall — don't let it hang from the line. Mount the
 solenoid coil-up so any seal weep drips clear of the coil and electrical connection.
 
-**Solenoid wiring** (switched-mains-rail interlock — _not_ a smart plug):
+**Solenoid wiring** (pump-driven interlock — _not_ a smart plug, _not_ a "switched-mains" tap):
 
-- ⚠️ A smart plug on the wall outlet does **not** work: the Mini V2 has its own power switch, so
-  outlet power ≠ machine-on. The solenoid would open whenever the plug is on, even with the machine
-  switched off — defeating the fail-safe.
-- Instead, power the coil from the machine's **switched-mains rail** — the L/N that goes live only
-  when the machine's own power switch is on (the same rail the ito module powers from; see
-  [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) connector map). Tap L/N **downstream
-  of the machine power switch**, at the mains entry — full mains, not a logic rail, and not ito's
-  supply (which has no spare current).
-- If the solenoid is **110 V AC**: wire the coil leads (via a small strain-relieved, grounded
-  junction box) directly across the switched-mains rail. This is mains — treat it as such.
-- If the solenoid is **24 V DC**: feed a 24 V DC wall-wart from the switched-mains rail, then run
-  the low-voltage leads to the coil. Lower-risk; preferred.
-- Result: machine on ⇒ coil live ⇒ valve open. Machine off **or** power loss ⇒ NC valve closed.
-- ito can't drive the valve itself (both its switchable outputs are committed — `Relay 1` to the
-  pump via phase-angle, `Relay 2` to the 3-way brew valve), so the valve keeps its own coil supply
-  off the rail. Optional: an ESP32 tapping the same rail adds Home Assistant control (leak-sensor
-  auto-shutoff, scheduling) — not required for the fail-safe.
+- ⚠️ **The Mini V2 has no hard mains switch.** The soft-touch power pad is a logic input that only
+  toggles ON ⇄ Standby; PHASE is fused straight off the plug, so **`F`/PHASE + Neutral are ALWAYS
+  LIVE whenever the machine is plugged in** (metered `F` → GND = 120 VAC in standby). There is no
+  "only-when-on" mains pair to tap, and a smart plug on the outlet just moves the same problem to
+  the wall. See the
+  [control-board wiring reference](_reference/mini-v2-control-board-wiring.md) for the full terminal
+  map and the always-live finding — this section defers to it for terminal detail.
+- **Instead, derive the coil's 12 VDC PSU from the control-board PUMP output.** On the **M5** output
+  strip the PUMP tab is the **unlabeled tab at position 3** (top→bottom: `A`=EV.AL autofill,
+  `2`=EV.H hot-water, **PUMP (unlabeled)**, `1`=EV.GR group, `F`=PHASE, then two white NEUTRALs).
+  Wire the PSU's **Line to the PUMP tab** and its **Neutral to a white NEUTRAL tab**.
+- Result: the pump only runs while drawing from the tank (brew / autofill / hot-water), so the coil
+  is energized — and the NC valve open — **only during those draws**. Idle, standby, off, or
+  unplugged ⇒ PUMP tab dead ⇒ coil de-energized ⇒ **NC valve closed**. Genuinely fail-safe, with
+  **no smart-plug dependency**.
+- This is the **same PUMP tab 06-001 taps for ito's `SNS` sense** — a few-watt PSU hung in parallel
+  is negligible on that relay, behind the machine's 5 A fuse. Cleanest done during the ito install
+  (see [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md)).
+- **Alternative (not preferred):** power the whole machine from a smart plug on `F`/`N`. The valve
+  then sits **continuously open the entire time the machine is powered** (not just during pump
+  draws) — simpler wiring, but it reintroduces the external smart-plug dependency this project set
+  out to avoid, and only fails closed when you cut the plug. Use only if you can't reach the PUMP
+  tab.
 
-**Two separate supplies — don't confuse them.** The 24 V solenoid coil runs off its **own 24 V DC
-supply**, _not_ the ito's 5 V PSU (the ito's HLK-PM01 is **5 V / 0.6 A** — wrong voltage and far too
-little current for a solenoid). Both simply hang off the **same switched-mains rail**:
+**Two separate supplies — don't confuse them.** The 12 V solenoid coil runs off its **own 12 V DC
+PSU**, _not_ the ito's 5 V PSU (the ito's HLK-PM01 is **5 V / 0.6 A** — wrong voltage and far too
+little current for a solenoid). The coil PSU hangs off the **PUMP output**; ito hangs off always-live
+mains:
 
 ```text
-power switch → SWITCHED-MAINS RAIL   (120 VAC, live only when machine ON)
-      ├─► ito HLK-PM01 → 5 VDC 0.6 A → ito module         (ito's own supply)
-      └─► your 24 VDC PSU → 24 V solenoid coil            (the interlock)
-machine OFF → rail dead → 24 VDC PSU off → NC coil de-energized → VALVE CLOSED
+M5 PUMP tab (pos 3) → Line ─┐   (live ONLY while the pump draws from the tank)
+white NEUTRAL tab   → Neut ─┴─► your 12 VDC PSU → 12 V solenoid coil   (the interlock)
+ito HLK-PM01 → 5 VDC 0.6 A → ito module   (its own supply, off always-live F/N)
+pump idle → PUMP tab dead → 12 VDC PSU off → NC coil de-energized → VALVE CLOSED
 ```
 
-Wire the 24 V supply's **AC input downstream of the power switch** (onto the switched-mains rail) so
-the coil is energized only when the machine is on — that's what makes it fail-closed. Cleanest
-method: **hardwire the wall-wart** — crack its case, wire its AC input (rated 100–240 V, so 120 V is
-fine) to the switched-mains at the control board, and its 24 V DC output to the coil (**observe
-polarity**). ⚠️ A cracked-open wall-wart is a bare mains PCB — **enclose it in a junction box**;
-don't leave it floating.
+Wire the 12 V PSU's **AC input across the PUMP tab and a NEUTRAL tab** so the coil is energized only
+while the pump draws — that's what makes it fail-closed. Cleanest method: **hardwire the wall-wart**
+— crack its case, wire its AC input (rated 100–240 V, so 120 V is fine) to the PUMP + NEUTRAL tabs at
+the control board, and its 12 V DC output to the coil (**observe polarity**). ⚠️ A cracked-open
+wall-wart is a bare mains PCB — **enclose it in a junction box**; don't leave it floating.
 
 ### 4. Mount the float valve (through-wall)
 
@@ -289,14 +304,15 @@ rigidity from the beam rather than the tub — use only if you won't modify the 
 
 ### 6. Pressurize and verify
 
-- Smart plug **on** (solenoid energized, valve open). Open inline shut-off slowly, watch every
-  joint.
+- Draw water so the pump runs (pull a shot or open the hot-water tap) → solenoid energized, valve
+  open. Open inline shut-off slowly, watch every joint.
 - Float valve fills to set level and **closes cleanly** (no oscillation / hammering).
 - If hammering: drop regulator setpoint in 5 PSI increments until quiet.
 - Drain the tank manually to confirm the existing low-water switch still trips.
-- **Solenoid functional check**: with the inline shut-off open, smart plug **off** — confirm no flow
-  downstream of the solenoid (watch the float valve; tank should not refill as you draw it down).
-  Then smart plug **on** — confirm flow resumes within ~1 second.
+- **Solenoid functional check**: with the inline shut-off open and the machine **idle** (pump not
+  running) — confirm no flow downstream of the solenoid (watch the float valve; tank should not
+  refill on its own). Then **draw water** (brew or hot-water tap) so the pump runs — confirm flow
+  resumes within ~1 second of the pump starting and stops again shortly after it stops.
 
 ### 7. Wet test
 
@@ -306,7 +322,11 @@ rigidity from the beam rather than the tub — use only if you won't modify the 
 
 ### 8. Burn-in (24h)
 
-- Leave on the line under static pressure for 24h (machine off OK — line still pressurized).
+- Leave on the line under static pressure for 24h. The **upstream** side (Claryum → solenoid) stays
+  pressurized whenever the machine is plugged in; the **downstream** side (regulator → float valve)
+  only sees supply pressure while the pump is drawing, so hold the inline shut-off open and pull a
+  few draws through the burn-in window to pressurize it, or briefly jumper the coil for a sustained
+  downstream leak check.
 - Inspect every joint for weep / drip.
 - Re-tighten any wet joint; re-test.
 
@@ -326,10 +346,12 @@ just a coincidence:
 - Heads-up for later: the Mini V2 has a **brew over-pressure bypass valve** returning water to the
   pump inlet. It's irrelevant to this plumb-in but matters for profiling (set it >9 bar; see
   06-001).
-- **The fill-solenoid interlock reuses ito's wiring:** power the coil from the machine's
-  switched-mains rail — the same L/N that feeds ito's **N/L** input. ito can't drive the valve (both
-  its outputs are taken — `Relay 1` = pump, `Relay 2` = 3-way valve), so the valve gets its own coil
-  supply off that rail. Tap it during the ito install to avoid opening the machine twice.
+- **The fill-solenoid interlock shares 06-001's PUMP tap:** the coil's 12 VDC PSU is fed from the
+  control-board **PUMP output** — the same unlabeled M5 tab 06-001 routes to ito's **`SNS`** sense
+  (see the [control-board wiring reference](_reference/mini-v2-control-board-wiring.md)). ito can't
+  drive the valve itself (both its outputs are taken — `Relay 1` = pump, `Relay 2` = 3-way valve),
+  so the valve gets its own PSU hung on that tab; a few watts in parallel is negligible on the relay
+  behind the 5 A fuse. Tap it during the ito install to avoid opening the machine twice.
 
 Net: do this project freely now; it does not foreclose — and arguably enables — 06-001 later.
 
@@ -339,9 +361,10 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
   downhill slope. Independent workstream.
 - **Softening upgrade**: if hardness creeps up (annual re-test), add Pentair Claris or BWT Bestmax
   cartridge upstream of regulator stack, downstream of Claryum.
-- **Home Assistant integration of the smart plug**: schedule, away-mode auto-off, leak-sensor
-  triggered shutoff. The plug from Phase 1 is already HA-compatible; this is a software-only
-  follow-up.
+- **Home Assistant layer (optional smart plug)**: the pump-driven interlock needs no smart plug, but
+  adding one on the machine's outlet enables schedule, away-mode auto-off, and leak-sensor triggered
+  full-cutoff on top of the fail-safe. A Kasa-class plug is HA-compatible out of the box; this is a
+  software-only follow-up.
 
 ## Exit Criteria
 
@@ -350,8 +373,9 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [ ] Inline shut-off closes cleanly with full water-flow stop downstream.
 - [ ] Regulator gauge reads 20–25 PSI under static line pressure.
 - [ ] Float valve fills to set level and closes without hammering.
-- [ ] Solenoid: machine off ⇒ no downstream flow; machine on ⇒ flow within ~1 s. Pulling mains
-      (simulated power loss) also closes the valve.
+- [ ] Solenoid: machine idle (pump off) ⇒ no downstream flow; drawing water (pump running) ⇒ flow
+      within ~1 s of the pump starting, and stops when the pump stops. Standby / off / unplug all
+      close the valve.
 - [ ] Existing low-water switch trips when tank is manually drained.
 - [ ] No leaks at any joint after 24 hours of static line pressure.
 - [ ] 5+ consecutive shots pulled with steady tank refill.
@@ -365,10 +389,11 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [x] Water quality confirmed soft (SFPUC current 6/2026, Presidio Heights: H18/Alk22/Cl8) — no
       softener; optional re-verify at Claryum output
 - [ ] Build regulation stack (shut-off → solenoid → regulator)
-- [ ] Wire solenoid coil to machine's switched-mains rail; bench-test open/close before plumbing
+- [ ] Wire solenoid 12 VDC PSU to the control-board PUMP output (Line→PUMP tab, Neutral→NEUTRAL
+      tab); bench-test open/close before plumbing
 - [ ] Drill rear-wall hole (~5/8", step bit); mount float valve with gasket + locknut
 - [ ] Wet test
-- [ ] Solenoid power-cycle + power-loss shutoff verified
+- [ ] Solenoid pump-cycle (opens on draw, closes on idle) + standby/off shutoff verified
 - [ ] 24h burn-in observation
 - [ ] Document as-built (regulator setpoint, line route, water test numbers, solenoid model/coil V)
 
