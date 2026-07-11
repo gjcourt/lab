@@ -72,7 +72,7 @@ AFTER   (★ = added;  stock control board left alone)
 - **Electrical — interposition, not a rebuild.** The ito **triac (SSR 1)** slips into the pump's
   mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead for zero-cross
   timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011 NAND + PC817
-  optocoupler** (galvanic isolation, powered from the meter's own 14.8 V rail); and the module
+  optocoupler** (galvanic isolation; the NAND runs on 5 V logic, not the 14.3 V rail); and the module
   shares **one switched-mains tap** with the plumb-in solenoid, downstream of the machine's power
   switch.
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
