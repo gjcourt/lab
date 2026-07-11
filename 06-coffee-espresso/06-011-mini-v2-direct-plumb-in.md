@@ -224,9 +224,9 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 - If the solenoid is **24 V DC**: feed a 24 V DC wall-wart from the switched-mains rail, then run
   the low-voltage leads to the coil. Lower-risk; preferred.
 - Result: machine on ⇒ coil live ⇒ valve open. Machine off **or** power loss ⇒ NC valve closed.
-- ito can't drive the valve itself (both its switchable outputs are committed — `SSR 1` to the pump
-  via phase-angle, `SSR 2` to the 3-way brew valve), so the valve keeps its own coil supply off the
-  rail. Optional: an ESP32 tapping the same rail adds Home Assistant control (leak-sensor
+- ito can't drive the valve itself (both its switchable outputs are committed — `Relay 1` to the
+  pump via phase-angle, `Relay 2` to the 3-way brew valve), so the valve keeps its own coil supply
+  off the rail. Optional: an ESP32 tapping the same rail adds Home Assistant control (leak-sensor
   auto-shutoff, scheduling) — not required for the fail-safe.
 
 **Two separate supplies — don't confuse them.** The 24 V solenoid coil runs off its **own 24 V DC
@@ -328,7 +328,7 @@ just a coincidence:
   06-001).
 - **The fill-solenoid interlock reuses ito's wiring:** power the coil from the machine's
   switched-mains rail — the same L/N that feeds ito's **N/L** input. ito can't drive the valve (both
-  its outputs are taken — `SSR 1` = pump, `SSR 2` = 3-way valve), so the valve gets its own coil
+  its outputs are taken — `Relay 1` = pump, `Relay 2` = 3-way valve), so the valve gets its own coil
   supply off that rail. Tap it during the ito install to avoid opening the machine twice.
 
 Net: do this project freely now; it does not foreclose — and arguably enables — 06-001 later.

@@ -55,7 +55,7 @@ AFTER   (★ = added;  stock control board left alone)
                                                 ├─► ★ ito power (N/L)
                                                 └─► ★ solenoid coil supply   (plumb-in interlock)
 
-  pump run:   ★[ito SSR/triac 1] → [VIBE PUMP]                  ← leva! phase-angle control (a triac, not a relay)
+  pump run:   ★[ito Relay 1] → [VIBE PUMP]                      ← leva! phase-angle control (solid-state relay, phase-fired)
   sense:      controller pump-on lead → ★[ito SNS]             ← zero-cross + "pump on"; ito SNS is an opto input,
                                                                   so the stock board must switch the pump via a
                                                                   mechanical relay to trigger it reliably
@@ -69,12 +69,12 @@ AFTER   (★ = added;  stock control board left alone)
   and a single pressure tee on the brew line (06-001); the existing over-pressure bypass dialed to
   crack just above 9 bar. **Flow is read off the machine's own stock GICAR meter — no added in-line
   meter** (a second meter in series restricted free flow ~10 %, t56816 #31).
-- **Electrical — interposition, not a rebuild.** The ito **triac (SSR 1)** slips into the pump's
-  mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead for zero-cross
-  timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011 NAND + PC817
-  optocoupler** (galvanic isolation; the NAND runs on 5 V logic, not the 14.3 V rail); and the
-  module shares **one switched-mains tap** with the plumb-in solenoid, downstream of the machine's
-  power switch.
+- **Electrical — interposition, not a rebuild.** The ito **`Relay 1`** (a solid-state relay) slips
+  into the pump's mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead
+  for zero-cross timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011
+  NAND + PC817 optocoupler** (galvanic isolation; NAND powered from the meter's ~14.8 V rail, as
+  blondica built it); and the module shares **one switched-mains tap** with the plumb-in solenoid,
+  downstream of the machine's power switch.
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
   [06-012](../06-012-leva-pid-temperature-takeover.md)), low-water float switch (dry-run
   protection), boilers, group, and pump.
