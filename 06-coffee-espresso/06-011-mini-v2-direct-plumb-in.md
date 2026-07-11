@@ -244,6 +244,20 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
   out to avoid, and only fails closed when you cut the plug. Use only if you can't reach the PUMP
   tab.
 
+> ⚠️ **Refill-rate caveat — the one real limitation of pump-gating.** The valve opens _only_ while
+> the pump runs, so refill happens only in those windows — there is **no catch-up between draws**. If
+> the float valve's max flow (at your ~20–25 psi) is **below the pump's peak draw**, the tank drops a
+> little each draw, the deficits **accumulate** (they never recover while the machine sits idle), and
+> eventually the low-water switch trips — nuisance dry-run cutoffs under heavy use. The worst case is
+> a **steam-boiler autofill** (the pump fills the boiler at ~free-flow, ≈600 mL/min); a brew is only
+> ~2 mL/s of tank draw because the OPV bypass recirculates at the pump inlet. **Mitigate, cheapest
+> first:** (a) size the fill ≥ pump draw — 25 psi, larger float-valve orifice, short/fat supply tube;
+> **(b) add a ~30–60 s off-delay** on the solenoid (a time-delay relay, or an RC hold on the PSU) so
+> the float catches up between draws — keeps the fail-safe, no smart plug; or (c) accept
+> continuous-open via the smart-plug alternative above. **Bench test:** run several back-to-back shots
+> + a steam session and watch the tank — holds/recovers = fine on flow; drifts down = add the
+> off-delay.
+
 **Two separate supplies — don't confuse them.** The 12 V solenoid coil runs off its **own 12 V DC
 PSU**, _not_ the ito's 5 V PSU (the ito's HLK-PM01 is **5 V / 0.6 A** — wrong voltage and far too
 little current for a solenoid). The coil PSU hangs off the **PUMP output**; ito hangs off always-live

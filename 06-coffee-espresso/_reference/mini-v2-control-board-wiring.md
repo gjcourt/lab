@@ -90,7 +90,10 @@ impulses/L.
 - **[06-011] plumb-in** — derive the fill-solenoid's 12 VDC PSU from the **PUMP** output (L = PUMP
   tab, N = a white tab). The solenoid then opens **only when the pump draws from the tank** → fail-safe
   (closed when idle/off), and with **no smart-plug dependency**. Same tab does double duty with
-  06-001's `SNS` sense (a few-watt PSU is negligible on that relay, behind the 5 A fuse).
+  06-001's `SNS` sense (a few-watt PSU is negligible on that relay, behind the 5 A fuse). ⚠️
+  **Refill-rate caveat:** pump-gating refills only during pump windows with no catch-up between draws,
+  so if the float valve can't match the pump's peak draw (worst case = boiler autofill, ≈600 mL/min)
+  the tank ratchets down → size the fill ≥ pump draw, or add a ~30–60 s solenoid off-delay (see 06-011).
 - **[06-012] PID takeover** — the boiler/group heating elements switch via the **triac board** (an
   external 20 A SSR driven from ito's `SSR` connector), separate from M5.
 
