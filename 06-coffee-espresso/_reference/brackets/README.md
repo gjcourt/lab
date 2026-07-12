@@ -39,8 +39,8 @@ plate**, next to the vibratory pump.
 - Coil-up (media stays below the armature). Narrow toward the pump; fixing ears run fore/aft, away
   from it.
 - **2× M5 socket-head screws pass up through the riser** (heads counterbored at the bottom) into the
-  valve's tapped base. Ears have two slotted **M5** holes to bolt the riser to the base plate (drill
-  new).
+  valve's tapped base. Two counterbored **M5** holes (flanked by ribs so a driver still reaches
+  them) bolt the riser straight down to the base plate (drill new).
 - **Assembly:** bolt the valve to the riser on the bench first, then set the unit on the base plate
   and drive the two ear screws.
 
