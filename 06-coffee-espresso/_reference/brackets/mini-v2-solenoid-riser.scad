@@ -3,16 +3,16 @@
 // Solid boxy pedestal that stands the valve 25-28 mm off the horizontal
 // base plate, next to the vibratory pump.
 //
-// FASTENERS: all four are the SAME standard bolt — 2x M5x10 socket-head
-// cap screws up into the valve's tapped base, 2x M5x10 down into the base
-// plate. Each passes through 5 mm of bracket and bites ~5 mm on the far
+// FASTENERS: all four are the SAME standard bolt — 2x M5x12 socket-head
+// cap screws up into the valve's tapped base, 2x M5x12 down into the base
+// plate. Each passes through 7 mm of bracket and bites ~5 mm on the far
 // side. The valve bolts sit in deep access bores from underneath so they
-// only grip the 5 mm top flange (no long bolts buried in plastic).
+// only grip the 7 mm top flange (no long bolts buried in plastic).
 //
 // Assembly: on the bench, invert the riser onto the valve, drop the two
-// M5x10 bolts down through the top flange into the valve base and tighten
+// M5x12 bolts down through the top flange into the valve base and tighten
 // (hex key reaches the head down the Ø9 access bore). Flip upright, set on
-// the base plate, drive the two base M5x10 down through the feet.
+// the base plate, drive the two base M5x12 down through the feet.
 //
 // Print: PETG, >=4 perimeters, >=40% infill. Prints as-is, no support.
 // Units: mm.
@@ -29,9 +29,9 @@ M5_CLEAR = 5.5;    // M5 through-clearance
 HOLES_ALONG_Y = true; // 23 mm line runs fore/aft (Y); ports run across (X)
 
 /* ---------- FASTENERS (all 4 identical) ---------- */
-// M5x10 socket-head cap screws throughout. Bracket grip is FLANGE_TH; the
+// M5x12 socket-head cap screws throughout. Bracket grip is FLANGE_TH; the
 // far-side bite is (bolt length - grip) ~= 5 mm into valve / base plate.
-FLANGE_TH   = 5.0; // top-flange & foot thickness the bolt grips
+FLANGE_TH   = 7.0; // top-flange & foot thickness the bolt grips (2 mm extra meat)
 HEAD_BORE_D = 9.0; // Ø of the deep access bore for the M5 socket head (8.5 head)
 
 /* ---------- FOOTPRINT (boxy = stiff next to the pump) ---------- */
@@ -79,12 +79,12 @@ module riser() {
           }
         }
     }
-    // 2x valve bolts (M5x10 up into the tapped base)
+    // 2x valve bolts (M5x12 up into the tapped base)
     for (i=[-1,1]) {
       pos = HOLES_ALONG_Y ? [0, i*HOLE_CTC/2, 0] : [i*HOLE_CTC/2, 0, 0];
       translate(pos) valve_bolt_hole();
     }
-    // 2x base bolts (M5x10 down into the base plate) — plain through, head proud
+    // 2x base bolts (M5x12 down into the base plate) — plain through, head proud
     for (sy=[-1,1])
       translate([0, sy*base_ctc/2, -1]) cylinder(h=FLANGE_TH + 2, d=BASE_HOLE_D);
   }

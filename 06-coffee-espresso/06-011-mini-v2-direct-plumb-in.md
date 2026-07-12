@@ -424,7 +424,7 @@ OpenSCAD/STL files are in [`_reference/brackets/`](_reference/brackets/).
   [`.scad`](_reference/brackets/mini-v2-solenoid-riser.scad)) — stands the WIC 2BCK-1/4-24VDC-D fill
   solenoid 26 mm off the **base plate**, coil-up, tucked next to the vibratory pump. Two M5 bolts
   pass up into the valve's tapped base (23 mm c/c, perpendicular to flow); two more bolt the riser
-  straight down (drill new). All four are the same M5×10, via deep access bores so no long buried
+  straight down (drill new). All four are the same M5×12, via deep access bores so no long buried
   bolts.
 
 Bolt the valve to the riser on the bench first, then set the unit on the base plate and drive the
