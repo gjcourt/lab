@@ -1,92 +1,92 @@
 // =====================================================================
 // WIC 2BCK-1/4-24VDC-D fill-solenoid RISER  (06-011 plumb-in)
-// Solid pedestal that stands the valve 25-28 mm off the horizontal base
-// plate, next to the vibratory pump.  Valve bolts DOWN into the riser:
-// 2x M5 socket-head screws pass up through the riser (counterbored heads
-// at the bottom) into the valve's 2x M5x0.8 base holes (23 mm c/c).
-// Riser then screws to the base plate via fore/aft flange ears (drill new).
-// Narrow in X so it tucks beside the pump; ears run in Y, away from it.
-// Print: PETG, >=4 perimeters, >=40% infill (solid core = stiff, low buzz).
-// Assembly: bolt valve to riser on the bench first, THEN fix riser down.
+// Solid boxy pedestal that stands the valve 25-28 mm off the horizontal
+// base plate, next to the vibratory pump.
+//
+// FASTENERS: all four are the SAME standard bolt — 2x M5x10 socket-head
+// cap screws up into the valve's tapped base, 2x M5x10 down into the base
+// plate. Each passes through 5 mm of bracket and bites ~5 mm on the far
+// side. The valve bolts sit in deep access bores from underneath so they
+// only grip the 5 mm top flange (no long bolts buried in plastic).
+//
+// Assembly: on the bench, invert the riser onto the valve, drop the two
+// M5x10 bolts down through the top flange into the valve base and tighten
+// (hex key reaches the head down the Ø9 access bore). Flip upright, set on
+// the base plate, drive the two base M5x10 down through the feet.
+//
+// Print: PETG, >=4 perimeters, >=40% infill. Prints as-is, no support.
 // Units: mm.
 // =====================================================================
 
 /* ---------- HEIGHT ---------- */
 STAND_H  = 26.0;   // valve base above base plate (target 25-28)   << set
 
-/* ---------- VALVE SIDE (measured / verify) ---------- */
-HOLE_CTC = 23.0;   // M5 hole spacing in the valve base            << measured (confirmed)
+/* ---------- VALVE SIDE (measured) ---------- */
+HOLE_CTC = 23.0;   // M5 hole spacing in the valve base            << measured
 BODY_W   = 32.75;  // valve body width                            << measured
-PORT_SPAN = 55.0;  // inlet-to-outlet span (tube clearance either end) << measured
+PORT_SPAN = 55.0;  // inlet-to-outlet span (tube clearance)       << measured
 M5_CLEAR = 5.5;    // M5 through-clearance
-CBORE_D  = 9.5;    // M5 socket-head counterbore dia
-CBORE_H  = 5.5;    // counterbore depth (head sinks below the base)
-HOLES_ALONG_Y = true; // 23 mm line runs fore/aft (Y) — set false for across (X)
+HOLES_ALONG_Y = true; // 23 mm line runs fore/aft (Y); ports run across (X)
 
-/* ---------- FOOTPRINT ---------- */
-CORE_X   = 28.0;   // riser width — shrink toward the pump; keeps it from looking squat << pump clearance
-EDGE     = 6.0;    // material margin around each M5 hole (trimmed for a slimmer column)
-WALL_MIN = 6.0;    // min core thickness on the non-hole axis
+/* ---------- FASTENERS (all 4 identical) ---------- */
+// M5x10 socket-head cap screws throughout. Bracket grip is FLANGE_TH; the
+// far-side bite is (bolt length - grip) ~= 5 mm into valve / base plate.
+FLANGE_TH   = 5.0; // top-flange & foot thickness the bolt grips
+HEAD_BORE_D = 9.0; // Ø of the deep access bore for the M5 socket head (8.5 head)
+
+/* ---------- FOOTPRINT (boxy = stiff next to the pump) ---------- */
+CORE_X   = 30.0;   // riser width (toward the pump) — shrink if the gap is tight << pump clearance
+EDGE     = 7.0;    // margin around each M5 hole (also clears the Ø9 head bore)
 
 /* ---------- BASE-PLATE FIXING (drill new) ---------- */
-// Feet bolt straight DOWN into the base plate: M5 through-hole with a counterbore
-// on TOP so a socket-head sits flush and the bolt path is obvious.
-BASE_TH      = 6.0; // foot thickness
-EAR_REACH    = 16.0;// foot length beyond the core, each end (Y)
-BASE_HOLE_D  = 5.5; // M5 clearance
-FOOT_CBORE_D = 10.0;// M5 socket-head counterbore dia (top of foot)
-FOOT_CBORE_H = 3.0; // counterbore depth (leaves 3 mm under the head)
-GUSSET       = true;
+EAR_REACH   = 16.0;// foot length beyond the core, each end (Y)
+BASE_HOLE_D = 5.5; // M5 clearance (drill + bolt the base plate; tap it or use a nut)
+GUSSET      = true;
 
 $fn = 96;
 
 // ---- derived ----
-core_y   = (HOLES_ALONG_Y ? HOLE_CTC : 0) + 2*EDGE;   // fore/aft length
-core_x   = HOLES_ALONG_Y ? max(CORE_X, WALL_MIN)      // width
-                         : max(CORE_X, HOLE_CTC + 2*EDGE);
-ear_y    = core_y/2 + EAR_REACH;                       // ear tip in Y
-base_ctc = 2*(core_y/2 + EAR_REACH/2);                 // fixing hole c/c (Y)
+core_y   = HOLE_CTC + 2*EDGE;            // fore/aft length (covers the 32.75 body)
+core_x   = max(CORE_X, HEAD_BORE_D + 8); // width
+ear_y    = core_y/2 + EAR_REACH;         // foot tip in Y
+base_ctc = core_y + EAR_REACH;           // base fixing hole c/c (Y)
 
-module m5_bolt_hole() {
-  translate([0,0,-0.01]) cylinder(h=STAND_H+1, d=M5_CLEAR);   // through
-  translate([0,0,-0.01]) cylinder(h=CBORE_H, d=CBORE_D);      // head pocket (bottom)
+// valve bolt: Ø5.5 through the top flange + deep Ø9 access bore from below
+module valve_bolt_hole() {
+  translate([0,0,STAND_H - FLANGE_TH]) cylinder(h=FLANGE_TH + 1, d=M5_CLEAR);   // flange clearance
+  translate([0,0,-1])                  cylinder(h=STAND_H - FLANGE_TH + 1, d=HEAD_BORE_D); // head access
 }
 
 module riser() {
   difference() {
     union() {
-      // solid core
+      // solid boxy core
       translate([-core_x/2, -core_y/2, 0]) cube([core_x, core_y, STAND_H]);
-      // fore/aft base ears
+      // fore/aft feet
       for (sy=[-1,1])
         translate([-core_x/2, sy>0 ? core_y/2 : -ear_y, 0])
-          cube([core_x, EAR_REACH, BASE_TH]);
-      // gussets ear -> core: TWO ribs per foot, flanking the base bolt hole so a
-      // driver still reaches it. Each rib = manifold-safe hull of a tall slab in
-      // the core face and a short slab in the ear (overlaps both).
+          cube([core_x, EAR_REACH, FLANGE_TH]);
+      // gusset ribs: two per foot, flanking the base hole so a driver reaches it
       if (GUSSET)
         for (sy=[-1,1]) for (rx=[-1,1]) {
-          gt   = 4;                                       // rib thickness (X)
-          xoff = rx*(FOOT_CBORE_D/2 + gt/2 + 1.5);        // clear of the counterbore
-          y_core = sy*(core_y/2 - 1);                     // 1 mm inside the core face
-          y_ear  = sy*(core_y/2 + EAR_REACH*0.70);        // within the ear
+          gt   = 4;
+          xoff = rx*(BASE_HOLE_D/2 + gt/2 + 2);
+          y_core = sy*(core_y/2 - 1);
+          y_ear  = sy*(core_y/2 + EAR_REACH*0.70);
           hull() {
-            translate([xoff - gt/2, y_core - 1, 0]) cube([gt, 2, 0.6*STAND_H]);
-            translate([xoff - gt/2, y_ear  - 1, 0]) cube([gt, 2, BASE_TH]);
+            translate([xoff - gt/2, y_core - 1, 0]) cube([gt, 2, 0.55*STAND_H]);
+            translate([xoff - gt/2, y_ear  - 1, 0]) cube([gt, 2, FLANGE_TH]);
           }
         }
     }
-    // 2x M5 clearance + counterbore
+    // 2x valve bolts (M5x10 up into the tapped base)
     for (i=[-1,1]) {
       pos = HOLES_ALONG_Y ? [0, i*HOLE_CTC/2, 0] : [i*HOLE_CTC/2, 0, 0];
-      translate(pos) m5_bolt_hole();
+      translate(pos) valve_bolt_hole();
     }
-    // 2x base fixings (fore/aft): M5 through + top counterbore -> bolts DOWN
+    // 2x base bolts (M5x10 down into the base plate) — plain through, head proud
     for (sy=[-1,1])
-      translate([0, sy*base_ctc/2, 0]) {
-        translate([0,0,-1]) cylinder(h=BASE_TH+2, d=BASE_HOLE_D);                 // through
-        translate([0,0,BASE_TH-FOOT_CBORE_H]) cylinder(h=FOOT_CBORE_H+1, d=FOOT_CBORE_D); // head recess (top)
-      }
+      translate([0, sy*base_ctc/2, -1]) cylinder(h=FLANGE_TH + 2, d=BASE_HOLE_D);
   }
 }
 
