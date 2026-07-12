@@ -228,12 +228,13 @@ manual — see **Tuning** below and `_reference/leva/`.
 1. **Pre-flight** (section above): vibe-pump confirmed, grouphead path clear (no gicleur/S11 between
    the sensor tap and the portafilter), pump/3-way seals sound, bypass valve noted.
 2. **Mount & power ito.** **Solder on the HLK-PM01 PSU** — it ships loose on purpose (mains-safety +
-   a power choice), and it's what converts the switched-mains **N/L → the 5 V** ito runs on; mind
+   a power choice), and it's what converts the machine's **N/L → the 5 V** ito runs on; mind
    orientation (L/N in, +5 V/GND out — check the manual footprint). _(Or power ito from an external
    5 V / ≥600 mA source and skip the HLK-PM01.)_ Fit the 4 adhesive feet + acrylic insulation
    shield; mount in a **non-metal or grounded enclosure — not metal screws** (insulation distance),
-   away from boiler heat. Wire **N/L to the machine's switched-mains rail**; use a surge-protected
-   outlet. Keep mains leads separated from low-voltage leads (EMC).
+   away from boiler heat. Wire **N/L to the machine's mains N/L** (`F`/PHASE + Neutral — always live
+   on this machine, which is fine: ito wants continuous power for zero-cross sensing); use a
+   surge-protected outlet. Keep mains leads separated from low-voltage leads (EMC).
 3. **Wire the pump for phase-angle control.** Drive the vibratory pump from ito's on-board
    **`Relay 1`** (clamp 1). leva!'s "Relays 1/2" are **solid-state** relays — they have to be: leva!
    fires the output at a computed delay after each `SNS`-detected zero-cross (that delay _is_ the
@@ -373,8 +374,8 @@ curves in-thread if you post phase plots.
 - [ ] Install pressure sensor (brew-line T-tap) + tap the stock GICAR meter via the CD4011 NAND
       buffer → `IMPULSE`
 - [ ] Wire the pump to ito's **`Relay 1`** for phase-angle + move the controller's pump-on lead to
-      **SNS** (combine the machine-open work with 06-011's switched-mains interlock tap); design +
-      print PETG display/encoder housing
+      **SNS** (combine the machine-open work with 06-011's PUMP-output fill tap); design + print
+      PETG display/encoder housing
 - [ ] Flash leva!; install Status Monitor XML
 - [ ] Set bypass + `PRESS OPV`; run pressure pre-test (mind the SNS-inactivity gotcha — jumper
       `SNS`↔`L` or press the shot button first)
