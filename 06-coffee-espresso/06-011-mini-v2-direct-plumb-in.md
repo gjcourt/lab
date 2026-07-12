@@ -255,7 +255,7 @@ solenoid coil-up so any seal weep drips clear of the coil and electrical connect
 > **(b) add a ~30–60 s off-delay** on the solenoid (a time-delay relay, or an RC hold on the PSU) so
 > the float catches up between draws — keeps the fail-safe, no smart plug; or (c) accept
 > continuous-open via the smart-plug alternative above. **Bench test:** run several back-to-back shots
-> + a steam session and watch the tank — holds/recovers = fine on flow; drifts down = add the
+> then a steam session, watching the tank — holds/recovers = fine on flow; drifts down = add the
 > off-delay.
 
 **Two separate supplies — don't confuse them.** The 12 V solenoid coil runs off its **own 12 V DC
