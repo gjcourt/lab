@@ -7,9 +7,10 @@ Combined before/after of the **fluid** and **electrical** paths across the two m
 
 Every `★` is something you add; everything unmarked stays stock. The water side gains **two taps**
 (no added flow meter — the machine's own stock GICAR meter is reused electrically); the electrical
-side is pure **interposition** — the ito slips into the pump's mains circuit and rides the same
-switched-mains rail that also powers the plumb-in solenoid. The stock control board, the low-water
-float switch, the boilers, and the pump itself are **untouched**.
+side is pure **interposition** — the ito slips into the pump's mains circuit, and both ito's
+pump-sense and the plumb-in solenoid tap the control-board **PUMP output** (there is **no** switched
+mains rail on this machine — see the wiring reference). The stock control board, the low-water float
+switch, the boilers, and the pump itself are **untouched**.
 
 ```text
 ════════════════════════ FLUID PATH ════════════════════════
@@ -51,9 +52,10 @@ BEFORE  (stock)
 
 AFTER   (★ = added;  stock control board left alone)
 
-  MAINS → [power switch] → SWITCHED-MAINS RAIL ─┬─► [stock control board]   (unchanged)
-                                                ├─► ★ ito power (N/L)
-                                                └─► ★ solenoid coil supply   (plumb-in interlock)
+  MAINS (always live — no hard switch) ─► [stock control board]   (unchanged)
+     F/PHASE + N ─► ★ ito power (N/L)                  (always-live mains)
+     PUMP output ─┬─► ★ ito SNS                        (zero-cross + "pump on")
+                  └─► ★ solenoid 12 V PSU              (fill interlock — open only while pump draws)
 
   pump run:   ★[ito Relay 1] → [VIBE PUMP]                      ← leva! phase-angle control (solid-state relay, phase-fired)
   sense:      controller pump-on lead → ★[ito SNS]             ← zero-cross + "pump on"; ito SNS is an opto input,
@@ -75,8 +77,7 @@ AFTER   (★ = added;  stock control board left alone)
   NAND buffer on ito's 5 V rail** (opto optional — galvanic isolation only; blondica's proven build
   is the bare NAND); and both ito's `SNS` and the plumb-in solenoid's PSU tap the control-board
   **PUMP output** — there is **no switched mains rail** on this machine (`F`/PHASE is always live;
-  full M5 terminal map in
-  [control-board wiring](mini-v2-control-board-wiring.md)).
+  full M5 terminal map in [control-board wiring](mini-v2-control-board-wiring.md)).
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
   [06-012](../06-012-leva-pid-temperature-takeover.md)), low-water float switch (dry-run
   protection), boilers, group, and pump.
@@ -89,6 +90,6 @@ AFTER   (★ = added;  stock control board left alone)
 ## Shared teardown
 
 Because the float valve (06-011) and the pressure tee + stock-meter tap (06-001) are all reachable
-once the panels are off, and the single switched-mains tap serves both the ito and the solenoid,
-**do both projects' in-machine work in one session.** Panel removal:
+once the panels are off, and the control-board **PUMP output** serves both ito's `SNS` sense and the
+solenoid PSU, **do both projects' in-machine work in one session.** Panel removal:
 [Clive — LUCCA A53 / Mini / Vivaldi: Panel Removal](https://support.clivecoffee.com/en/la-spaziale-lucca-a53-panel-removal).
