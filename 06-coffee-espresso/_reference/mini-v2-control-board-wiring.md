@@ -126,6 +126,29 @@ Pictorial: [gicar-tap.svg](gicar-tap.svg).
   high-impedance tap that re-drives a fresh pulse, so ito can never pull on the Vivaldi's line. That
   isolation — not the part count — is why the buffered build is the proven one.
 
+## Buffer part — simpler than the CD4011B
+
+blondica's buffer is a CD4011B (14-pin quad NAND, only one gate used). You only need a single
+high-impedance re-driver, so simpler parts work. Keep whichever on **ito's 5 V**, GND shared, `+`
+(14.3 V) on the Vivaldi only — same as the buffered diagram.
+
+| Option                     | Part                                                                                | Notes                                                                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Simplest, through-hole** | **2N7000** MOSFET + 10 kΩ drain pull-up (+ ~1 kΩ gate series, 100 kΩ gate pulldown) | One transistor. Gate ← `o`, drain → ito IMPULSE + pull-up to 5 V, source → GND. **Inverts** (fine). High-Z gate → never loads the Vivaldi line. |
+| **Cleanest IC (Schmitt)**  | **74LVC1G17** single Schmitt buffer (SOT-23-5)                                      | Non-inverting + hysteresis → squares up the coarse ~2 pulse/mL edges, rejects noise. Needs a breakout (below). `74LVC1G14` = Schmitt inverter.  |
+| **Schmitt, through-hole**  | **74HC14 / CD40106** hex Schmitt inverter (DIP-14)                                  | Drop-in build like the CD4011B but with hysteresis; use one of six gates. Inverts (fine).                                                       |
+
+### The 74LVC1G17 breakout
+
+Tiny (~15 × 12 mm): the SOT-23-5 chip, one **0.1 µF** decoupling cap across VCC/GND, and a 4-pad
+header — **5V, IN, OUT, GND** (IN ← GICAR `o`, OUT → ito IMPULSE, 5V ← ito, GND ← shared).
+Pictorial: [schmitt-breakout.svg](schmitt-breakout.svg). Three ways to get one:
+
+- **Have JLCPCB/PCBWay SMT-assemble it** — a small custom PCB with the 1G17 + cap pre-populated → a
+  finished 4-pad module. Easiest to piggyback on an order already going out.
+- **Buy a SOT-23-to-DIP adapter** (SparkFun/Adafruit/generic, ~$1) and hand-solder the chip + cap.
+- **Skip SMD** and use the 74HC14 / CD40106 DIP instead.
+
 ## How each project taps this board
 
 - **[06-001] ito + leva! profiling** — cut the **PUMP** wire at the pump → route the control-board
