@@ -16,7 +16,7 @@ BARREL_H   = 9.3;    // clamp-area height (knob -> body)     << measured
 /* ---------- FRAME MOUNT (from your machine) -------------------------- */
 ARM_LEN    = 18.0;   // standoff: ring face -> frame face
 FRAME_BOLT_D  = 5.5; // M5 clearance
-FRAME_HOLE_DX = 20.0;// horizontal spacing between the two frame screws
+FRAME_HOLE_DX = 22.0;// horizontal spacing between the two frame screws
 MOUNT_SLOTS   = true;// true = vertical slots (height-adjustable on frame)
 
 /* ---------- clamp ring ----------------------------------------------- */
@@ -86,27 +86,26 @@ module clamp_ring() {
 }
 
 // -------- frame plate + arm web (behind, -Y) -------------------------
+web_w = 14;   // arm-web width — kept narrower than the hole spacing so the
+              // two M5 fixings stay clear for a bolt + driver
+
 module mount() {
   // plate (vertical, in X-Z plane; thin in Y)
   difference() {
     translate([-PLATE_W/2, plate_y - PLATE_TH, RING_H/2 - PLATE_H/2])
       cube([PLATE_W, PLATE_TH, PLATE_H]);
-    // frame fixings
+    // 2x frame fixings — M5 through the plate (axis along Y), vertical slot
     for (sx = [-1, 1])
-      translate([sx*FRAME_HOLE_DX/2, plate_y - PLATE_TH - 1, RING_H/2])
-        rotate([-90,0,0]) {
-          if (MOUNT_SLOTS)
-            hull() for (dz = [-4, 4])
-              translate([0, dz, 0]) cylinder(h=PLATE_TH+2, d=FRAME_BOLT_D);
-          else
-            cylinder(h=PLATE_TH+2, d=FRAME_BOLT_D);
-        }
+      translate([sx*FRAME_HOLE_DX/2, plate_y - PLATE_TH/2, RING_H/2])
+        hull() for (dz = (MOUNT_SLOTS ? [-4,4] : [0,0]))
+          translate([0, 0, dz])
+            rotate([90,0,0]) cylinder(h=PLATE_TH+6, d=FRAME_BOLT_D, center=true);
   }
-  // arm web joining the flattened ring back to plate
+  // narrow arm web (centred; leaves the fixings at +/-FRAME_HOLE_DX/2 clear)
   hull() {
-    translate([-ear_w/2, y_back_cut, 0]) cube([ear_w, 0.1, RING_H]);
-    translate([-PLATE_W/2, plate_y, RING_H/2 - PLATE_H/2 + 3])
-      cube([PLATE_W, 0.1, PLATE_H - 6]);
+    translate([-web_w/2, y_back_cut, 0]) cube([web_w, 0.1, RING_H]);
+    translate([-web_w/2, plate_y, RING_H/2 - PLATE_H/2 + 3])
+      cube([web_w, 0.1, PLATE_H - 6]);
   }
 }
 
