@@ -1,0 +1,13 @@
+{
+  "meta": { "filename": "flow-tap.kicad_pro", "version": 1 },
+  "board": { "design_settings": {}, "layer_presets": [], "viewports": [] },
+  "boards": [],
+  "cvpcb": { "equivalence_files": [] },
+  "erc": { "meta": { "version": 0 }, "rule_severities": {}, "pin_map": [] },
+  "libraries": { "pinned_footprint_libs": [], "pinned_symbol_libs": [] },
+  "net_settings": { "classes": [], "meta": { "version": 3 } },
+  "pcbnew": { "last_paths": {}, "page_layout_descr_file": "" },
+  "schematic": { "legacy_lib_dir": "", "legacy_lib_list": [] },
+  "sheets": [],
+  "text_variables": {}
+}

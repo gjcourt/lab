@@ -82,6 +82,73 @@ Coarse (~2 pulses/ml) — fine for **display + volume dosing**; leva! 3.0 flow-_
 Digmesa nano (48 pulses/ml), adaptable per sandc (t61709 #179): 10 N on C8, 4K7 on R6, set 48000
 impulses/L.
 
+## Feeding ito from the shared `o` — two ways
+
+Both **share the stock meter in parallel** — the `o` line is open-collector, already pulled to 5 V
+by the Vivaldi, so it fans out to a second reader without a second meter or a second supply; `+`
+(14.3 V) stays on the **Vivaldi ONLY**. The two builds differ only in how `o` reaches ito.
+Pictorial: [gicar-tap.svg](gicar-tap.svg).
+
+**blondica — buffered (bench-proven ✓):** one CD4011B gate on ito's 5 V rail re-drives the pulse.
+
+```text
+  +(14.3 V) ─────────────────► Vivaldi ONLY
+  −(GND) ───────┬────────────► Vivaldi
+                └────────────► ito GND / CD4011 VSS(7)
+  o(5 V O-C) ─┬──────────────► Vivaldi        (machine keeps its own pulses)
+              └─► CD4011 B(2)
+  ito 5 V ──► CD4011 VDD(14) + A(1, tied high)
+  CD4011 OUT(3) ─────────────► ito IMPULSE    (0↔5 V, NAND-inverted — fine for counting)
+  [PC817 opto optional — galvanic isolation only]
+```
+
+**sandc — direct, no IC (untested ⚠):** wire `o` straight to ito, after gutting ito's input RC.
+
+```text
+  +(14.3 V) ─────────────────► Vivaldi ONLY
+  −(GND) ───────┬────────────► Vivaldi
+                └────────────► ito GND
+  o(5 V O-C) ─┬──────────────► Vivaldi
+              └──────────────► ito IMPULSE    (direct)
+  ⚠ first REMOVE ito R6 (10 kΩ input pull-up) + C8 (100 nF input filter)
+```
+
+**What sandc changes, and why it's the riskier one:**
+
+- **No CD4011B, no PC817** — fewer parts, no buffer logic to power.
+- **Remove ito's R6 (10 kΩ) + C8 (100 nF) first.** R6 is ito's own input pull-up — leaving it puts a
+  _second_ pull-up on the shared open-collector node (ties ito's 5 V onto it, fighting the Vivaldi's
+  pull-up); C8 filters/rounds the coarse ~2 pulses/ml GICAR edges. Gut both so ito reads the
+  Vivaldi-pulled line cleanly. _(This is the opposite of the Digmesa-nano retune above, which keeps
+  the RC but resizes it — C8→10 nF, R6→4K7 — for the 48 000 imp/L meter.)_
+- **Both controller inputs then sit directly on one node**, so ito can load or disturb the very
+  signal the **machine** relies on for its own dosing/autofill. blondica's buffer is a
+  high-impedance tap that re-drives a fresh pulse, so ito can never pull on the Vivaldi's line. That
+  isolation — not the part count — is why the buffered build is the proven one.
+
+## Buffer part — simpler than the CD4011B
+
+blondica's buffer is a CD4011B (14-pin quad NAND, only one gate used). You only need a single
+high-impedance re-driver, so simpler parts work. Keep whichever on **ito's 5 V**, GND shared, `+`
+(14.3 V) on the Vivaldi only — same as the buffered diagram.
+
+| Option                     | Part                                                                                | Notes                                                                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Simplest, through-hole** | **2N7000** MOSFET + 10 kΩ drain pull-up (+ ~1 kΩ gate series, 100 kΩ gate pulldown) | One transistor. Gate ← `o`, drain → ito IMPULSE + pull-up to 5 V, source → GND. **Inverts** (fine). High-Z gate → never loads the Vivaldi line. |
+| **Cleanest IC (Schmitt)**  | **74LVC1G17** single Schmitt buffer (SOT-23-5)                                      | Non-inverting + hysteresis → squares up the coarse ~2 pulse/mL edges, rejects noise. Needs a breakout (below). `74LVC1G14` = Schmitt inverter.  |
+| **Schmitt, through-hole**  | **74HC14 / CD40106** hex Schmitt inverter (DIP-14)                                  | Drop-in build like the CD4011B but with hysteresis; use one of six gates. Inverts (fine).                                                       |
+
+### The 74LVC1G17 breakout
+
+Tiny (~15 × 12 mm): the SOT-23-5 chip, one **0.1 µF** decoupling cap across VCC/GND, and a 4-pad
+header — **5V, IN, OUT, GND** (IN ← GICAR `o`, OUT → ito IMPULSE, 5V ← ito, GND ← shared).
+Pictorial: [schmitt-breakout.svg](schmitt-breakout.svg). Three ways to get one:
+
+- **Have JLCPCB/PCBWay SMT-assemble it** — a small custom PCB with the 1G17 + cap pre-populated → a
+  finished 4-pad module. Easiest to piggyback on an order already going out.
+- **Buy a SOT-23-to-DIP adapter** (SparkFun/Adafruit/generic, ~$1) and hand-solder the chip + cap.
+- **Skip SMD** and use the 74HC14 / CD40106 DIP instead.
+
 ## How each project taps this board
 
 - **[06-001] ito + leva! profiling** — cut the **PUMP** wire at the pump → route the control-board
