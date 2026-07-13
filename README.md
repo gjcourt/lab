@@ -1,4 +1,4 @@
-# 117 Multidisciplinary Engineering & Skill-Building Projects
+# 119 Multidisciplinary Engineering & Skill-Building Projects
 
 Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 114 engineering and skill-building
 projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
@@ -26,7 +26,7 @@ The 114 projects are divided into the following categories:
    hardware.
 2. **[Woodworking](02-woodworking/projects.md)** (15 Projects) - Functional furniture, speaker
    cabinets, and homelab enclosures.
-3. **[Homelab & Automation](03-homelab-automation/projects.md)** (29 Projects) - eBPF, K8s
+3. **[Homelab & Automation](03-homelab-automation/projects.md)** (31 Projects) - eBPF, K8s
    operators, ESP32 sensors, and infrastructure.
 4. **[Finance & Analysis](04-finance-analysis/projects.md)** (16 Projects) - EDGAR parsing, DCF
    modeling, and personal finance tracking.
