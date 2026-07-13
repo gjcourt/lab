@@ -1,4 +1,4 @@
-# 116 Multidisciplinary Engineering & Skill-Building Projects
+# 117 Multidisciplinary Engineering & Skill-Building Projects
 
 Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 114 engineering and skill-building
 projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
