@@ -42,10 +42,10 @@ The **rev 4** answer is an **L** that grips the brick's right corner:
   lips).
 - **Leg 2** wraps onto the right face — mechanical grip so the case doesn't hang off the plug.
 - The outer corner between the legs is a **generous continuous round** (no recess). The FPC antenna
-  adheres across leg 1 → curve → leg 2 as one surface (~45 mm of skin), conforming to the curve — no
+  adheres across leg 1 → curve → leg 2 as one surface (~52 mm of skin), conforming to the curve — no
   crease, no bump.
-- A **wire-catch** comb on the back wall strain-relieves the fragile u.FL coax; the lead exits a
-  top-center notch to the antenna.
+- The u.FL coax exits a top-center notch, where a **pinch** (two nubs anchored to the top wall)
+  grips the lead for strain relief — clear of the board that fills the cavity below.
 
 See [`_reference/presence-enclosures/`](_reference/presence-enclosures/README.md) for the OpenSCAD
 source, STL, print settings, and the full deployment geometry.

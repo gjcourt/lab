@@ -4,8 +4,8 @@
 //   room face; leg 2 wraps onto the right face. The outer corner between
 //   them is a GENEROUS ROUND (CORNER_R) and the outer skin is CONTINUOUS
 //   (no recess) — the 20x40 FPC antenna adheres across leg1 → curved
-//   corner → leg2, conforming to the curve (no crease, no bump). Coax from
-//   the center-rear u.FL routes out; wire-catch combs give strain relief.
+//   corner → leg2, conforming to the curve (no crease, no bump). The u.FL coax
+//   exits a top-center notch; a pinch there grips the lead for strain relief.
 //   Board captured (open back for the adapter, USB-C throat, retention lips).
 // Local axes: +X = room, +Y = right, +Z = up.
 // =====================================================================
@@ -21,7 +21,6 @@ LEG2     = 18.0;                // right-face leg length (leg1 + arc + LEG2 >= 4
 
 /* ---- details ---- */
 LIP    = 0.9; COAX_D = 1.35;
-CATCH_Z = [16.5, 10.0];
 
 $fn = 56;
 cav_y0 = -(PCB_W/2+CLR); cav_y1 = (PCB_W/2+CLR);
@@ -63,24 +62,23 @@ module body() {
   translate([0, cav_y0, cav_z1-LIP]) cube([LIP, cav_y1-cav_y0, LIP]);
   translate([0, cav_y0, 0])          cube([LIP, LIP, cav_z1]);
   translate([0, cav_y1-LIP, 0])      cube([LIP, LIP, cav_z1]);
-  // wire-catch combs (u.FL strain relief) at centre-rear
-  for (zc = CATCH_Z) wire_comb(zc);
+  // strain relief: a pinch at the coax exit grips the u.FL lead as it leaves,
+  // loading the top wall instead of the fragile connector
+  coax_pinch();
 }
 
-module wire_comb(zc) {
-  pw = 2.0; ph = 2.4; bx = 0.6;
-  translate([bx, -COAX_D/2-pw, zc]) cube([2.4, pw, ph]);
-  translate([bx,  COAX_D/2,     zc]) cube([2.4, pw, ph]);
-  translate([bx, -COAX_D/2-0.6, zc+ph]) cube([1.4, COAX_D+1.2, 0.9]);
+// Two nubs bridge the top exit notch, narrowing it to ~COAX_D-0.25 mm so the
+// coax presses in and is retained where it exits — anchored to the top wall,
+// clear of the board that fills the cavity below.
+module coax_pinch() {
+  gap = COAX_D - 0.25;                 // snap gap, just under the coax dia
+  half = COAX_D/2 + 0.5;               // notch half-width (matches the exit cut)
+  for (sy = [-1, 1])
+    translate([3, (sy < 0) ? -half - 0.1 : gap/2, cav_z1])
+      cube([2, half - gap/2 + 0.1, 1.6]);
 }
 
 module board_ghost(){ %translate([STK-1.3, cav_y0+CLR, CLR]) cube([1.3, PCB_W, PCB_L]); }
-
-// antenna footprint ghost (conforms over the corner) — visual only
-module antenna_ghost(){
-  %color([0.85,0.2,0.2]) translate([room_x+0.1, -2, case_z/2-10])
-    cube([0.4, right_y-CORNER_R+2, 20]);
-}
 
 body();
 board_ghost();

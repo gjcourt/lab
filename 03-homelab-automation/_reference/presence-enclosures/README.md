@@ -26,10 +26,10 @@ An **L** that grips the brick's right corner:
 - The **outer corner between the legs is a generous round** (`CORNER_R = 7 mm`) and the outer skin
   is **continuous — no recess**. The 20 × 40 FPC antenna adheres across leg 1 → curved corner → leg
   2 as one surface, conforming to the curve (no crease, no "speed bump"). Developed skin ≈ leg1
-  (~16) + arc (~11) + leg2 (~18) ≈ 45 mm, so the 40 mm antenna fits with margin.
-- **Wire-catch:** two snap combs on the back wall at center-rear give **strain relief** for the
-  fragile u.FL coax — a tug loads the plastic, not the connector. The coax exits up through a
-  top-center notch to the antenna.
+  (~22) + arc (~11) + leg2 (~19) ≈ 52 mm, so the 40 mm antenna fits with margin.
+- **Strain relief:** the u.FL coax exits a top-center notch, and a **pinch** there (two nubs narrow
+  the slot to ~1.1 mm) grips the lead as it leaves — a tug loads the top wall, not the fragile
+  connector. The pinch is anchored to the top wall, clear of the board that fills the cavity.
 
 Envelope ≈ 25.6 × 29.5 × 23.6 mm.
 
