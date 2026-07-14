@@ -75,7 +75,11 @@ store.
       to a **swappable 2×4 female socket on the BACK** wired to the **fixed E07-M1101D datasheet
       pinout** (module plugs straight in), antenna off the south edge; **all-layer antenna keepout
       added**. Top/bottom renders + orientation diagram in the homelab dir.
+- [x] **Official Seeed footprint**: swapped the provisional 1×7 sockets for Seeed's
+      `XIAO-ESP32-C3-DIP` (15.24 mm row pitch, hybrid SMD+THT castellated pads, USB-C off the
+      west edge); re-derived the fan around the real pad map (power on 12/13/14, strapping
+      D0/D8/D9 avoided). Standoff confirmed (E07 pins protrude ~1 mm, clears the socketed XIAO).
+      DRC still 0/0.
 - [x] Export Gerbers/drill → `hardware/ir-rf-blaster-hat/ir-rf-gerbers.zip`
-- [ ] GUI before ordering: swap the provisional XIAO socket for Seeed's official footprint;
-      3D-check the back-side E07 / XIAO standoff stack
+- [ ] Optional final 3D view before fab; then order (JLCPCB)
 - [ ] CC1101 ESPHome external component + on-board RF bring-up
