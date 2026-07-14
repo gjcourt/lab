@@ -7,7 +7,7 @@ picture: [flow-interposer.svg](flow-interposer.svg).
 **Status (2026-07-13): routed + DRC-clean, fab-ready.** The board is generated headlessly
 (`generate_pcb.py`, kiutils) and validated with `kicad-cli` (DRC: **0 violations, 0 unconnected**).
 Gerbers/drill are exported in [`flow-tap-gerbers.zip`](flow-tap-gerbers.zip); a top render is
-[`flow-tap-top.png`](flow-tap-top.png). Board size ≈ **35.6 × 23.6 mm**, 2-layer.
+[`flow-tap-top.png`](flow-tap-top.png). Board size ≈ **23.1 × 19.8 mm**, 2-layer.
 
 > Open `flow-tap.kicad_pcb` in KiCad for a final eyeball before ordering (mains-adjacent signal).
 > The placement is functional but roomy — you may want to compact it and/or swap the vertical XH

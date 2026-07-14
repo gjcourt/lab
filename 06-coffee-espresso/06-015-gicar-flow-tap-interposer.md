@@ -115,7 +115,7 @@ To revert: pull the board, plug the meter back into the Vivaldi.
 - [x] Schematic + netlist + BoM drafted (KiCad project scaffolded)
 - [x] Identify `J1/J2` (GICAR) + `J3` (ito) connectors → **JST XH 2.5 mm**: GICAR = 4-pin (pos 1
       key-blank; 2 +14.3 V/red, 3 GND/black, 4 signal/white), ito = 3-pin (1 GND, 2 signal, 3 +5 V)
-- [x] Lay out the board — routed + **DRC-clean** (0 violations, 0 unconnected), 2-layer 35.6 × 23.6
+- [x] Lay out the board — routed + **DRC-clean** (0 violations, 0 unconnected), 2-layer 23.1 × 19.8
       mm. Generated headlessly (`_reference/flow-tap-pcb/generate_pcb.py`) + validated with
       `kicad-cli`. Signals on F.Cu, GND on B.Cu. Render + Gerbers in `_reference/flow-tap-pcb/`
 - [ ] Final review in KiCad GUI (compact placement / right-angle headers if wanted) → order
