@@ -33,10 +33,14 @@ its own USB-C.
 ## Design summary
 
 - **IR:** transmit-only, **3× 940 nm THT LEDs** (D3 optional/DNP), low-side **AO3400A** MOSFET on
-  GPIO4. LEDs off 5 V (VBUS).
-- **RF:** transmit-only **CC1101 module** (SPI + GDO0), tunable 315/433/868/915 — never wrong about
-  frequency. Codes are learned on the C3 learn rig, so the blaster itself needs no receiver. RF
-  replay only works on **fixed-code** gear (outlets/fans/doorbells), not rolling-code.
+  GPIO2 (D0; the 10 kΩ gate pulldown keeps it off through boot). LEDs off 5 V (VBUS).
+- **RF:** transmit-only **CC1101** on a socketed **EBYTE E07-M1101D** module (SPI + GDO0), on the
+  **back** with the SMA/antenna off the south edge. The CC1101 _chip_ is multi-band, but a physical
+  _module_ is antenna-matched to one band — the E07-M1101D is **433 MHz** (covers ~387–464; the
+  common US/EU fixed-code band). The 2×4 socket is **band-agnostic**, so a differently-tuned CC1101
+  module (315 / 868 / 915) drops in without a board change. Codes are learned on the C3 learn rig,
+  so the blaster needs no receiver. RF replay only works on **fixed-code** gear (outlets/fans/
+  doorbells), not rolling-code.
 - **Assembly:** JLCPCB SMT for the MOSFET + passives + CC1101; hand-solder the IR LEDs and the XIAO
   sockets.
 - **Firmware:** ESPHome. IR is stock `remote_transmitter`; the CC1101 needs a community
@@ -53,7 +57,7 @@ store.
 
 ## Exit Criteria
 
-- A routed, DRC-clean 2-layer board using Seeed's official XIAO footprint, fabricated by JLCPCB.
+- A routed, DRC-clean 4-layer board using Seeed's official XIAO footprint, fabricated by JLCPCB.
 - The assembled hat drives every captured IR device across the room from the socketed XIAO C3.
 - The CC1101 transmits a learned fixed-code RF command that actuates a real device (outlet/fan).
 - It drops into Home Assistant over MQTT as a replacement for the breadboard node — no regressions.
@@ -63,7 +67,19 @@ store.
 - [x] Requirements + schematic + BOM + pin map (no strapping pins) + floorplan
 - [x] KiCad scaffold generated headless (18 footprints placed, nets, outline, mounting holes,
       antenna keepout) and round-trip-validated
-- [ ] Open in KiCad; swap the provisional XIAO socket for Seeed's official footprint
-- [ ] Route both layers + GND pour (clear the antenna keepout), DRC
-- [ ] Export Gerbers/BOM/CPL → order from JLCPCB
+- [x] **Routed as 4-layer** (F.Cu / In1 GND plane / In2 +5V plane / B.Cu) with real library
+      footprints; SPI fans N-row-from-J1 / S-row-from-J2 so no trace clips the E07 pad block.
+      **DRC-clean: 0 errors, 0 unconnected** (23 × 54 mm). Generated headless (kiutils), zone-filled
+      via `pcbnew.LoadBoard`, validated with `kicad-cli`. Homelab PR #1120.
+- [x] **Design-review re-layout**: XIAO rotated horizontal (USB-C off the WEST edge); CC1101 moved
+      to a **swappable 2×4 female socket on the BACK** wired to the **fixed E07-M1101D datasheet
+      pinout** (module plugs straight in), antenna off the south edge; **all-layer antenna keepout
+      added**. Top/bottom renders + orientation diagram in the homelab dir.
+- [x] **Official Seeed footprint**: swapped the provisional 1×7 sockets for Seeed's
+      `XIAO-ESP32-C3-DIP` (15.24 mm row pitch, hybrid SMD+THT castellated pads, USB-C off the west
+      edge); re-derived the fan around the real pad map (power on 12/13/14, strapping D0/D8/D9
+      avoided). Standoff confirmed (E07 pins protrude ~1 mm, clears the socketed XIAO). DRC still
+      0/0.
+- [x] Export Gerbers/drill → `hardware/ir-rf-blaster-hat/ir-rf-gerbers.zip`
+- [ ] Optional final 3D view before fab; then order (JLCPCB)
 - [ ] CC1101 ESPHome external component + on-board RF bring-up
