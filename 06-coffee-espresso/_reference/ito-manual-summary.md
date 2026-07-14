@@ -1,7 +1,7 @@
 # ito Hardware Reference Manual — Executive Summary
 
 **Source:** `/Volumes/family/projects/electronics/espresso/ito-dvd/Manual/Manual.pdf`
-**Publisher:** Software & Circuits — Dietmar Eilert Systemsoftware, Aachen, Germany (www.softwareandcircuits.com)
+**Publisher:** Software & Circuits — Dietmar Eilert Systemsoftware, Aachen, Germany (<www.softwareandcircuits.com>)
 **Document:** "ito — Hardware Reference Manual," last revised 25 Sep 2024, 75 pages, © 2016 Dietmar Eilert.
 
 > **Important scope note (read first).** This PDF is the *generic hardware reference manual* for the ito board. It is **not** the espresso-specific ("leva!" / "caffè!") firmware/integration guide. It repeatedly says: "This is a generalized installation guide. Please refer to the specific installation guide that came with your firmware…" (p.10). The board is presented as a general-purpose IoT controller; espresso use (PID, shot profiling, pre-infusion, brew control, MQTT/HASS) is a *firmware* concern layered on this hardware and is **not** documented here. The firmware examples in this manual are generic demos (buzzer, UART, encoder, relays, zero-cross, flowmeter, LED, EEPROM, OLED, ADC, TSic) — building blocks, not the espresso application. If you need the espresso PID/profiling/pre-infusion/flow-control specifics, that lives in a separate firmware manual, not this file. Everything below faithfully summarizes what this hardware manual actually contains.
@@ -18,6 +18,7 @@ The ito is a "Pi A+"–sized (65 × 56 mm) IoT controller module built around **
 The two chips are joined by an **on-board 115200-baud serial bridge**: ESP `uart0` ↔ ATMega `usart0`. The ESP acts like a transparent "cable" between your PC/WLAN and the ATMega, and simultaneously serves a web UI to configure WLAN. **Both chips can be flashed wirelessly.** Note: a specific ATMega firmware may require a specific ESP firmware and vice versa. The ATMega ships **unprogrammed**; an Eclipse-based C SDK and C source examples are on the ito DVD.
 
 ### Feature list (p.2)
+
 - WLAN 2.4 GHz b/g/n, 54 Mbps
 - Two on-board 1 A solid-state relays for motors/pumps/valves — up to 240 W (8 A surge)
 - SSR connector with hardware PWM for two **external** solid-state relays
@@ -34,6 +35,7 @@ The two chips are joined by an **on-board 115200-baud serial bridge**: ESP `uart
 - Optional on-board 100–240 V~ power supply
 
 ### Software shipped (p.2, p.5)
+
 - **Status Monitor** app (Windows / Linux / Mac OS X / Android) to visualize module output
 - **Virtual Display** to use a wirelessly connected PC/Android device as a display
 - Free/open-source SDKs: Eclipse C environment for both chips, WinAVR for ATMega, esp-open-sdk for ESP; ATMega firmware examples with C source
@@ -60,7 +62,9 @@ Notable items: (1) ito module with adhesive PCB supports + acrylic insulation sh
 ## 4. Board Layout / Connectors
 
 ### PCB 2.0 top side (p.7)
+
 Numbered map:
+
 1. **SPI** — header for OLED display and ISP programmers
 2. **AUX** — 2 digital sensors (e.g. TSic) or contacts
 3. **PWM** — 2 LEDs, dimmable (40 mA max each)
@@ -81,9 +85,11 @@ Numbered map:
 18. Expansion port (PCB rev 2.0+ only)
 
 ### PCB 2.0 bottom side (p.9)
+
 1. ATMega1284 MCU (IC3); 2. High-voltage area (insulation shield required); 3. Pull-up resistor R6 + filter cap C8 for flow meters. **Note:** a 4K7 0603 resistor must be installed on **R6** if a flow meter without integrated pull-up is used; cap **C8 (100N/16V)** must be replaced with **10N/16V** for a Digmesa **nano** flow meter (see p.64).
 
 ### Mains clamps: SNS N L 1 2 (p.8)
+
 - **SNS** — AC optocoupler input, senses 32–240 VAC. Detects presence of L phase, reads a switch state, and/or detects **zero-crossings** of the AC sine — the basis for **phase-angle control ("dimming")** of relays 1 & 2. (On resistive loads, add a choke for interference suppression.)
 - **N, L** — power the board (100–240 VAC / 5 VDC / ≥0.6 A via the on-board PSU module). N and L are arbitrary names, **but** on-board relays 1 & 2 always output the **L** phase, and SNS only detects the L phase. So the circuit into which ito is integrated may demand a specific N/L order.
 - **1, 2** — outputs of the two on-board 1 A SSRs. "Instant-on" type → support phase-angle dimming up to 240 V/1 A (only if SNS is connected to L).
@@ -102,6 +108,7 @@ Numbered map:
 Repeated cautions: never attach/detach cables while powered; double-check every connection (wrong header/orientation can damage the board); relays output the L phase — load must be ≤ 240 W (1 A), never wired directly to N (destructive short); only connect devices the installed firmware supports (firmware programs each I/O pin as input or output — mismatch can damage hardware).
 
 **Sensor/display mounting details:**
+
 - **TSic temperature sensor (p.14):** glued with MG Chemicals 8329TCM 2-component heat-conductive adhesive (−40…+150 °C), mixed 1:1 (≤10% error), 45-min pot life; clean both surfaces with isopropyl; cure 24 h at room temp or 1 h at ≥65 °C.
 - **OLED display mounting (p.15–19):** four methods — (A) behind a laser-cut steel panel with M3×16 screws + epoxy (cut-outs: 0.96" type "H" = 25×14 mm; 1.54" type "HXL" = 39×20 mm); (B) behind a milled 3 mm aluminum bezel with screws (fits DIN controller holes 47×25 to 60×25 mm; 25×47 mm cut-out); (C) behind a 3D-printed bezel ("Narrow" 53 mm / "Wide" 70 mm; STL via sculpteo); (D) behind foil for type "G" displays. Insert 3 mm clear acrylic window; don't scratch PCB with tools.
 - **Display problems (p.20):** SPI over >40 cm is noise-sensitive — don't route display leads parallel to mains/noisy lines, **do NOT bundle display leads with a cable tie** (fan them out or twist), or change the SPI transfer rate in firmware. Protect the fragile chip-on-glass OLED from shock (15 cm drop can crack traces); keep ≤70 °C; avoid high-contrast settings (load-pump current draw); a 230 V neon lamp on the SNS input can inject voltage spikes — remove it.
@@ -117,11 +124,13 @@ The ESP8266 firmware (esp-link based) runs a **web configuration server** and br
 Desktops without WLAN need a USB WLAN dongle (tested: TP-LINK TL-WN722N v1.10).
 
 ### Three WLAN modes (p.24)
-- **AP (Access Point) — factory default.** ito creates its own network **SSID "ito Module"**, password **`jukGT54tz9`** (WPA/WPA2-PSK). Web UI at **http://192.168.4.1**. No internet in this mode. **Change the default AP password ASAP.**
+
+- **AP (Access Point) — factory default.** ito creates its own network **SSID "ito Module"**, password **`jukGT54tz9`** (WPA/WPA2-PSK). Web UI at **<http://192.168.4.1>**. No internet in this mode. **Change the default AP password ASAP.**
 - **STA (Station).** ito joins your 2.4 GHz router (cannot use 5 GHz), gets an IP via DHCP, becomes a normal network device. Recommended for normal use. Configure a **static DHCP lease** so you can bookmark its IP. If configured for STA but the router is offline, ito boots to STA+AP, then switches to STA within seconds once connected.
 - **STA+AP (Mixed) — temporary only.** ito runs its own AP *and* scans/joins your router; auto-switches to STA on success. Slow/unreliable (single RF channel is multiplexed) — use only briefly during initial setup, never permanently. To go from AP → STA you first switch to STA+AP on the "WLAN station" page, pick your network, enter its password; ito switches to STA automatically (192.168.4.1 becomes unresponsive; find the router-assigned IP).
 
 ### WLAN LED blink patterns (red LED, p.25)
+
 - Short flash every **2 s** → not connected, running as **AP** (factory).
 - Short flash every **1 s** → not connected, running as **STA+AP**.
 - Even on/off every 1 s → connected as STA, **no IP yet** (waiting for DHCP).
@@ -129,9 +138,11 @@ Desktops without WLAN need a USB WLAN dongle (tested: TP-LINK TL-WN722N v1.10).
 - Irregular → problem (possible boot loop / corrupted ESP config).
 
 ### WLAN factory / configuration reset (p.28)
+
 Power off → **press and hold the encoder** → power on → ito beeps, then beeps faster, then stops beeping → **release the encoder**. This sends a 5 s signal to the ESP; it restarts in **AP mode** with SSID **ito Module**, password **`jukGT54tz9`**, IP **192.168.4.1**. (With a two-button "G" display, the right button ▲ = encoder button.) You must then reconnect your PC and, on Windows, choose "Forget" on the old network before re-entering the new password (devices cache WLAN passwords).
 
 ### WLAN troubleshooting highlights (p.28–30)
+
 - ito won't reconnect after power-cycle (stays STA+AP, "forgets" router password) → assign ito a static IP in your router instead of relying on DHCP; the ESP8266 DHCP client is known to be incompatible with some routers' DHCP servers. Optionally change the ito hostname to trigger a DHCP reset.
 - Windows won't auto-connect to ito's AP → force with `netsh wlan connect name="ito Module"` (can be run at boot via Task Scheduler; "Do not save password").
 - Can't reach 192.168.4.1 → if in STA mode the IP is router-assigned, not 192.168.4.1.
@@ -151,6 +162,7 @@ Both MCUs are flashed by **bootloaders** (small programs in protected flash) ove
 - **ATMega firmware files end in `.hex`; ESP firmware files end in `.bin`.**
 
 ### 7a. Flashing ATMega1284 over the air / WLAN (Windows & Linux, p.32)
+
 - Establish WLAN; **ito must be in AP or STA mode, NOT STA+AP** (its network scans interfere with flashing). End all software talking to the module (esp. the Status Monitor).
 - Use **TeraTerm** (from DVD; Linux via Wine). Serial-terminal settings: New-Line Receive/Send = **CR+LF**, Local echo = **checked**.
 - New connection: Host = ito's IP **without http://** (192.168.4.1 in AP mode), TCP/IP, **port 2323**, IPv4, Service = **Other** (not Telnet).
@@ -162,9 +174,11 @@ Both MCUs are flashed by **bootloaders** (small programs in protected flash) ove
 - Two alternative entry routes: (1) connect to **port 23** (doesn't auto-start bootloader — start it from the web UI "console" page bootloader button); (2) hold the encoder while power-cycling until ito beeps twice-as-fast (bootloader ready over WLAN), then connect TeraTerm to port 23.
 
 ### 7b. Flashing ATMega over the air — Mac OS X (p.33–34)
+
 Same idea using **ZOC terminal** (30-day trial): host = ito IP, port 2323; connection "Telnet"/"Raw socket"; File Transfer = "Xmodem" with "Use CRC (Xmodem-CRC)"; press RETURN → `f` → Upload the `.hex` → `q` to exit.
 
 ### 7c. ATMega bootloader commands explained (p.35)
+
 - **q** — quit (= encoder press).
 - **c** — clear: erases ATMega flash + EEPROM → restores as-shipped state.
 - **f** — flash: erases flash, enters XMODEM-CRC flash mode (up to 4 KB firmware in hex within 60 s of `CCCC`).
@@ -177,7 +191,9 @@ Same idea using **ZOC terminal** (30-day trial): host = ito IP, port 2323; conne
 **Supported ATMega hex formats:** standard **Intel 8-bit hex** (from WinAVR/AVR Studio) and ito's **proprietary 8-bit hex** (can also carry EEPROM data). Other formats need conversion (bin2hex utilities on DVD). **Content protection:** flash ROM is protected from ISP read-out; the only way to lift it is a chip-erase via ISP (p.42).
 
 ### 7d. Flashing ESP8266 over the air (p.36–37)
+>
 > Strong warning: the ESP is already flashed at the factory; **do not flash it unless you know what you're doing** — the module may have to be returned to the manufacturer to restore it. OTA ESP upgrades only work if supported by the currently-installed ESP firmware; the ito factory firmware supports them.
+
 - Establish WLAN, **AP or STA mode only** (not STA+AP). ESP upgrades are always two parts, **user1.bin** + **user2.bin**.
 - Tool: **avr-link** (Windows/Linux, from `gitlab.com/bc547-playground/avr-link`, also on DVD):
   `avr-link esp flash --esp 192.168.4.1 --user1 "user1.bin" --user2 "user2.bin"`
@@ -185,10 +201,13 @@ Same idea using **ZOC terminal** (30-day trial): host = ito IP, port 2323; conne
 - **Alternative with curl:** identify the target slot with `curl -m 10 -s "http://192.168.4.1/flash/next"` → it prints `user1.bin` or `user2.bin`; upload the matching file with `curl -XPOST --data-binary "@user1.bin" "192.168.4.1/flash/upload"`; reboot with `curl -m 10 -v "http://192.168.4.1/flash/reboot"`.
 
 ### 7e. Flashing ATMega over USB (cable) (p.38)
+
 Connect PC to ito's **AUX** connector via a **5 V TTL USB-to-Serial ("FTDI"/"USB Arduino") adapter**. TeraTerm serial settings: **115200 baud, 8N1, no parity, no flow control**, New-Line Rx/Tx = CR+LF, local echo on. **Hold the encoder while powering on** until ito beeps (ATMega in bootloader/cable mode) → release. Bootloader menu appears → `f` → send `.hex` via Xmodem → `q` to exit. (Again: not "Send File.")
 
 ### 7f. Flashing ESP8266 over USB (p.39)
+
 Enter the ATMega bootloader over USB (7e), press **`b`** (puts ESP in bootloader + ATMega in pass-through = virtual cable between AUX and ESP). Close the terminal to release the serial port, then run the **Espressif ESP Flash Download Tool** (Windows; Linux users use esptool.py). Settings for the WROOM-02: COM = OS port, CrystalFreq = **26M**, SPI SPEED **80 MHz**, SPI mode **QIO**, BAUD **115200**, Flash Size **32 Mbit**. Flash files/addresses:
+
 - `boot_v1.7.bin` → **0x000000**
 - firmware `user1.bin` → **0x01000**
 - firmware `user2.bin` → **0x81000**
@@ -198,7 +217,9 @@ Enter the ATMega bootloader over USB (7e), press **`b`** (puts ESP in bootloader
 Paths must be ASCII-only (no umlauts). When done, press the encoder to exit the ESP bootloader and re-enter the ATMega bootloader; press again to exit. esptool.py one-liner is given for Linux.
 
 ### 7g. Re-flashing ESP8266 configuration (recovery) (p.40–41)
+
 For rare troubleshooting (try a WLAN config reset p.28 first). Needs a Windows PC + USB-to-Serial adapter on AUX. Obtain Espressif's SDK: **SDK 1.5.4** if the module shipped with WLAN firmware 1.0 (before Jul/19), or **SDK 2.2.1** for firmware 1.1 (firmware version shown in web UI, e.g. "ito 1.1 – 2019-06-30"). Needed files: `boot_v1.7.bin` (or boot_v1.5.bin for fw 1.0), `esp_init_data_default_v08.bin` (or ..._default.bin), `blank.bin`. Boot into ito's boot menu (hold encoder while powering on), press **`b`** for the ESP bootloader, close the terminal, run the Espressif Download Tool with CrystalFreq 26M / SPI 80 MHz / QIO / 32 Mbit, flash:
+
 - `boot_v1.7.bin` → 0x0
 - `esp_init_data_default_v08.bin` → 0xFC000
 - `blank.bin` → 0xFE000
@@ -208,6 +229,7 @@ For rare troubleshooting (try a WLAN config reset p.28 first). Needs a Windows P
 Then TeraTerm → press encoder to leave ESP boot mode and re-enter ito's boot menu → press **`s`** (5 s signal → ESP sets defaults) → **`q`** to exit. Done.
 
 ### 7h. Flashing ATMega with ISP programmer (p.42)
+>
 > **Not recommended.** ISP programmers **erase the ATMega bootloader**; without it you can no longer flash ito-format hex (only Intel hex), and the original ito bootloader cannot be restored by you (must return to manufacturer, for a fee). ito uses a **non-standard single-row 10-pin "SPI" header** (p.66) instead of the usual 10-pin ISP — you must build an adapter cable (p.68). Program via your IDE's "Program AVR" or AVR Dude. **WARNING:** wrong fuse settings (bad clock source, disabled resets) can render the ATMega useless and require chip replacement.
 
 ---
@@ -219,7 +241,9 @@ Then TeraTerm → press encoder to leave ESP boot mode and re-enter ito's boot m
 - **Floating-point math (p.46):** WinAVR defaults to integer-only printf; to print fractional values add `-Wl,-u,vfprintf` under AVR Linker → Other Arguments and add libraries **`m`** and **`printf_flt`** — otherwise floats show as "?".
 
 ### Firmware examples on the DVD (ATMega, p.47)
+
 Each project has `module.c`/`module.h` (init) + `main.c`. Load them by pointing Eclipse workspace at `firmware examples/eclipse/workspace`.
+
 - **00-buzzer** — periodic beep
 - **01-uart** — sends "Hello world!" to a terminal over WLAN
 - **02-encoder** — reads rotary encoder, prints rotation, beeps on press
@@ -253,6 +277,7 @@ The **Status Monitor** app (Win/Linux/Mac/Android) visualizes ito's output over 
 ## 10. Appendix — Pinouts & Reference (p.58–71)
 
 ### ATMega1284 pin map (p.58) — *critical for custom firmware*
+
 Legend: red = input, dark blue = output, blue = bidirectional, uncolored = not connected.
 
 **Port A:** A0 = IMPULSE pin2 (pulse input); A1 = ENC pin4 (encoder phase B); A2 = ENC pin3 (encoder phase A); A3 = ENC pin2 (encoder button); A4 = ADC pin3 (analog in 2); A5 = ADC pin2 (analog in 1); A6 = Expansion pin6 (/CS)¹; A7 = Expansion pin7 (MISO).
@@ -266,12 +291,15 @@ Legend: red = input, dark blue = output, blue = bidirectional, uncolored = not c
 ¹ Expansion interface is PCB rev 2.0+ only; on rev 1.x, A6, A7, C0, C1 are unused.
 
 ### ESP8266 pin map (p.59)
+
 GPIO0 = bootloader signal from ATMega (C7); GPIO4 = red on-board LED (high = on); GPIO12 = bootloader signal for ATMega (C6); GPIO14 = ATMega reset (high = reset); RXD ← TXD0 of ATMega; TXD → RXD0 of ATMega; RST = reset signal from ATMega (C5).
 
 ### 7-pin expansion port (p.59, PCB rev 2.0+)
+
 Pad 1 = VCC (+5 V); 2 = GND; 3 = +3.3 V; 4 = SCK (C0); 5 = MOSI/SDA (C1); 6 = /CS (A6); 7 = MISO (A7). Two supply rails + 4 digital I/O usable as hardware I²C or software SPI.
 
 ### Header pinouts (p.60–66)
+
 - **ADC:** 1 = GND, 2 = Analog in 1, 3 = Analog in 2, 4 = AVCC (+5 V). Two 10-bit 0–5 V inputs; combined draw from AVCC **≤ 300 mA** (filtering inductance limit). Example: ratiometric 5 V pressure sensor (Honeywell MLH016BGD14A, 1/4", 16 bar) — sensor common→GND, output→analog in, excitation→AVCC.
 - **AUX:** 1 = GND, 2 = I/O1 or **TXD1**, 3 = I/O2 or **RXD1**, 4 = VCC (+5 V). Two digital inputs; alternatively a serial interface (TXD/RXD). Compatible: switch, Hall sensor, TSic306WTB temperature sensor, RS232-TTL. **TSic306WTB wiring:** GND→pin3, I/O1→pin2 (output), VCC→pin1 (two sensors can share, with GND on 3A+3B). **RS232/USB:** TXD1(I/O1)→ATMega TXD1, RXD1(I/O2)→ATMega RXD1; connect a PC via a 5 V TTL USB-to-Serial (FT232RL) adapter with **crossed** RX/TX (FTDI RX↔AUX TXD1, FTDI TX↔AUX RXD1, GND↔GND, adapter set to 5 V).
 - **ENC:** 1 = GND, 2 = SW (push-button), 3 = A, 4 = B. Rotary encoder (2-bit quadrature) or push-buttons. Example: ALPS STEC12E (24 impulses/rev). Two-button "G" displays: right button ▲ → ENC pin2 (SW), left button ▼ → ENC pin3 (A).
@@ -281,9 +309,11 @@ Pad 1 = VCC (+5 V); 2 = GND; 3 = +3.3 V; 4 = SCK (C0); 5 = MOSI/SDA (C1); 6 = /C
 - **SSR (external relays):** 1 = GND (switched), 2 = SSR 3 (+5 V), 3 = SSR 4 (+5 V). Two switched 5 V lines for 3–32 V SSRs (add a snubber/varistor across the load; heatsink usually needed). SHARP S202Sxx relays need a **270 Ω** series resistor to their internal optocoupler LED (GND→relay pin4 cathode via 270 Ω, SSR3→relay pin3 anode). Note: on-board relays are "relay 1 & 2"; external ones are "SSR 3 & 4."
 
 ### Creating custom leads (p.68)
+
 All ito headers use **Molex KK 100 series (2.54 mm grid)** plugs (2-contact 22-01-2027, 3-contact -2037, 4-contact -2047, 8-contact -3087, 10-contact -3107; cheaper reichelt "PSS"/"PSK-KONTAKTE"). Crimp (reichelt "CRIMPZANGE PSK") or solder; strip 2–3 mm, insert 4–5 mm, contacts click into the housing and can't be pulled out once seated.
 
 ### ESP8266 flash layout (p.69)
+
 16 Mbit (2 MB) or 32 Mbit (4 MB) WROOM-02, two-partition OTA layout: 0x0000 bootloader (4 KB); **Partition 1** user1.bin at 0x1000 (492 K) + user params 0x7C000 (16 KB); reserved 0x80000; **Partition 2** user2.bin at 0x81000 (492 K) + user params 0xFC000; free user data from 0x100000; system parameters in the last 16 KB (0x3FC000 for 32 Mbit). The two partitions hold in-use vs. next firmware, swapped on OTA reboot.
 
 ---
@@ -327,22 +357,26 @@ All ito headers use **Molex KK 100 series (2.54 mm grid)** plugs (2-contact 22-0
 ## 12. Quick Reference
 
 **Network**
-- Default mode: **AP**. SSID **`ito Module`**, password **`jukGT54tz9`** (WPA/WPA2-PSK). Web UI **http://192.168.4.1**.
+
+- Default mode: **AP**. SSID **`ito Module`**, password **`jukGT54tz9`** (WPA/WPA2-PSK). Web UI **<http://192.168.4.1>**.
 - STA mode → router-assigned DHCP IP (use a static lease). 2.4 GHz only (no 5 GHz/ac).
 - **Port 23** = transparent serial bridge to ATMega (Status Monitor; 4 conns; 5-min timeout). **Port 2323** = firmware-update port (auto-starts ATMega bootloader; block at firewall if internet-exposed).
 
 **Resets / recovery**
+
 - **WLAN config reset → factory AP:** power off, hold encoder, power on, wait through beep-faster-then-stop, release. Restores SSID `ito Module` / pw `jukGT54tz9` / 192.168.4.1.
 - **ATMega firmware reset:** bootloader `c` (clears flash + EEPROM to as-shipped).
 - **ESP recovery:** WLAN config reset first; else re-flash ESP config (p.40, needs USB-serial cable + Espressif Download Tool). Do NOT casually flash the ESP.
 
 **Flashing (ATMega, the common case)**
+
 - Files: **`.hex`** (ATMega), **`.bin`** (ESP). Mode must be **AP or STA, never STA+AP**.
 - OTA: TeraTerm/ZOC → ito IP, **port 2323**, RETURN → **`f`** → **Xmodem Send** the `.hex` → **`q`**. Never "Send File."
 - USB: FTDI 5 V adapter on **AUX**, **115200 8N1**, hold encoder while powering on → bootloader → `f` → Xmodem → `q`.
 - Bootloader menu: `q`uit `c`lear `f`lash `e`eprom `r`eset `p`ass-through `b`ootloader(ESP) `s`ignal(WLAN reset).
 
 **Key header pinouts (2.54 mm Molex KK)**
+
 - **ADC:** 1 GND · 2 AnalogIn1 · 3 AnalogIn2 · 4 AVCC(+5 V, ≤300 mA)
 - **AUX:** 1 GND · 2 I/O1/TXD1 · 3 I/O2/RXD1 · 4 VCC(+5 V)
 - **ENC:** 1 GND · 2 SW · 3 A · 4 B
@@ -358,6 +392,7 @@ All ito headers use **Molex KK 100 series (2.54 mm grid)** plugs (2-contact 22-0
 **Hard-wired ATMega pins to remember (damage risk):** B0 buzzer, C2/C3 on-board relays 1/2, C4 green LED, C5 ESP reset, D0/D1 ↔ ESP serial, D4/D5 PWM LEDs, D6/D7 external SSR, A0 flow pulse, A1–A3 encoder, A4/A5 ADC, B2 zero-cross.
 
 **Gotchas**
+
 - Only a qualified electrician may connect mains (>30 V).
 - Wire loads to relay clamps 1/2 (L phase) at ≤240 W/1 A — never to N (short).
 - N/L order can matter because relays/SNS only work with the L phase.

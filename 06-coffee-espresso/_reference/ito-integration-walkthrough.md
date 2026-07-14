@@ -107,6 +107,7 @@ The final integrated product is the union of the `06-001` and `06-015` Exit Crit
 monitoring layer added. **Acceptance = all of the following true simultaneously:**
 
 **Firmware + control (from `06-001`):**
+
 1. ito installed and powered from the machine; `leva!` `1 - ito with rotary encoder` running.
 2. Pump driven by ito via phase-angle control (Relay 1), `SNS` fed from the pump-switch L phase.
 3. A `Gen Lever` (or custom) profile tracks setpoint to within a fraction of a bar at the plateau.
