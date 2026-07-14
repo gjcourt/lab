@@ -289,6 +289,33 @@ manual — see **Tuning** below and `_reference/leva/`.
 > bench at low voltage**, then **solder the HLK-PM01 and do the mains install** (steps 2–4) in the
 > machine. Decouples the fiddly firmware work from the mains wiring.
 
+### Interim bring-up — kit Digmesa now, GICAR swap later
+
+The flow-tap interposer ([06-015](06-015-gicar-flow-tap-interposer.md)) is what lets ito read the
+**stock GICAR** meter — but the whole ito bring-up doesn't have to wait for that board. The kit's
+**Digmesa is a 5 V meter, so it plugs straight into ito's `IMPULSE` header** (GND / signal / +5 V) —
+no buffer needed (that's the whole reason the ~14.3 V GICAR needs the interposer and the Digmesa
+doesn't). So the ito **flow input is identical either way**; only the source changes. Use it to
+validate everything now:
+
+1. **Temporarily inline the kit Digmesa** and run its 3 leads to `IMPULSE`. (The "second in-series
+   meter restricts flow ~10 %" caveat is about the _permanent_ Digmesa+GICAR setup — for a bench
+   validation it's a non-issue.)
+2. With it in, shake out the full chain: ito power (bench 5 V or HLK-PM01), **pump phase-angle**
+   wiring (Relay 1 + pump-on lead on `SNS`), the **pressure** sensor on the brew-line T-tap, leva!
+   flashed + Status Monitor plotting, a **full pressure-profiled shot**, and that `IMPULSE`
+   registers flow pulses.
+3. **When the flow-tap board arrives:** pull the Digmesa, drop the interposer onto the stock GICAR
+   (J1/J2 → GICAR, J3 → `IMPULSE`). **No ito reconfiguration** — same header, same 0–5 V pulses.
+
+> ⚠️ **K-factor.** The Digmesa and GICAR have different pulses-per-litre, so on the Digmesa just
+> confirm pulses _register_ — don't trust the mL/s number and **don't calibrate flow scaling on
+> it**. Re-set the flow K-factor in leva! **after** the GICAR swap. Pressure calibration is
+> unaffected (separate sensor).
+
+Net: power + pump + pressure + leva! + the flow-input path are all validated now, and the board
+arrival becomes a ~5-minute meter swap + one flow recal — not a bring-up.
+
 ## Tuning (the real, ongoing work)
 
 Run the firmware-manual tutorials, then iterate with the Status Monitor plots (turn on the **pump
