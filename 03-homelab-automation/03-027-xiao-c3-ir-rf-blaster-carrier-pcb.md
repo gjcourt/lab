@@ -63,7 +63,11 @@ store.
 - [x] Requirements + schematic + BOM + pin map (no strapping pins) + floorplan
 - [x] KiCad scaffold generated headless (18 footprints placed, nets, outline, mounting holes,
       antenna keepout) and round-trip-validated
-- [ ] Open in KiCad; swap the provisional XIAO socket for Seeed's official footprint
-- [ ] Route both layers + GND pour (clear the antenna keepout), DRC
-- [ ] Export Gerbers/BOM/CPL → order from JLCPCB
+- [x] **Routed as 4-layer** (F.Cu / In1 GND plane / In2 +5V plane / B.Cu) with real library
+      footprints; SPI uses a monotonic XIAO→CC1101 fan so traces don't cross. **DRC-clean: 0 errors,
+      0 unconnected** (22 × 50 mm). Generated headless (kiutils), zone-filled via
+      `pcbnew.LoadBoard`, validated with `kicad-cli`. Homelab PR #1120.
+- [x] Export Gerbers/drill → `hardware/ir-rf-blaster-hat/ir-rf-gerbers.zip`
+- [ ] GUI before ordering: swap the provisional XIAO socket for Seeed's official footprint; add the
+      antenna copper keepout for the specific CC1101 module
 - [ ] CC1101 ESPHome external component + on-board RF bring-up
