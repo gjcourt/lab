@@ -276,5 +276,6 @@ So "expose both" is really _software everywhere, hardware where the device expos
 - Volumio Snapcast plugin — <https://github.com/Saiyato/volumio-snapcast-plugin>
 - Snapcast — <https://github.com/snapcast/snapcast>
 - DSPi (RP2040/RP2350 USB DSP firmware) — `~/src/DSPi` + [ASR thread][dspi]; console
-  `~/src/DSPi-Console`
+  `~/src/DSPi-Console`. Enclosure + I/O-board index (95-page ASR crawl, with buy links):
+  [`_reference/dspi-asr-index.md`](_reference/dspi-asr-index.md)
 - CamillaDSP (software DSP alternative) — <https://github.com/HEnquist/camilladsp>
