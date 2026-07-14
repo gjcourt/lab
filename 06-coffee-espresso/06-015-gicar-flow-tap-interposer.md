@@ -115,8 +115,11 @@ To revert: pull the board, plug the meter back into the Vivaldi.
 - [x] Schematic + netlist + BoM drafted (KiCad project scaffolded)
 - [x] Identify `J1/J2` (GICAR) + `J3` (ito) connectors → **JST XH 2.5 mm**: GICAR = 4-pin (pos 1
       key-blank; 2 +14.3 V/red, 3 GND/black, 4 signal/white), ito = 3-pin (1 GND, 2 signal, 3 +5 V)
-- [ ] Draw schematic in KiCad, assign footprints (XH-4/XH-3), lay out (~20 × 20 mm, 2-layer)
-- [ ] Export Gerbers/BoM/CPL → order JLC/PCBWay (SMT U1+C1, TH connectors)
+- [x] Lay out the board — routed + **DRC-clean** (0 violations, 0 unconnected), 2-layer 35.6 × 23.6
+      mm. Generated headlessly (`_reference/flow-tap-pcb/generate_pcb.py`) + validated with
+      `kicad-cli`. Signals on F.Cu, GND on B.Cu. Render + Gerbers in `_reference/flow-tap-pcb/`
+- [ ] Final review in KiCad GUI (compact placement / right-angle headers if wanted) → order
+      JLC/PCBWay (SMT U1+C1, hand-solder connectors); Gerbers already exported
 - [ ] Assemble, bench-verify pulse pass-through + buffered output into ito
 - [ ] Install in-line; confirm machine still doses/autofills and ito reads flow
 
