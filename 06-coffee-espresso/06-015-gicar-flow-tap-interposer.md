@@ -39,16 +39,30 @@ straight through so the machine is untouched, and breaking out only what ito nee
 
 ## Connectors — three ports
 
-| Ref  | Role                     | Pins               | Match to…                                                   |
-| ---- | ------------------------ | ------------------ | ----------------------------------------------------------- |
-| `J1` | GICAR meter in           | `+`, `−`, `o`      | the **GICAR flow-meter connector** (receptacle)             |
-| `J2` | to Vivaldi (passthrough) | `+`, `−`, `o`      | the **Vivaldi flow socket** (plug identical to the meter's) |
-| `J3` | to ito                   | `OUT`, `5V`, `GND` | **Dietmar's ito flow-meter cable** connector                |
+All three ports are **JST XH, 2.5 mm pitch** — confirmed 2026-07-13. The GICAR board connector
+measures **2.0 mm _between_ pins**, which with the 0.5 mm posts = 2.5 mm pitch (XH, not the 2.0 mm
+PH it superficially resembles). ito's IMPULSE side is XH too, so one connector family + one crimp
+tool covers the whole board.
 
-> ⚠️ **Connector choice is pending two photos** — the GICAR meter connector and ito's flow cable
-> connector (type + pin pitch, 2.0 mm vs 2.54 mm). If matching either is impractical, fall back to
-> **JST-XH 2.54 mm** on all three ports + two short adapter pigtails (universal, slightly less
-> tidy).
+| Ref  | Role                     | Connector         | Pinout (numbered from the key/latch end)                                  |
+| ---- | ------------------------ | ----------------- | ------------------------------------------------------------------------- |
+| `J1` | GICAR meter in           | JST XH, **4-pin** | 1 = **key/blank**, 2 = +14.3 V (red), 3 = GND (black), 4 = signal (white) |
+| `J2` | to Vivaldi (passthrough) | JST XH, **4-pin** | mirrors `J1` — 1 blank, 2 +14.3 V, 3 GND, 4 signal                        |
+| `J3` | to ito                   | JST XH, **3-pin** | 1 = GND, 2 = OUT (buffered signal), 3 = +5 V — matches ito IMPULSE        |
+
+> ✅ **Connector question resolved.** GICAR flow-meter plug = JST XH **4-pin** housing with
+> **position 1 left blank as a key** (3 wires on 4 pins). ito IMPULSE = JST XH **3-pin**
+> (`1 GND / 2 signal / 3 +5 V`, metered earlier). Pin 2's +14.3 V passes `J1→J2` only and never
+> reaches `J3`; `J3` taps **pin 4 (white/signal)** buffered, referenced to the shared **pin 3 GND**.
+
+**Connector BoM (all JST XH 2.5 mm):**
+
+- **Cable plugs:** `XHP-4` (J1/J2 side) + `XHP-3` (ito) housings with `SXH-001T-P0.6` crimps — or
+  pre-crimped XH pigtails to skip the crimp tool.
+- **PCB headers (through-hole):** `B4B-XH-A` ×2 (`J1`, `J2`) + `B3B-XH-A` (`J3`); swap to `S…-XH-A`
+  right-angle if it lays out cleaner.
+- **`J2`→Vivaldi:** a short XH 4-wire jumper (`XHP-4` both ends) or a `J2` pigtail — the Vivaldi
+  board header natively mates the meter's plug, so the interposer presents a plug back to it.
 
 ## Schematic / netlist
 
@@ -56,11 +70,12 @@ One buffer, one decoupling cap, three connectors. Full netlist + BoM live in the
 README: [`_reference/flow-tap-pcb/`](_reference/flow-tap-pcb/README.md).
 
 ```text
-  N_PLUS (14.3 V):  J1.+ ── J2.+                       (pass-through ONLY — not to U1 or J3)
-  GND:              J1.− ── J2.− ── J3.GND ── U1.GND ── C1
-  N_O   (pulse):    J1.o ── J2.o ── U1.A(in)
-  V5    (ito 5 V):  J3.5V ── U1.VCC ── C1
-  N_OUT (buffered): U1.Y(out) ── J3.OUT
+  (J1.1 / J2.1 = keyed blank — no connection)
+  N_PLUS (14.3 V):  J1.2 ── J2.2                       (pass-through ONLY — not to U1 or J3)
+  GND:              J1.3 ── J2.3 ── J3.1 ── U1.GND ── C1
+  N_O   (pulse):    J1.4 ── J2.4 ── U1.A(in)
+  V5    (ito 5 V):  J3.3 ── U1.VCC ── C1
+  N_OUT (buffered): U1.Y(out) ── J3.2
 ```
 
 - **U1** — 74LVC1G17 single Schmitt buffer (SOT-23-5). (Non-inverting; `74LVC1G14` = inverting equiv
@@ -71,8 +86,8 @@ README: [`_reference/flow-tap-pcb/`](_reference/flow-tap-pcb/README.md).
 ## Fabrication + assembly (JLC/PCBWay)
 
 - **2-layer, ~20 × 20 mm.** Export Gerbers + BoM + CPL from KiCad.
-- **SMT-assemble only U1 + C1** (the fiddly SMD). Use **through-hole connectors** for `J1/J2/J3` and
-  hand-solder them — cheap, and lets you pick the exact housings once the photos land.
+- **SMT-assemble only U1 + C1** (the fiddly SMD). Hand-solder the **through-hole JST XH headers**
+  for `J1/J2/J3` (`B4B-XH-A` ×2 + `B3B-XH-A`) — cheap, and keeps the connector footprints trivial.
 - Piggyback this on the plumb-in bracket order (both fab houses take it in one cart).
 
 ## Integration (3 plugs, reversible)
@@ -98,8 +113,9 @@ To revert: pull the board, plug the meter back into the Vivaldi.
 
 - [x] Topology chosen: in-line interposer, Schmitt-buffered, `+` isolated from ito by construction
 - [x] Schematic + netlist + BoM drafted (KiCad project scaffolded)
-- [ ] Identify `J1/J2` (GICAR) + `J3` (ito) connectors from photos → finalize connector BoM
-- [ ] Draw schematic in KiCad, assign footprints, lay out (~20 × 20 mm, 2-layer)
+- [x] Identify `J1/J2` (GICAR) + `J3` (ito) connectors → **JST XH 2.5 mm**: GICAR = 4-pin (pos 1
+      key-blank; 2 +14.3 V/red, 3 GND/black, 4 signal/white), ito = 3-pin (1 GND, 2 signal, 3 +5 V)
+- [ ] Draw schematic in KiCad, assign footprints (XH-4/XH-3), lay out (~20 × 20 mm, 2-layer)
 - [ ] Export Gerbers/BoM/CPL → order JLC/PCBWay (SMT U1+C1, TH connectors)
 - [ ] Assemble, bench-verify pulse pass-through + buffered output into ito
 - [ ] Install in-line; confirm machine still doses/autofills and ito reads flow
