@@ -66,9 +66,29 @@ if DEBUG:
         print(r, {p.number: abspad(fp, p.number) for p in fp.pads})
     sys.exit(0)
 
+def chamfer45(pts, cmax=1.2):
+    """Replace each 90 degree orthogonal corner with two 45 degree bends."""
+    if len(pts) < 3: return pts
+    out = [pts[0]]
+    for i in range(1, len(pts)-1):
+        a, v, b = pts[i-1], pts[i], pts[i+1]
+        vin = (v[0]-a[0], v[1]-a[1]); vout = (b[0]-v[0], b[1]-v[1])
+        lin = math.hypot(*vin); lout = math.hypot(*vout)
+        perp = abs(vin[0]*vout[0] + vin[1]*vout[1]) < 1e-6
+        ortho = min(abs(vin[0]),abs(vin[1])) < 1e-6 and min(abs(vout[0]),abs(vout[1])) < 1e-6
+        if perp and ortho and lin > 1e-6 and lout > 1e-6:
+            c = min(cmax, lin/2, lout/2)
+            out.append((v[0]-vin[0]/lin*c, v[1]-vin[1]/lin*c))
+            out.append((v[0]+vout[0]/lout*c, v[1]+vout[1]/lout*c))
+        else:
+            out.append(v)
+    out.append(pts[-1])
+    return out
 def route(points, netname, layer="F.Cu", w=0.35):
+    points = chamfer45(points)
     for a, b in zip(points, points[1:]):
-        board.traceItems.append(Segment(start=Position(*a), end=Position(*b),
+        board.traceItems.append(Segment(start=Position(round(a[0],4),round(a[1],4)),
+                                         end=Position(round(b[0],4),round(b[1],4)),
                                          width=w, layer=layer, net=NUM[netname], tstamp=uid()))
 def via(p, netname):
     board.traceItems.append(Via(position=Position(*p), size=0.7, drill=0.35,
