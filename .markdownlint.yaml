@@ -12,3 +12,11 @@ MD033: false
 
 # MD041/first-line-heading/first-line-h1 - First line in a file should be a top-level heading
 MD041: false
+
+# MD029/ol-prefix - Ordered list item prefix. Off so reference docs can carry a single
+# continuous numbering across interleaved subsections (e.g. a 1..N acceptance checklist).
+MD029: false
+
+# MD036/no-emphasis-as-heading - Off so prose/reference docs can use bold inline labels
+# (e.g. **Gotchas**, **Network**) without promoting each to a real heading.
+MD036: false
