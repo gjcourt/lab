@@ -1,0 +1,11 @@
+Designator,Mid X,Mid Y,Layer,Rotation
+R1,4.5mm,-11.0mm,Top,0
+R2,11.5mm,-11.0mm,Top,0
+R3,18.5mm,-11.0mm,Top,0
+R4,6.5mm,-15.5mm,Top,0
+R5,16.5mm,-15.5mm,Top,0
+C1,2.5mm,-15.5mm,Top,0
+C2,20.5mm,-15.5mm,Top,0
+C3,9.0mm,-44.0mm,Top,-90
+C4,12.5mm,-44.0mm,Top,-90
+Q1,11.5mm,-15.5mm,Top,0

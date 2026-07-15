@@ -33,7 +33,8 @@ its own USB-C.
 ## Design summary
 
 - **IR:** transmit-only, **3× 940 nm THT LEDs** (D3 optional/DNP), low-side **AO3400A** MOSFET on
-  GPIO2 (D0; the 10 kΩ gate pulldown keeps it off through boot). LEDs off 5 V (VBUS).
+  **GPIO3 (D1)** — a non-strapping pin, so the 10 kΩ gate pulldown can't drag the D0/GPIO2 strap low
+  at reset. LEDs off 5 V (VBUS).
 - **RF:** transmit-only **CC1101** on a socketed **EBYTE E07-M1101D** module (SPI + GDO0), on the
   **back** with the SMA/antenna off the south edge. The CC1101 _chip_ is multi-band, but a physical
   _module_ is antenna-matched to one band — the E07-M1101D is **433 MHz** (covers ~387–464; the
@@ -48,12 +49,20 @@ its own USB-C.
 
 ## Where the design lives
 
-The buildable assets (KiCad project, `generate_pcb.py` generator, design doc, and the ESPHome
-config) live in the homelab repo — this repo is the project-lifecycle writeup, not a binary/asset
-store.
+The **PCB** assets live alongside this doc in lab (mirroring `flow-tap-pcb` and the presence-node
+enclosures — hardware design belongs in lab); the **firmware** lives in homelab, where the device is
+deployed next to the rest of the IR-blaster ESPHome ecosystem.
 
-- `gjcourt/homelab` → `hardware/ir-rf-blaster-hat/` + `firmware/esphome/ir-rf-blaster-xiao-c3.yaml`
-- Opened as homelab **PR #1044**.
+- **PCB** — [`_reference/ir-rf-blaster-pcb/`](_reference/ir-rf-blaster-pcb/): KiCad project
+  (`xiao-c3-ir-rf.kicad_pcb`), `generate_pcb.py` generator + `footprints/`, gerbers, JLC BOM + CPL,
+  and top/bottom renders. DRC-clean, fab- and assembly-ready.
+- **Firmware** — `gjcourt/homelab` → `firmware/esphome/ir-rf-blaster-xiao-c3.yaml`.
+  > Its GPIO map predates the official-footprint re-layout — align it to the pin table in the PCB
+  > [`README`](_reference/ir-rf-blaster-pcb/README.md) before flashing.
+
+_(History: the PCB originally landed in `homelab/hardware/ir-rf-blaster-hat/` as an unrouted
+scaffold — homelab PR #1044/#1120 — then moved here once it was routed. That homelab dir is being
+removed.)_
 
 ## Exit Criteria
 
@@ -80,6 +89,7 @@ store.
       edge); re-derived the fan around the real pad map (power on 12/13/14, strapping D0/D8/D9
       avoided). Standoff confirmed (E07 pins protrude ~1 mm, clears the socketed XIAO). DRC still
       0/0.
-- [x] Export Gerbers/drill → `hardware/ir-rf-blaster-hat/ir-rf-gerbers.zip`
-- [ ] Optional final 3D view before fab; then order (JLCPCB)
+- [x] Export Gerbers/drill + JLC BOM/CPL → `_reference/ir-rf-blaster-pcb/` (R1–R3 = 0805 so the
+      whole assembly BOM is JLC **Basic**); top/bottom renders regenerated
+- [ ] Verify CPL rotations in JLC's preview (Q1/SOT-23 likely +180°); then order (JLCPCB)
 - [ ] CC1101 ESPHome external component + on-board RF bring-up
