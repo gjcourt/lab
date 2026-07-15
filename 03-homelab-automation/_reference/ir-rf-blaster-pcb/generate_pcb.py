@@ -181,7 +181,7 @@ g = abspad(Q1, 1); r51 = abspad(R5, 1)
 route([abspad(R4, 2), g], "Q_GATE")                               # R4.2 -> gate (F.Cu)
 via(g, "Q_GATE"); via(r51, "Q_GATE")
 route([g, r51], "Q_GATE", "B.Cu")                                 # gate -> R5 (B.Cu, clears drain)
-# IR_TX: XIAO D0 (south-west) up the west edge, in along y17.5 (south of the driver row and
+# IR_TX: XIAO D1 (south-west) up the west edge, in along y17.5 (south of the driver row and
 # clear of C1's GND via), then up into R4.1 (B.Cu)
 r41 = abspad(R4, 1); d1 = abspad(A1, 2)   # IR_TX on D1/GPIO3 (non-strapping)
 # drop south of the XIAO pad row first (clears the spare D0 pad) then up the west edge to R4

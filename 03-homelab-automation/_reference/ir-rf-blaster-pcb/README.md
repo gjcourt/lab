@@ -88,7 +88,7 @@ docker run --rm --platform linux/amd64 -v "$PWD:/w" -w /w kicad/kicad:9.0 sh -c 
   kicad-cli pcb export svg --layers "F.Cu,Edge.Cuts,F.Silkscreen" --page-size-mode 2 -o top.svg xiao-c3-ir-rf.kicad_pcb'
 ```
 
-`footprints/` holds the eight KiCad-9 footprints the generator places (so it runs without a local
+`footprints/` holds the eight KiCad footprints the generator places (so it runs without a local
 KiCad install). `fill.py` zone-fills via `pcbnew.ZONE_FILLER` — needed because the planes are
 written unfilled.
 
