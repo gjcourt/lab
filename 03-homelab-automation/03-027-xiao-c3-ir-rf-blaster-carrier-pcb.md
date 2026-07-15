@@ -60,9 +60,9 @@ deployed next to the rest of the IR-blaster ESPHome ecosystem.
   > Its GPIO map predates the official-footprint re-layout — align it to the pin table in the PCB
   > [`README`](_reference/ir-rf-blaster-pcb/README.md) before flashing.
 
-_(History: the PCB was developed in `homelab/hardware/ir-rf-blaster-hat/` — scaffold in homelab PR
-#1044, routed 4-layer DRC-clean board in #1120 — then relocated here, where R1–R3 moved to 0805
-(all-Basic BOM) and JLC BOM/CPL were added. The homelab dir is removed in gjcourt/homelab#1125.)_
+_(History: developed in `homelab/hardware/ir-rf-blaster-hat/` — homelab PR 1044 was the scaffold, PR
+1120 the routed 4-layer DRC-clean board — then relocated here, where R1–R3 moved to 0805 (all-Basic
+BOM) and JLC BOM/CPL were added. The homelab dir is removed in gjcourt/homelab#1125.)_
 
 ## Exit Criteria
 
