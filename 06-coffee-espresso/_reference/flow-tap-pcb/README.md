@@ -74,8 +74,28 @@ KiCad install).
 > (`malloc(): unaligned tcache chunk`), so this project generates with **kiutils** (pure Python,
 > native) and only uses the compiled `kicad-cli` for DRC/export/render.
 
-## Order (JLC/PCBWay)
+## Order (JLC)
 
-1. Upload [`flow-tap-gerbers.zip`](flow-tap-gerbers.zip).
-2. Enable **SMT assembly for U1 + C1** only (LCSC parts); hand-solder `J1/J2/J3`.
-3. Piggyback on the plumb-in bracket order.
+1. Upload [`flow-tap-gerbers.zip`](flow-tap-gerbers.zip). Select **2-layer**.
+2. Enable **SMT assembly** (top only) and upload the BOM + CPL:
+   - BOM: [`flow-tap-BOM.csv`](flow-tap-BOM.csv)
+   - CPL / pick-and-place: [`flow-tap-CPL.csv`](flow-tap-CPL.csv)
+3. Hand-solder the three JST-XH connectors (`J1`/`J2`/`J3`) — they're not in the BOM/CPL.
+4. Piggyback on the plumb-in bracket order.
+
+### Assembly BOM (2 parts)
+
+| Designator | Value     | Package  | LCSC   | JLC library                 |
+| ---------- | --------- | -------- | ------ | --------------------------- |
+| U1         | 74LVC1G17 | SOT-23-5 | C7836  | **Extended** (~$3 one-time) |
+| C1         | 100 nF    | 0603     | C14663 | Basic                       |
+
+`U1` (TI `SN74LVC1G17DBVR`) is an Extended part — the ~$3 one-time loading fee is worth it over
+hand-soldering a SOT-23-5. (If you'd rather avoid the fee, both parts are trivial to hand-solder;
+the 0603 is easy, the SOT-23-5 wants hot air or a steady hand — leave SMT assembly off and populate
+them yourself.)
+
+> ⚠ **Verify rotations in JLC's CPL preview before ordering.** The CPL carries KiCad's rotations;
+> the 0603 maps 1:1, but **`U1` (SOT-23-5) commonly needs a rotation offset** to line pin 1 up with
+> JLC's part orientation. JLC's online viewer overlays each part on its footprint — spin it there if
+> it looks wrong.
