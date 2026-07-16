@@ -9,7 +9,7 @@ import math, sys, uuid
 def uid(): return str(uuid.uuid4())
 from kiutils.board import Board
 from kiutils.footprint import Footprint
-from kiutils.items.common import Position, Net, Effects, Justify
+from kiutils.items.common import Position, Net, Effects, Justify, Font
 from kiutils.items.brditems import Segment, Via, LayerToken
 from kiutils.items.gritems import GrLine, GrText
 from kiutils.items.zones import Zone, ZonePolygon, Hatch, FillSettings, KeepoutSettings
@@ -215,6 +215,30 @@ board.graphicItems.append(GrText(text="USB", position=Position(1.5, 21.0, 90),
                                  layer="F.SilkS", tstamp=uid()))
 board.graphicItems.append(GrText(text="E07 CC1101 -> BACK",
                                  position=Position(11.5, 49.0), layer="F.SilkS", tstamp=uid()))
+# --- reference designators + LED polarity (custom fps carry no refdes silk of their own) ---
+def refdes(ref, x, y, layer="F.SilkS", size=0.8, angle=0):
+    fx = Font(width=size, height=size, thickness=round(size*0.15, 3))
+    eff = Effects(font=fx, justify=Justify(mirror=True)) if layer.startswith("B.") else Effects(font=fx)
+    board.graphicItems.append(GrText(text=ref, layer=layer, tstamp=uid(),
+        position=Position(round(x, 3), round(y, 3), angle or None), effects=eff))
+def silk_line(x0, y0, x1, y1, layer="F.SilkS", w=0.3):
+    board.graphicItems.append(GrLine(start=Position(round(x0,3), round(y0,3)),
+        end=Position(round(x1,3), round(y1,3)), layer=layer, width=w, tstamp=uid()))
+# LEDs: refdes above the 5 mm bodies; cathode (pad1, WEST) bar in each inter-body gap
+for i, cx in enumerate(LEDX):
+    refdes(f"D{i+1}", cx, 2.0)
+    silk_line(cx-3.1, 4.6, cx-3.1, 7.4)      # vertical bar marks the cathode (west) side
+# resistor row (labelled below their pads, clear of the LED silk circles above)
+for i, cx in enumerate(LEDX):
+    refdes(f"R{i+1}", cx, 13.0)
+# gate/driver cluster — labelled below the row in the clear band before the XIAO
+refdes("C1", 2.5, 18.0); refdes("R4", 6.5, 18.0); refdes("Q1", 11.5, 18.0)
+refdes("R5", 16.5, 18.0); refdes("C2", 20.5, 18.0)
+refdes("A1", 11.5, 20.8)
+# south-strip decaps
+refdes("C3", 9.0, 41.5); refdes("C4", 12.5, 41.5)
+# E07 (module lives on the BACK) — mirrored on B.SilkS, north of its header pads
+refdes("M1", 11.5, 28.0, layer="B.SilkS")
 # E07 module body footprint on the BACK (15 x 30 mm), header at y30-32.5, body extends SOUTH;
 # on B.Fab (no silk DRC), clear of the header pads.
 mb = [(4.0,33.4),(19.0,33.4),(19.0,53.4),(4.0,53.4)]
