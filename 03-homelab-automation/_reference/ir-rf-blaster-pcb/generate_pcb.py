@@ -9,7 +9,7 @@ import math, sys, uuid
 def uid(): return str(uuid.uuid4())
 from kiutils.board import Board
 from kiutils.footprint import Footprint
-from kiutils.items.common import Position, Net, Effects, Justify
+from kiutils.items.common import Position, Net, Effects, Justify, Font
 from kiutils.items.brditems import Segment, Via, LayerToken
 from kiutils.items.gritems import GrLine, GrText
 from kiutils.items.zones import Zone, ZonePolygon, Hatch, FillSettings, KeepoutSettings
@@ -215,6 +215,29 @@ board.graphicItems.append(GrText(text="USB", position=Position(1.5, 21.0, 90),
                                  layer="F.SilkS", tstamp=uid()))
 board.graphicItems.append(GrText(text="E07 CC1101 -> BACK",
                                  position=Position(11.5, 49.0), layer="F.SilkS", tstamp=uid()))
+# --- reference designators ---
+# The stock footprints emit their Reference property as (hide yes), so add visible refdes text.
+# Their geometric silk (LED body circle + cathode flat, pad outlines) IS rendered, so polarity
+# needs no extra mark — LED_D5.0mm draws the cathode flat on the pad1/WEST side already.
+def refdes(ref, x, y, layer="F.SilkS", size=0.8, angle=0):
+    fx = Font(width=size, height=size, thickness=max(0.15, round(size*0.15, 3)))
+    eff = Effects(font=fx, justify=Justify(mirror=True)) if layer.startswith("B.") else Effects(font=fx)
+    board.graphicItems.append(GrText(text=ref, layer=layer, tstamp=uid(),
+        position=Position(round(x, 3), round(y, 3), angle or None), effects=eff))
+# LEDs: refdes above the 5 mm bodies (the footprint's own cathode flat marks polarity)
+for i, cx in enumerate(LEDX):
+    refdes(f"D{i+1}", cx, 2.0)
+# resistor row (labelled below their pads, clear of the LED silk circles above)
+for i, cx in enumerate(LEDX):
+    refdes(f"R{i+1}", cx, 13.0)
+# gate/driver cluster — labelled below the row in the clear band before the XIAO
+refdes("C1", 2.5, 18.0); refdes("R4", 6.5, 18.0); refdes("Q1", 11.5, 18.0)
+refdes("R5", 16.5, 18.0); refdes("C2", 20.5, 18.0)
+refdes("A1", 11.5, 20.8)
+# south-strip decaps
+refdes("C3", 9.0, 41.5); refdes("C4", 12.5, 41.5)
+# E07 (module lives on the BACK) — mirrored on B.SilkS, north of its header pads
+refdes("M1", 11.5, 28.0, layer="B.SilkS")
 # E07 module body footprint on the BACK (15 x 30 mm), header at y30-32.5, body extends SOUTH;
 # on B.Fab (no silk DRC), clear of the header pads.
 mb = [(4.0,33.4),(19.0,33.4),(19.0,53.4),(4.0,53.4)]
