@@ -112,7 +112,7 @@ route([(14.0, Y), (14.0, gj[1]), gj], "GND", "B.Cu")                   # down th
 u3 = abspad(U1, 3); via(u3, "GND"); route([u3, (u3[0], Y)], "GND", "B.Cu")
 c2 = abspad(C1, 2); via(c2, "GND"); route([c2, (c2[0], Y)], "GND", "B.Cu")
 
-# silkscreen — reference designators (the custom fps carry no silk of their own).
+# silkscreen — reference designators (the stock fps emit their Reference as hidden).
 # Connectors are keyed by the housing; SOT-23-5 is pin-asymmetric; C1 is non-polar,
 # so refdes alone documents the board for hand-assembly. Placed in the open mid-band
 # (y 3..11.5) clear of the two pad rows (U1/C1 at y1.3, connector pins at y14).
@@ -120,7 +120,8 @@ def silk_text(x, y, text, layer="F.SilkS", size=0.8, angle=0):
     board.graphicItems.append(GrText(text=text,
         position=Position(round(x, 3), round(y, 3), angle if angle else None),
         layer=layer,
-        effects=Effects(font=Font(width=size, height=size, thickness=round(size*0.15, 3))),
+        effects=Effects(font=Font(width=size, height=size,
+                                  thickness=max(0.15, round(size*0.15, 3)))),
         tstamp=uid()))
 # the 3 JST housings fill the board (silk y ~4.7..16.5 + pads); the only clear zone is the top
 # strip above them. All refdes go in one clean row at y -0.9, each above its part's x column.
@@ -143,6 +144,11 @@ def fp_extent(fp):
 xs, ys = [], []
 for fp in board.footprints:
     for (px, py) in fp_extent(fp): xs.append(px); ys.append(py)
+for gi in board.graphicItems:                       # fold silk text into the bounds
+    if isinstance(gi, GrText):                       # (the refdes row sits above the pads)
+        s = gi.effects.font.height if (gi.effects and gi.effects.font) else 0.8
+        xs += [gi.position.X - s, gi.position.X + s]
+        ys += [gi.position.Y - s, gi.position.Y + s]
 m = 1.2
 x0, y0, x1, y1 = min(xs)-m, min(ys)-m, max(xs)+m, max(ys)+m
 corners = [(x0,y0),(x1,y0),(x1,y1),(x0,y1)]
