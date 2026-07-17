@@ -520,8 +520,12 @@ curves in-thread if you post phase plots.
 - [ITO/Leva! Controller — Q&A + Experience (home-barista, t61709)](https://www.home-barista.com/espresso-machines/ito-leva-controller-q-experience-t61709.html)
 - [La Spaziale Mini Vivaldi and pressure profiling (home-barista, t56816)](https://www.home-barista.com/espresso-machines/la-spaziale-mini-vivaldi-and-pressure-profiling-t56816.html)
 - [softwareandcircuits.com — ito module + leva!](http://www.softwareandcircuits.com)
-- **Free ITO leva! companion app** — community-built, announced in t61709 **#365 (Apr 2026)**: live
-  brew, profile editor, shot history, on-machine diagnostics; an alternative to Status Monitor (link
-  in the thread post / `.../home-barista-thread-index/INDEX.md`).
+- **Free ITO leva! companion app** — community-built
+  ([github.com/vocian/Leva-Companion](https://github.com/vocian/Leva-Companion)), announced in
+  [t61709 #p1075964 (Apr 2026)](https://www.home-barista.com/espresso-machines/ito-leva-controller-q-experience-t61709-360.html#p1075964):
+  live brew, profile editor, shot history, on-machine diagnostics; an alternative to Status Monitor.
+  All-rights-reserved (not forkable). Client mechanism + a clean-room TS/homelab re-implementation
+  design:
+  [`_reference/leva-controller-clean-room-design.md`](_reference/leva-controller-clean-room-design.md).
 - [projectcaffe.bplaced.net — leva! features / beta manual](http://projectcaffe.bplaced.net/features_leva.html)
 - kaffee-netz.de — pressure-sensor install on a similar machine (linked from thread)
