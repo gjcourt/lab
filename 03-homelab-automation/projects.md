@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (31)
+# Homelab & Automation Projects (32)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -37,3 +37,4 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-029 | [SFPL Borrow-and-Rip Pipeline](03-029-sfpl-borrow-and-rip-pipeline.md)                                                         | Not Started | Medium     | 1-4 weeks       |
 | 03-030 | [XIAO ESP32-C3 Wall-Wart Presence-Node Enclosures](03-030-xiao-c3-presence-node-enclosures.md)                                 | In Progress | Easy       | 1-2 days        |
 | 03-031 | [ESP32 Resonant Chime-Bar Alarm (Software-Configured Gentle Wake)](03-031-esp32-chime-bar-alarm.md)                            | Not Started | Medium     | 1-2 weeks       |
+| 03-032 | [Audio CD Ripping on macOS (AccurateRip → FLAC → music library)](03-032-audio-cd-ripping-macos.md)                             | Not Started | Easy       | 1-2 hours       |

@@ -125,3 +125,5 @@ manual babysitting:
   [03-028 — Household Media Library Build-Out](03-028-media-library-buildout.md)
 - Rip pipeline (disc → correctly-named file on the NAS):
   [03-026 — Rip Owned 4K UHD Blu-rays to the NAS](03-026-rip-owned-4k-uhd-blurays-to-nas-jellyfin.md)
+- CD-rip step for this pipeline (audio disc → AccurateRip FLAC in the music library):
+  [03-032 — Audio CD Ripping on macOS](03-032-audio-cd-ripping-macos.md)
