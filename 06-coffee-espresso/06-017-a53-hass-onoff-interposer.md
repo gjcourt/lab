@@ -13,11 +13,11 @@ depends_on:
 # A53 Mini HASS On/Off Interposer (ESP32 / ESPHome)
 
 The concrete **v1 on/off build** of the general button sidecar
-([06-014](06-014-esp32-button-automation-sidecar.md)) and the first step of the machine-control
-track in the [shot-feedback-loop roadmap](_reference/shot-feedback-loop-roadmap.md). Give the LUCCA
-A53 Mini (= La Spaziale S1 Mini Vivaldi II) a **Home Assistant power switch** by simulating its
-front **ON/OFF button** — an ESP32 running ESPHome closes an isolated contact across the button's
-two pins for ~3 s, exactly like a finger press.
+([06-014](06-014-esp32-button-automation-sidecar.md)), and the first step of machine control (Phase
+4 of the Vibrato shot-feedback-loop roadmap, which lives in the `vibrato` repo). Give the LUCCA A53
+Mini (= La Spaziale S1 Mini Vivaldi II) a **Home Assistant power switch** by simulating its front
+**ON/OFF button** — an ESP32 running ESPHome closes an isolated contact across the button's two pins
+for ~3 s, exactly like a finger press. It talks to **Home Assistant** directly (not to Vibrato).
 
 > ⚠️ **Safety.** The button lines are **low-voltage logic** (safe to interpose), but they live
 > inside a **mains + dual-boiler (~15 A) + water** machine. **Unplug the machine before opening or
@@ -196,5 +196,5 @@ switch:
   (static PDFs on s1cafe.com **are** fetchable), plus the
   [control-board wiring reference](_reference/mini-v2-control-board-wiring.md).
 - Parent / related: [06-014](06-014-esp32-button-automation-sidecar.md) (general button sidecar),
-  [06-016](06-016-a53-control-board-reverse-engineering.md) (bench-board RE),
-  [shot-feedback-loop roadmap](_reference/shot-feedback-loop-roadmap.md) (Phase 4).
+  [06-016](06-016-a53-control-board-reverse-engineering.md) (bench-board RE). Umbrella: the Vibrato
+  shot-feedback-loop roadmap, Phase 4 (in the `vibrato` repo).
