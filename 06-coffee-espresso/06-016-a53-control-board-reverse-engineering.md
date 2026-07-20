@@ -6,7 +6,7 @@ difficulty: 'Hard'
 time_commitment: 'Weeks–months (staged)'
 target_skills:
   'Logic Analysis, Protocol RE, ICSP / Firmware, Bench Bring-up, Tigard (UART/I2C/SPI/JTAG)'
-status: 'Blocked'
+status: 'Not Started'
 depends_on:
   - 06-001-lucca-a53-mini-leva-firmware-integration
   - hardware/lucca-a53
