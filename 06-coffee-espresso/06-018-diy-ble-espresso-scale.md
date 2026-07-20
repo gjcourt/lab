@@ -20,9 +20,10 @@ Vivaldi II) whose single design goal is to **drive
 [ito + `leva!`](06-001-lucca-a53-mini-leva-firmware-integration.md)'s native weight-stop** — leva!
 cuts the shot at target mass itself. The trick that makes a _DIY_ scale plug into that native path:
 the firmware **advertises as, and emits the byte format of, a Skale 2**, so leva! reads it as one of
-its three supported scales with **zero leva!-side changes**. Onboard load cell + 24-bit ADC +
-nRF52840 BLE; thin enough to sit under the portafilter on the drip tray; USB-C rechargeable with
-multi-month standby.
+its three supported scales with **zero leva!-side changes** — _provided leva! binds a scale by
+advertised name, not a bonded MAC; that is the make-or-break unknown to verify before building (see
+Validation)._ Onboard load cell + 24-bit ADC + nRF52840 BLE; thin enough to sit under the
+portafilter on the drip tray; USB-C rechargeable with multi-month standby.
 
 > **What makes this different from [06-007](06-007-smart-scale-integration-via-bluetooth.md).**
 > 06-007 _integrates a commercial scale_ (reverse-engineer an Acaia/Timemore and bridge its data).
@@ -32,12 +33,12 @@ multi-month standby.
 
 ## The four requirements (and how each is met)
 
-| #   | Requirement                            | How this design meets it                                                                                                                                   |
-| --- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | **Plugs into gravimetrics**            | Firmware is a **Skale 2 GATT server** (weight-notify + tare). leva! set to `Method: WEIGHT` + `Stop early` reads it natively — no source scale, no bridge. |
-| 2   | **Usable** (fast, low-noise, tolerant) | NAU7802 24-bit at ~80–320 SPS → digital filter → **~10 Hz notify** (leva!'s cadence); tare + auto-tare button; conformal-coated PCB + gasketed enclosure.  |
-| 3   | **Thin** (fits under portafilter)      | Low-profile single-point load cell + slim platform; XIAO-class module + LiPo pouch; target stack-up **≤ 18–20 mm**.                                        |
-| 4   | **Long battery / USB-C**               | nRF52840 (BLE sleep in **µA**) + LiPo pouch + **onboard USB-C LiPo charger**; deep-sleep between shots, wake on load/button; fuel gauge over standard BAS. |
+| #   | Requirement                            | How this design meets it                                                                                                                                                                                                                               |
+| --- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | **Plugs into gravimetrics**            | Firmware is a **Skale 2 GATT server** (weight-notify + tare). leva! set to `Method: WEIGHT` + `Stop early` reads it natively — no source scale, no bridge — **if leva! binds by advertised name** (the make-or-break to verify first; see Validation). |
+| 2   | **Usable** (fast, low-noise, tolerant) | NAU7802 24-bit at ~80–320 SPS → digital filter → **~10 Hz notify** (leva!'s cadence); tare + auto-tare button; conformal-coated PCB + gasketed enclosure.                                                                                              |
+| 3   | **Thin** (fits under portafilter)      | Low-profile single-point load cell + slim platform; XIAO-class module + LiPo pouch; target stack-up **≤ 18–20 mm**.                                                                                                                                    |
+| 4   | **Long battery / USB-C**               | nRF52840 (BLE sleep in **µA**) + LiPo pouch + **onboard USB-C LiPo charger**; deep-sleep between shots, wake on button/tap (or duty-cycled poll); fuel gauge over standard BAS.                                                                        |
 
 ## Why "emit the Skale 2 protocol" is the winning approach (requirement #1)
 
@@ -49,7 +50,9 @@ on the wire. Of the three, **Skale 2 is the right emulation target**:
   [Sources](#sources).
 - **Near one-way:** the host subscribes to weight notifications and (optionally) writes a **tare**.
   There is no pairing handshake, heartbeat, or rolling auth to spoof (contrast Acaia, which needs a
-  periodic keep-alive). That makes a faithful emulator small and robust.
+  periodic keep-alive). That makes a faithful emulator small and robust. _(This is the **data
+  protocol** — small to emulate. Whether leva! **binds** by name vs a bonded MAC is a **separate,
+  unverified** question that gates the whole approach — see Validation.)_
 - It is the **same "emit target" as Path C of the Vibrato shot-feedback-loop roadmap (Phase 2)** —
   which lives in the **`vibrato` repo** (referenced here as a black box; see
   [Cross-links](#positioning--cross-links)). The difference: there, Vibrato re-emits a _separate
@@ -69,17 +72,21 @@ All UUIDs are the 16-bit Atomax IDs expanded into the Bluetooth base UUID
 | **Battery**           | `0x180F`     | Read/Notify      | Standard **Battery Service** (`0x2A19` level %). Skale II fixed the Skale I bug. |
 
 **Weight notification byte layout** (per the Decent `scale_api` description of Skale II): an
-**8-byte** packet — **discard the first two bytes, read the next 4 as the weight integer**
-(little-endian), the value carrying **0.1 g resolution** (Skale II's rated step). Sign handling and
-the exact scale factor **must be confirmed against a real device or the SkaleKit SDK** before
-trusting the cut (see the validation note). Emit at ~**5–10 Hz**; leva! integrates flow from the
-mass slope, so cadence + low jitter matter more than raw SPS.
+**8-byte** packet — **discard the first two bytes, read the next 4 as the weight integer**, the
+value carrying **0.1 g resolution** (Skale II's rated step). **Endianness, sign, and the exact scale
+factor must be confirmed against a real device or the SkaleKit SDK** before trusting the cut (see
+Validation). Note the published "drop-2-read-4" description may describe the BLE **advertisement
+manufacturer-data** framing rather than the raw `EF81` **GATT notification** payload a subscriber
+receives (dropping two then reading four would leave `ef 81` inside the "four") — resolve that
+ad-vs-notification ambiguity with the sniffer capture. Emit at ~**5–10 Hz**; leva! integrates flow
+from the mass slope, so cadence + low jitter matter more than raw SPS.
 
-> **Emitter, not parser.** The reference lib [`kstam/esp-arduino-ble-scales`](#sources) (the
-> BLE-scale layer **GaggiMate** builds on) is written to _read_ these scales as a client. Here we
-> run the mirror image: a **GATT _server_** that advertises the Skale 2 name + service and
-> **produces** EF81 notifications in that byte format, while **consuming** the EF80 tare write. The
-> lib is the canonical reference for the exact framing to reproduce; the code direction is inverted.
+> **Emitter, not parser.** The reference lib [`kstam/esp-arduino-ble-scales`](#sources) (upstream of
+> the fork **GaggiMate** builds on — GaggiMate uses Zer0-bit's fork) is written to _read_ these
+> scales as a client. Here we run the mirror image: a **GATT _server_** that advertises the Skale 2
+> name + service and **produces** EF81 notifications in that byte format, while **consuming** the
+> EF80 tare write. The lib is the canonical reference for the exact framing to reproduce; the code
+> direction is inverted.
 
 ## Hardware architecture
 
@@ -143,33 +150,39 @@ platform stack is the gating dimension.
   gauge yields.
 - **Mounting:** classic single-point cantilever — fixed end to the base, free end to the platform,
   with the platform's travel physically limited. Keep the whole sandwich low.
+- **Height budget (to hit ≤ ~18–20 mm):** platform (~1–2 mm) + deflection/travel gap (~2–3) + load
+  cell body (~4–6) + PCB (~1.6) + LiPo pouch (~4–5) + enclosure floor/lid (~2–3) ≈ **15–20 mm** —
+  tight but feasible; the **load-cell body and the LiPo are the two gating dimensions**, so pick the
+  thinnest adequately-rated versions of each.
 
 #### Power + USB-C
 
-| Block          | Choice                                                                                                               |
-| -------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Cell           | **Thin LiPo pouch** (e.g. ~400–600 mAh, single cell) sized to the enclosure floor.                                   |
-| Charge         | **XIAO's onboard BQ25101 over USB-C** (50/100 mA select via its charge pin). No separate MCP73831/TP4056 needed.     |
-| Fuel gauge     | Prefer a **MAX17048** (I²C, shares bus) for true SoC; fallback = MCU ADC on a battery divider. Publish via `0x180F`. |
-| Sleep strategy | Deep-sleep between shots; **wake on load-cell delta (NAU7802 DRDY / threshold) or button**; radio idles in µA.       |
+| Block          | Choice                                                                                                                                                                                                                                                                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Cell           | **Thin LiPo pouch** (e.g. ~400–600 mAh, single cell) sized to the enclosure floor.                                                                                                                                                                                                                                                                     |
+| Charge         | **XIAO's onboard BQ25101 over USB-C** (50/100 mA select via its charge pin). No separate MCP73831/TP4056 needed.                                                                                                                                                                                                                                       |
+| Fuel gauge     | Prefer a **MAX17048** (I²C, shares bus) for true SoC; fallback = MCU ADC on a battery divider. Publish via `0x180F`.                                                                                                                                                                                                                                   |
+| Sleep strategy | Deep-sleep between shots; **wake on button / tap**, radio idles in µA. (The NAU7802 has only a per-sample **DRDY** IRQ — **no threshold/window comparator** — so true wake-on-load needs either a low-power comparator on a bridge tap **or** an accepted duty-cycled ADC poll; budget that current. Button/periodic-poll wake is the simple default.) |
 
-**Battery math (order-of-magnitude):** with the radio in connectable-standby µA and the analog front
-end gated off between shots, a **~500 mAh** pouch yields **months of standby** and many days of
-active brewing between USB-C charges — the design intent behind requirement #4. Active draw is
-dominated by the ADC + BLE connection interval during a shot; keep the connection interval relaxed
-except while streaming.
+**Battery math (order-of-magnitude, to substantiate #4):** with the radio in connectable-standby
+(~5–20 µA) and the AFE gated off between shots, a **~500 mAh** pouch runs **months on standby**
+(self-discharge, not the load, dominates there). A ~30 s shot at ~5–8 mA (ADC + active BLE stream) ≈
+**~0.05 mAh/shot**, so streaming costs ~**thousands of shots per charge** — i.e. active brewing is
+_not_ the limiter; standby leakage + charge convenience are. Keep the BLE connection interval
+relaxed except while streaming. (These are estimates; the exit criterion measures the real numbers.)
 
 ### Usability details (requirement #2)
 
-| Concern          | Approach                                                                                                               |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Notify rate      | ~**10 Hz** to match leva!; oversample the ADC (80–320 SPS) and decimate.                                               |
-| Filtering        | Median-of-N despike + light IIR/EMA; keep group delay low so **live flow-rate** (mass slope) stays responsive.         |
-| Tare / auto-tare | Physical button = tare; **auto-tare** on stable-zero-after-cup-placement; honor the **EF80 `0x10`** tare from leva!.   |
-| Settle time      | Fast settle target so the shot-start tare doesn't lag; report jitter, not just resolution.                             |
-| Water / steam    | **Conformal-coat the PCB**, gasket the enclosure (IP-ish), recess the USB-C, drain channels — it lives on a drip tray. |
-| Feedback         | Minimal by design: **status LED** (+ optional haptic). A tiny OLED is optional but costs thinness + power — skip v1.   |
-| Calibration      | Two-point (tare + known mass, e.g. **100 g / 500 g** cal weights); store slope+offset in nRF flash; re-cal command.    |
+| Concern          | Approach                                                                                                                                                                                                                                                                                                                                            |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Notify rate      | ~**10 Hz** to match leva!; oversample the ADC (80–320 SPS) and decimate.                                                                                                                                                                                                                                                                            |
+| Filtering        | Median-of-N despike + light IIR/EMA; keep group delay low so **live flow-rate** (mass slope) stays responsive.                                                                                                                                                                                                                                      |
+| Tare / auto-tare | Physical button = tare; **auto-tare** on stable-zero-after-cup-placement; honor the **EF80 `0x10`** tare from leva!.                                                                                                                                                                                                                                |
+| Settle time      | Fast settle target so the shot-start tare doesn't lag; report jitter, not just resolution.                                                                                                                                                                                                                                                          |
+| Water / steam    | **Conformal-coat the PCB**, gasket the enclosure (IP-ish), recess the USB-C, drain channels — it lives on a drip tray.                                                                                                                                                                                                                              |
+| Feedback         | Minimal by design: **status LED** (+ optional haptic). A tiny OLED is optional but costs thinness + power — skip v1.                                                                                                                                                                                                                                |
+| Calibration      | Two-point (tare + known mass, e.g. **100 g / 500 g** cal weights); store slope+offset in nRF flash; re-cal command.                                                                                                                                                                                                                                 |
+| Drift / creep    | Cheap single-point cells have real **tempco + creep**, and the scale sits on a **warm drip tray** near steam. **Auto-tare at shot start** cancels short-term zero drift over a ~30 s pull; pick a **creep-/tempco-rated cell**. Span drift stays uncompensated — fine for per-shot mass (re-zeroed each shot), not for absolute long-term weighing. |
 
 ## Firmware architecture
 
@@ -179,10 +192,11 @@ except while streaming.
                                             (every ~100 ms) ─▶ pack Skale-2 EF81 bytes ─▶ BLE notify
 BLE EF80 write ─▶ dispatch: 0x10 tare │ units │ display/LED  ───────────────────────────┘
 Battery: MAX17048 (or ADC) ─▶ SoC% ─▶ GATT 0x180F (0x2A19)
-Idle: no cup + no BLE activity ─▶ gate AFE, deep-sleep radio ─▶ wake on load delta / button
+Idle: no cup + no BLE activity ─▶ gate AFE, deep-sleep radio ─▶ wake on button / periodic poll
 ```
 
-- **Advertise** with the Skale 2 device name + the `EF80` service so leva!'s scanner matches it.
+- **Advertise** with the Skale 2 device name + the `EF80` service — assuming leva! matches/binds by
+  name + service, the make-or-break to confirm first (see Validation).
 - **GATT server** exposes `EF81` (notify), `EF80` (write), optional `EF82` (notify), and standard
   `0x180F`.
 - **Weight packer** reproduces the exact Skale II framing (the 8-byte, drop-2-read-4, 0.1 g layout)
@@ -190,18 +204,33 @@ Idle: no cup + no BLE activity ─▶ gate AFE, deep-sleep radio ─▶ wake on 
 - **Tare handler** on `EF80 0x10` zeroes the software offset, so leva!'s own tare button works.
 - **Power manager** owns the sleep/wake and the fuel gauge.
 
-### Validation (the one thing that must be exactly right)
+### Validation — the make-or-break unknown comes first
 
-leva! will only cut the shot correctly if the **bytes are indistinguishable from a real Skale 2**.
-Two paths, in order of confidence:
+Two things must be true, and they are **not** equally settled. Resolve #1 **before spending on the
+load cell or PCB** — it can invalidate the whole approach:
 
-1. **Best — capture a real Skale 2 ↔ leva! session** with an **nRF Sniffer** (nRF52840 dongle +
-   Wireshark) if a Skale 2 can be borrowed: record the advertisement, the subscribe, the EF81 notify
-   framing across positive/negative/zero weight, and the EF80 tare write. Replay-match the emulator
-   to that ground truth.
-2. **Else — the published spec**: implement to the Decent `scale_api` + SkaleKit SDK + the
-   [`kstam`](#sources) parser (read it as the inverse of what to emit), then **A/B against leva!**:
-   does it connect, show live weight, tare on command, and **stop a real shot at target mass**?
+1. **Does leva! bind a scale by advertised _name + service_, or by a _bonded MAC_ / BLE pairing?**
+   This is the load-bearing assumption, and the Vibrato Path C roadmap flags it as **UNVERIFIED**.
+   If leva! rediscovers and connects to _anything_ advertising the Skale name + `EF80` service, a
+   name-only emulator works with zero leva!-side setup. If instead it stores a specific **bonded
+   MAC** (or requires BLE bonding/pairing) after first pair, a name-only impersonation won't be
+   picked up and the design needs a rethink (clone the MAC, or pair once from leva!). **Verify
+   before building anything:**
+   - Sniff a real Skale 2 ↔ leva! session (nRF Sniffer) — or find it in the spec — and confirm
+     leva! discovers/binds by **name + service** and does **not** require bonding to a stored MAC.
+   - Then stand up a **name-only advertisement + stub GATT server on a bare dev board** (no sense
+     chain yet) and confirm **leva! connects and subscribes**. That one cheap test de-risks the
+     whole project.
+2. **Are the EF81 weight bytes indistinguishable from a real Skale 2?** Once binding is confirmed,
+   match the framing — two paths in order of confidence:
+   - **Best — capture a real Skale 2 ↔ leva! session** with an **nRF Sniffer** (nRF52840 dongle +
+     Wireshark) if one can be borrowed: record the advertisement, the subscribe, the EF81 notify
+     framing across positive/negative/zero weight, and the EF80 tare write; replay-match the
+     emulator.
+   - **Else — the published spec**: implement to the Decent `scale_api` + SkaleKit SDK + the
+     [`kstam`](#sources) parser (read it as the inverse of what to emit), then **A/B against
+     leva!**: does it connect, show live weight, tare on command, and **stop a real shot at target
+     mass**?
 
 **Bench rig before the machine:** drive known masses onto the cell, confirm leva! (dose
 `Method: WEIGHT`, `Stop early`) reads them and fires the stop at the setpoint. Only then wire it
@@ -226,14 +255,19 @@ into the shot workflow on the [A53](06-001-lucca-a53-mini-leva-firmware-integrat
 
 ## Build order
 
+0. **De-risk the make-or-break first (no hardware spend):** confirm leva! binds a scale by **name +
+   service, not a bonded MAC** — sniff a real Skale 2 ↔ leva! session or the spec, then a name-only
+   advertisement + stub GATT server on a bare dev board that leva! actually connects to (see the
+   Validation section above). If it binds by MAC / requires bonding, **stop and rethink before
+   building anything.**
 1. **Breadboard the sense chain:** load cell → NAU7802 → XIAO nRF52840; read stable grams over
    serial; two-point calibrate.
 2. **Stand up the Skale 2 GATT server:** advertise as Skale, stream EF81, handle EF80 tare; connect
    from a phone app that speaks Skale 2 to sanity-check framing.
 3. **Prove the cut with leva!:** `Method: WEIGHT` + `Stop early`; validate framing (sniffer or
    spec); confirm live weight + tare + a bench stop at setpoint.
-4. **Power + sleep:** wire LiPo + USB-C charging + fuel gauge; implement wake-on-load / button;
-   measure standby + active current against the battery target.
+4. **Power + sleep:** wire LiPo + USB-C charging + fuel gauge; implement button/poll wake (+
+   optional low-power load comparator); measure standby + active current against the battery target.
 5. **Mechanical:** low-profile platform + enclosure; conformal-coat; gasket; recess USB-C; verify
    the stack clears under the portafilter on the drip tray.
 6. **Field it** on the A53 shot workflow; tune filter/notify cadence for responsive live flow
@@ -249,8 +283,9 @@ into the shot workflow on the [A53](06-001-lucca-a53-mini-leva-firmware-integrat
       of a genuine Skale 2 ↔ leva! session **or** the published spec + a passing leva! A/B.
 - [ ] **leva! reads it natively** (`Method: WEIGHT`, `Stop early`): live weight shown, `EF80 0x10`
       tare honored, and a **bench shot stops at target mass**.
-- [ ] Usability met: ~10 Hz notifications, low-jitter live flow-rate, physical tare + auto-tare,
-      water/steam-tolerant enclosure (conformal-coat + gasket).
+- [ ] Usability met: **~10 Hz notifications with notify jitter < ~20 ms and rest noise ≤ ±0.1 g**,
+      responsive live flow-rate, physical tare + auto-tare, water/steam-tolerant enclosure
+      (conformal-coat + gasket).
 - [ ] **Thin:** assembled stack clears under the portafilter on the drip tray (target ≤ ~18–20 mm).
 - [ ] **Power:** USB-C LiPo charging works; deep-sleep/wake-on-load verified; measured standby +
       active current project to the multi-day-active / multi-month-standby target on the chosen
