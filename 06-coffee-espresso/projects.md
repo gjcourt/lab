@@ -1,4 +1,4 @@
-# Coffee & Espresso Projects (15)
+# Coffee & Espresso Projects (16)
 
 This category focuses on espresso profiling, the Lucca A53 Mini, `leva!` firmware, and sensor
 integration.
@@ -22,3 +22,4 @@ integration.
 | 06-013 | [Espresso Water Remineralization](06-013-espresso-water-remineralization.md)                                     | Not Started | Easy       | 1-2 days        |
 | 06-014 | [ESP32 Button-Automation Sidecar](06-014-esp32-button-automation-sidecar.md)                                     | Not Started | Medium     | 1-4 weeks       |
 | 06-015 | [GICAR Flow-Tap Interposer PCB (stock meter → ito)](06-015-gicar-flow-tap-interposer.md)                         | In Progress | Medium     | 1-2 days        |
+| 06-016 | [A53 Control-Board Reverse Engineering (bench board)](06-016-a53-control-board-reverse-engineering.md)           | Blocked     | Hard       | Weeks–months    |
