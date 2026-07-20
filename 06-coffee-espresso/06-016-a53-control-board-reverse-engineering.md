@@ -50,16 +50,18 @@ listings — no such OEM part exists, and the too-good pricing is the bait.
 The board makes its own low-voltage rails from an onboard transformer fed by mains. Two ways up:
 
 - **Preferred — low-voltage injection, no mains on the desk.** Find the regulator output (the PIC's
-  ~5 V VDD rail) and the ~14 V control rail (the one that feeds the SSR — see
-  [06-012](06-012-leva-pid-temperature-takeover.md) / t2552) and drive them from the
-  **current-limited bench PSU**. This powers the entire digital side — PIC, keypad, serial bus,
-  flowmeter input — which is everything the RE needs. No mains, no boilers.
+  ~5 V VDD rail) and any **secondary DC control rail** the board uses to drive its heater-switching
+  stage, and feed them from the **current-limited bench PSU**. (A rail in the low-tens-of-volts is
+  plausible — **probe and confirm it on the bench; treat any specific figure as unverified**, not a
+  documented value.) This powers the entire digital side — PIC, keypad, serial bus, flowmeter input
+  — which is everything the RE needs. No mains, no boilers.
 - **Only for triac-gate timing** — feed real mains through an **isolation transformer**, fused,
   boilers disconnected (or dummy resistive loads). The triac drive needs mains zero-cross sync;
   nothing else does. Skip unless heater switching is the specific target.
 
-Set the board **DIP switches to match the target machine's model + V2 mode** (t2671) so behaviour
-matches; DIP-all-off = deliberate fault code, useful as a liveness check.
+Set the board **DIP switches to match the target machine's model** (t2671; DIP-all-off = a
+deliberate fault code, handy as a liveness check), and confirm it comes up in the right **V1/V2
+mode** — that's the power-up LED blink (t963), not a DIP setting.
 
 ## Tooling
 
@@ -67,7 +69,7 @@ matches; DIP-all-off = deliberate fault code, useful as a liveness check.
 | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------ |
 | **Tigard** (FT2232H, level-shifted UART/I2C/SPI/JTAG/SWD) | External-display **UART** sniff, onboard **EEPROM** dump, MCU debug UART, JTAG/SWD **iff** the MCU isn't a PIC | ✅                 |
 | **4-ch scope** (silent)                                   | Raw capture of the timer-bus waveform + triac gate timing; bit-width measurement for autobaud                  | ✅                 |
-| **2-ch linear PSU**                                       | Low-voltage rail injection (5 V digital + 14 V control), current-limited                                       | ✅                 |
+| **2-ch linear PSU**                                       | Low-voltage rail injection (5 V digital + the secondary control rail), current-limited                         | ✅                 |
 | **Logic analyzer, ≥16 ch, USB3, deep buffer**             | The 16-pin **keypad matrix** (parallel) + long streaming capture of the **timer bus** for software decode      | ⬜ see rec below   |
 | **PICkit 4 / Snap + SOIC clip**                           | PIC **ICSP** dump/reflash — the Tigard does **not** speak Microchip ICSP                                       | ⬜ if MCU is a PIC |
 | Bench harness                                             | ~500 kΩ multi-turn pots ×2 (NTC emul), pulse gen or ESP32 (flowmeter emul), 16-pin IDC ribbon breakout         | ⬜ build           |
@@ -85,9 +87,11 @@ required for the parallel keypad ribbon.
 - ✅ **Onboard config EEPROM** (look for an 8-pin 24Cxx / 25-series near the MCU): dump via Tigard
   I2C (pyftdi) or SPI (flashrom). Likely holds offset/model/calibration.
 - ✅ **MCU debug UART** on the PIC's TX pin, if firmware emits one at boot (version strings).
-- ❌ **OEM timer bus (B):** **not** UART — a custom 4-bits-per-bit line code (`1001` start,
-  `1000`=0, `1010`=1) on **>12 V** rails. Wiring the Tigard to it won't frame anything and risks the
-  FT2232H inputs. Capture with the **scope or LA + a divider** (below), decode in software.
+- ❌ **OEM timer bus (B):** **not** UART — a custom line code on **>12 V** rails (one forum member's
+  _unverified_ guess was ~4 bits per symbol, e.g. `1001` start / `1000`=0 / `1010`=1, but they
+  posted a conflicting reading and never confirmed it — treat as undecoded). Wiring the Tigard to it
+  won't frame anything and risks the FT2232H inputs. Capture with the **scope or LA + a divider**
+  (below), decode in software.
 - ❌ **PIC firmware:** the Tigard does JTAG/SWD, not ICSP → **cannot program a PIC.** Only if Stage
   1 shows the MCU is an ARM/JTAG part does the Tigard become the dumper.
 
@@ -98,8 +102,9 @@ required for the parallel keypad ribbon.
   **external-display header (SD/JP3)**.
 - **Read the MCU part number off the chip** — the linchpin. It fixes the ICSP pinout, memory map,
   and read-protect story, and decides **PICkit vs Tigard** for Stage 4. Pull the datasheet.
-- DMM continuity/diode: find the GND plane, the regulator → 5 V rail, the PIC VDD/VSS, the 14 V
-  rail, and **buzz the keypad ribbon to the PIC GPIOs** (confirm the t2629 map on _this_ board).
+- DMM continuity/diode: find the GND plane, the regulator → 5 V rail, the PIC VDD/VSS, any secondary
+  control rail, and **buzz the keypad ribbon to the PIC GPIOs** (confirm the t2629 map on _this_
+  board).
 - Locate the **ICSP pins** (a PIC header is typically
   `MCLR/VPP · VDD · VSS · PGD/ICSPDAT · PGC/ICSPCLK`, ± AUX) for the Stage 4 dump.
 
@@ -112,9 +117,11 @@ required for the parallel keypad ribbon.
   "PT1000" label is folklore, t2330). Sweep "temperature" and watch the heater-control output toggle
   at the ~1 °C deadband → the bang-bang loop, characterized live. **Log resistance vs. the displayed
   temp step** to recover the board's own R→T curve (the corpus has spot points, not a Beta).
-- **Flowmeter emulation:** drive `F` with a pulse gen / ESP32 at the GICAR rate (**2 pulses/rev**,
-  ~½ turn to register). Press a dose button, watch the count + cut-off → dose↔pulse mapping. Feeds
-  [06-015](06-015-gicar-flow-tap-interposer.md); **nobody in the corpus counted these externally.**
+- **Flowmeter emulation:** drive `F` with a pulse gen / ESP32 at the GICAR rate — the impeller has
+  **2 magnets → 2 pulses/rev** (t704), which the wiring reference and
+  [06-015](06-015-gicar-flow-tap-interposer.md) calibrate to **~2 pulses/mL** volumetrically. Press
+  a dose button, watch the count + cut-off → dose↔pulse mapping. **Nobody in the corpus counted
+  these externally.**
 
 ## Stage 3 — Instrument the buses
 
