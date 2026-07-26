@@ -1,4 +1,4 @@
-# Audio & MIDI Projects (17)
+# Audio & MIDI Projects (18)
 
 This category focuses on digital signal processing (DSP), custom MIDI controllers, and audio
 hardware.
@@ -24,3 +24,4 @@ hardware.
 | 01-015 | [Generative Ambient Music Player](01-015-generative-ambient-music-player.md)                                       | Not Started | Medium     | 1-4 weeks       |
 | 01-016 | [DIY Digital-Domain Streamer (Snapcast to External DAC/DSP)](01-016-diy-digital-domain-streamer.md)                | In Progress | Medium     | 1-4 weeks       |
 | 01-017 | [Elsinore Passive Crossover Refinement (Eigentakt-Optimized ULD)](01-017-elsinore-passive-crossover-refinement.md) | In Progress | Medium     | 1-4 weeks       |
+| 01-018 | [Headphone PEQ Generation (Topping DX5 II)](01-018-headphone-peq-generation.md)                                    | Not Started | Easy       | 1-4 hours       |
