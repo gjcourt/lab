@@ -29,16 +29,33 @@ Makefile               ← convenience targets
 - **Hard (months)**: Ambitious; stretches into low-level domains (C/C++, RTOS, DSP, advanced
   finance/music theory).
 
+## Project File Convention
+
+- Each project is one Markdown file named `NN-NNN-slug.md` inside its category directory, where the
+  `NN` prefix matches the directory (e.g. `05-006-midi-to-sheet-music-transcriber.md` in
+  `05-piano/`).
+- Every project file begins with YAML frontmatter. Required keys: `title`, `number`, `category`,
+  `difficulty` (`Easy|Medium|Hard`), `time_commitment`, `target_skills`, `status`
+  (`Not Started|In Progress|Done`). The `number:` value must match the filename prefix.
+- `depends_on:` is an optional list of prerequisite references (e.g. `hardware/midi-keyboard`, or
+  another project's `NN-NNN`); use it when a project can't start until another is in place.
+- Each file must include an `## Exit Criteria` section.
+
 ## Working With This Repo
 
-- Each category directory contains markdown files describing individual projects.
-- To add a new project: create a markdown file in the appropriate category directory following the
-  existing format.
+- To add a new project: create a `NN-NNN-slug.md` file in the appropriate category directory,
+  following the frontmatter convention above.
 - To renumber project prefixes after reordering: `python update_prefixes.py`
-- Use the `Makefile` for any automation tasks defined there.
+- CI runs on every push/PR to `main` and is mirrored by `make` targets — run these locally before
+  pushing:
+  - `make format-check` — Prettier formatting check (`make format` to auto-fix).
+  - `make lint` — markdownlint.
+  - `make check-invariants` — validates frontmatter keys, `number`/filename match, per-category
+    counts, and README totals (`scripts/check_invariants.py`).
+  - `make test` — runs all three of the above.
 
 ## Notes
 
-- This is a personal ideas/planning repo — no CI or tests.
+- This is a personal ideas/planning repo — no application code; content is Markdown project briefs.
 - Cross-disciplinary projects (`07-cross-disciplinary/`) intentionally combine concepts from
   multiple categories.
