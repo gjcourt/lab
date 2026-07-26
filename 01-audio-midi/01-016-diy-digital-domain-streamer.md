@@ -199,6 +199,11 @@ is tuned to a common target. "In sync" across mixed topologies is a calibration 
 
 ## Volume control (Home Assistant)
 
+> **As-built note:** the deployment chose a _single merged knob_ per room (see
+> [As-built](#as-built-deployed-2026-07)), not the two independent layers this section originally
+> proposed — the goal became one Snapcast/HASS control over Snapcast + p2p Spotify + TV. The
+> analysis below is retained as the original reasoning.
+
 The one thing worth preserving from the HiFiBerry WebUI is its volume slider — and it drove the
 card's **ALSA hardware mixer**, not a Snapcast control, so it doesn't come for free with the
 streamer OS. There are two independent volume layers, and both can live in HASS (the house control
@@ -247,25 +252,74 @@ So "expose both" is really _software everywhere, hardware where the device expos
    USB/DAC chain latency differs from the HAT chain — expect to nudge this).
 7. If green: this is the migration recipe for the other rooms.
 
-## Exit Criteria
+## As-built (deployed 2026-07)
 
-- [ ] Spare-Pi test passes: DietPi + `snapclient` + USB DAC joins the existing Snapcast group and
-      plays in sync with the two HiFiBerry rooms (per-client `latency` offset calibrated for the
-      USB/DAC chain).
-- [ ] D90 III Discrete on-board PEQ configured (Topping Tune) and confirmed applied on the USB
-      input.
-- [ ] Decision recorded: which rooms move to external-DAC-via-USB vs. stay HAT-based.
-- [ ] Volume control wired in HASS: Snapcast integration (software) + per-endpoint MQTT ALSA bridge
-      (hardware, where the device exposes an `amixer` control).
-- [ ] Migration runbook written into `homelab` (supersedes the patched `snapcast-hifiberry` image
-      for migrated rooms).
+The rollout diverged from the original plan in two deliberate ways, both driven by real per-room
+needs:
+
+1. **Living-room keeps its HiFiBerry DAC+ DSP** (the plan was to retire all HATs). That room's TV
+   (Samsung S95C) feeds **optical S/PDIF into the HiFiBerry**, and the downstream DAC (Topping **D30
+   Pro**) is a fixed-output DAC with no volume. The HiFiBerry DSP is therefore the room's volume
+   stage _and_ its TV-input path — the two things a bare digital transport can't do — so the DSP
+   stays on the HAT, feeding the D30 Pro over S/PDIF.
+2. **Volume became one merged knob per room, not two independent layers.** The plan kept
+   `--mixer software` plus a separate MQTT ALSA-hardware slider. In practice the wanted UX was a
+   _single_ Snapcast/HASS volume controlling **everything in the room — Snapcast + p2p Spotify
+   (go-librespot) + TV** — so each room routes that one control to whatever stage sits under all its
+   sources. `--mixer software` alone was insufficient: it doesn't touch the p2p go-librespot path.
+
+**Per-room as-built:**
+
+| Room            | DAC / DSP                                                                     | One-knob volume mechanism                                                                                                                                                                  | Network              | Status         |
+| --------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- | -------------- |
+| **Kitchen**     | USB → Topping **D50s**                                                        | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)                                                                                       | wired **10.42.2.38** | ✅ done        |
+| **Living-room** | HiFiBerry **DAC+ DSP** HAT → S/PDIF → **D30 Pro**; TV optical → HAT S/PDIF-in | Snapcast→**DSP master** bridge (`snap-dsp-volume-bridge`): subscribes to snapserver `Client.OnVolumeChanged`, sets the SigmaDSP master via `dsptoolkit` → covers stream + Spotify + **TV** | wired **10.42.2.39** | ✅ done        |
+| **Office**      | USB → Topping **D90 III Discrete** (reference room)                           | TBD — `--mixer hardware` if the D90 III exposes a UAC volume, else **softvol** (D90 III likely fixed-output)                                                                               | pending              | 🔧 in progress |
+
+Implementation notes captured for reuse:
+
+- **DietPi minimal has no sftp-server** → `scp` fails; deploy files via
+  `cat file | ssh host 'cat > dest'`.
+- **HiFiBerry DSP is SPI-controlled** (not I2C): `dtparam=spi=on`; toolkit = `hifiberry-dsp` from
+  GitHub `./src` (build deps `build-essential libasound2-dev python3-spidev python3-alsaaudio`);
+  `sigmatcpserver` needs TCP enabled (drop the `--disable-tcp` the shipped unit sets, for the
+  `dsptoolkit` CLI) + `Restart=always`. Stock profile `dacdsp-default.xml` gives master volume +
+  S/PDIF-in routing.
+- **After the WiFi→wired cutover, restart `go-librespot`** or its Spotify Connect device stays
+  advertised on the dead wlan0 IP and vanishes from the app.
+- **`--mixer hardware` preserves DAC auto-sleep** (only the mixer/control endpoint is held open; the
+  audio PCM still closes on idle).
+- Endpoints are on 10.42.2.x; when disabling WiFi add an `eth0` default route + verify
+  `ping -I eth0 <mac>` first (control host is on another subnet) or the node strands.
+
+## Exit Criteria (revised to as-built)
+
+- [ ] All endpoints on **DietPi + `snapclient`** (retires HiFiBerryOS + the patched
+      `snapcast-hifiberry` image) — kitchen ✅, living-room ✅, **office ⬜ (last node)**.
+- [x] **Per-room DAC/DSP topology decided** — kitchen USB→D50s, living-room keeps HiFiBerry DAC+ DSP
+      (TV + D30 Pro), office USB→D90 III (implementation: office pending).
+- [ ] **One Snapcast/HASS volume per room controls all sources** (Snapcast + p2p Spotify + TV where
+      present) — kitchen ✅, living-room ✅, office ⬜ (`--mixer hardware` vs softvol TBD).
+- [ ] **Wired ethernet + static IP + WiFi disabled** per room — kitchen ✅ (.38), living-room ✅
+      (.39), office ⬜ (verify wired drop).
+- [ ] **Office / D90 III**: snapclient joins on USB, volume wired, **PEQ configured** (Topping
+      Tune) + confirmed on the USB input.
+- [ ] **Per-client Snapcast `latency` offset calibrated** across all rooms (chains differ → they
+      drift otherwise).
+- [ ] **Migration runbook in `homelab`** — the reusable bundle exists at
+      `homelab/hosts/dietpi-audio/`; write it up as the canonical runbook that supersedes the
+      patched image (add the HiFiBerry-DSP and `--mixer hardware`/softvol volume recipes).
 
 ## Progress
 
 - [x] Meta-analysis of the digital-output HAT universe + interface/OS layers
-- [x] DAC identified (D90 III Discrete: discrete 1-bit PSRM, CPLD jitter reduction, 10-band PEQ)
-- [ ] Spare-Pi DietPi + snapclient + USB validation
-- [ ] Per-room rollout decision + homelab runbook
+- [x] DAC identified (D90 III Discrete) + per-room DACs deployed (D50s kitchen; D30 Pro + HiFiBerry
+      DSP living-room)
+- [x] Kitchen + living-room fully migrated (DietPi, wired, one-knob volume; Spotify + Snapcast [+ TV
+      living-room] verified)
+- [ ] Office / D90 III node (last endpoint) — USB DAC + volume + PEQ
+- [ ] Per-client latency-offset calibration across rooms
+- [ ] homelab migration runbook (supersedes patched `snapcast-hifiberry` image)
 
 ## References
 
