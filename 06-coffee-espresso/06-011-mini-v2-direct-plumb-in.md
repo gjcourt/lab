@@ -95,6 +95,73 @@ mechanical **float valve** controls fill, not pump enable.
    it's plugged in — see the control-board wiring reference — so a "switched-mains" tap does not
    exist to gate on.)
 
+## Fill-rate robustness: pump-gating limits and alternatives
+
+Pump-gating the NC solenoid (see [Solenoid wiring](#3-build-the-regulation-stack)) is fail-safe but
+has one real limit: the valve opens **only while the pump runs**, so refill happens only in those
+windows — there is no catch-up while the machine sits idle. Whether that bites is purely a **flow**
+question, and the fix is usually **no extra circuitry**.
+
+**The reframing.** The reservoir is a buffer of ~liters. You don't need fill ≥ draw at every
+instant; you need, averaged over a fill window, `fill_flow × open_time ≥ draw`. So the knob is
+either `fill_flow` or `open_time` — and `fill_flow` is free.
+
+**Per-operation draw (what the tank actually sees):**
+
+| Operation             | Tank draw             | Notes                                     |
+| --------------------- | --------------------- | ----------------------------------------- |
+| Brew shot             | ~120 mL/min (~2 mL/s) | OPV bypass recirculates at the pump inlet |
+| Steam-boiler autofill | ~600 mL/min           | pump at ~free-flow — **the worst case**   |
+| Hot-water tap         | ~tap flow             | occasional                                |
+
+A decent RO float valve flows ~500–1000 mL/min at 20–25 psi (tapering to 0 as it reaches level). So
+during a **brew**, fill (≈500+) already exceeds draw (120) — the tank actually _rises_ during the
+shot and pump-gating needs nothing. The only case where pump-gating can drift is **steam autofill**
+(600 mL/min), where fill may lag draw with no catch-up window.
+
+### Fix 1 (preferred — zero added parts): size fill_flow > worst-case draw
+
+Make the float valve's open flow exceed the ~600 mL/min autofill: a **larger-orifice float valve**
+and/or **a few psi more** at the regulator (30–40 psi), and a **short, fat supply run** (minimise
+line loss). Then even autofill nets positive and plain pump-gating works with **no timer, no smart
+plug**. `fill_flow` is a free knob — spend it before adding circuitry. **Bench-test:** back-to-back
+shots + a steam session; level holds/recovers ⇒ done.
+
+### Fix 2 (only if heavy-steam drift persists): software hold, not a discrete timer
+
+If sizing still can't keep up under sustained steam, don't build an analog off-delay — put the hold
+in **software on an MCU that already senses the pump**. The ESP32 button-automation sidecar
+([06-014](06-014-esp32-button-automation-sidecar.md)) or the ito-adjacent controller reads the PUMP
+/ `SNS` signal and holds a relay to the solenoid open for T≈5–10 min after each draw
+(retriggerable), giving the float minutes to catch up, then closes. Fail-safe preserved (no activity
+→ closed; MCU down → NC relay → closed). A few lines of code + one relay module, not a breadboard.
+
+### Fix 3 (hardware version if no MCU): off-delay timer relay
+
+A single off-the-shelf **12 V off-delay timer relay** (~$10–20 DIN module, retriggerable) on the
+PUMP tap does the same hold in hardware. One module wired inline — a modest added part, no custom
+circuitry.
+
+### Rejected: gate on the brew-boiler heater
+
+Tempting ("always on when the machine's on"), but the brew-boiler heater is a **PID-cycling triac**
+driving a resistive element — using it to gate the coil would make the valve **chatter/buzz** with
+the heater duty and wear the float seat. And a clean _steady_ "on-not-standby" rail likely doesn't
+exist on this board (the
+[no-switched-mains-rail finding](_reference/mini-v2-control-board-wiring.md)). Not worth it versus
+Fix 1.
+
+### Fallback: continuous-open via smart plug
+
+Power the machine from a smart plug and gate the coil on machine power → valve open the whole time
+the machine is on. Zero timer, simplest wiring, but reintroduces the external smart-plug dependency
+this build set out to avoid, and only fails closed when the plug cuts. Use only if the PUMP tap is
+unreachable.
+
+**Bottom line:** try Fix 1 first — with a well-sized float valve, pump-gating needs no extra
+circuitry at all. Reach for a hold (software > discrete timer) only if a real steam-heavy bench test
+shows drift.
+
 ## Pre-flight: verify source-water hardness
 
 The **Aquasana Claryum is a contaminant/taste filter (chlorine, chloramine, PFAS, lead, etc.) — it
