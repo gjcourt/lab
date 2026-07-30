@@ -102,6 +102,13 @@ has one real limit: the valve opens **only while the pump runs**, so refill happ
 windows — there is no catch-up while the machine sits idle. Whether that bites is purely a **flow**
 question, and the fix is usually **no extra circuitry**.
 
+> ⚠️ **The PUMP tap is now committed as ito's `SNS` sense** (see
+> [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md)). A small parallel coil PSU on that
+> tab is still fine (it doesn't change whether the tab is _live_, which is what ito senses), but
+> **avoid hanging further loads or triggers on it** that could disturb the sense. This is a point in
+> favour of **Fix 4** (electronic level control), which is wholly independent of the PUMP tap, and a
+> caveat on **Fix 3** (timer-relay trigger off the tap).
+
 **The reframing.** The reservoir is a buffer of ~liters. You don't need fill ≥ draw at every
 instant; you need, averaged over a fill window, `fill_flow × open_time ≥ draw`. So the knob is
 either `fill_flow` or `open_time` — and `fill_flow` is free.
@@ -126,6 +133,12 @@ and/or **a few psi more** at the regulator (30–40 psi), and a **short, fat sup
 line loss). Then even autofill nets positive and plain pump-gating works with **no timer, no smart
 plug**. `fill_flow` is a free knob — spend it before adding circuitry. **Bench-test:** back-to-back
 shots + a steam session; level holds/recovers ⇒ done.
+
+**Bonus — this also protects profiling.** With `fill_flow > draw` the reservoir never depletes
+during a shot, so the pump inlet stays fed and the **leva! pressure ramp is never starved** of
+water. Fill adequacy isn't just a nuisance-avoidance win; it keeps the atmospheric-inlet assumption
+the pressure loop relies on (see
+[Compatibility with pressure profiling](#compatibility-with-pressure-profiling-06-001)).
 
 ### Fix 2 (only if heavy-steam drift persists): software hold, not a discrete timer
 
