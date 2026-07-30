@@ -142,6 +142,47 @@ A single off-the-shelf **12 V off-delay timer relay** (~$10–20 DIN module, ret
 PUMP tap does the same hold in hardware. One module wired inline — a modest added part, no custom
 circuitry.
 
+### Fix 4 (root-cause): electronic level control — replace the float valve
+
+Instead of a mechanical float valve + pump-gating, let a **level sensor** drive the solenoid
+directly. Fill is then triggered by **tank level, not pump activity** — which removes the duty-cycle
+problem at its source (no timer, no hold). This is the same pattern the Mini V2 already uses for its
+**steam-boiler autofill** (level probe → EV.AL + pump).
+
+**Blocks:**
+
+- **Sensor:** a **reed float switch** at the high setpoint (reliable, no fouling — preferred over a
+  conductivity probe for a cold reservoir). Add hysteresis (a second reed ~½" lower, or a controller
+  dead-band) so it doesn't chatter at the line.
+- **Control:** the **ESP32 sidecar ([06-014](06-014-esp32-button-automation-sidecar.md))** reading
+  the switch and driving a relay/MOSFET to the coil (adds HA telemetry, remote cutoff, and a
+  drip-tray leak-sensor hard-cutoff) — or a discrete **latching relay** (set-on-low, reset-on-high)
+  for a no-MCU build.
+- **Actuator:** the existing **NC solenoid** (12 or 24 VDC — match the PSU), now switched by the
+  controller.
+- **Power:** a DC PSU (12/24 V) — an off-the-shelf supply / wall-wart, **not a custom transformer**.
+
+⚠️ **Power the rail CONTINUOUSLY (off always-live F/N), not off the PUMP tap.** Gating this rail on
+the PUMP tap would re-tie fill to pump-run time and **reintroduce the exact duty-cycle problem this
+option exists to solve.** The level sensor is the control; the solenoid's NC state is the fail-safe
+(control / power loss → closed). "Machine-on" detection is **not required** here.
+
+**Optional extra safety layer — machine-on gate (do later, the harder wire):** if you also want fill
+impossible unless the machine is on, AND the level condition with a **continuous** machine-on signal
+— a **smart plug** on the machine (continuous while on), _not_ the intermittent PUMP tap. Two
+independent conditions (machine-on AND level-low) must both hold to fill. Nice-to-have, not needed
+for correctness.
+
+**Flood backstop (required — you lose the float valve's mechanical fail-closed):** the new risk is a
+**sensor stuck reading "not full" → solenoid held open → overfill**. Mitigate, cheapest first: (a)
+keep a **mechanical float valve set ~½" higher** as a pure overflow stop (~$10, reversible — best);
+(b) an MCU **max-open timeout** (open > N s without reaching full → close + alarm) + the leak
+sensor.
+
+**Build order (easy thing first):** DC PSU on always-live F/N → reed switch in series with the coil
+(or via the relay / ESP32) → mechanical backstop float valve ½" higher. That's the MVP; add the
+smart-plug machine-on gate and HA / leak integration later.
+
 ### Rejected: gate on the brew-boiler heater
 
 Tempting ("always on when the machine's on"), but the brew-boiler heater is a **PID-cycling triac**
@@ -160,7 +201,9 @@ unreachable.
 
 **Bottom line:** try Fix 1 first — with a well-sized float valve, pump-gating needs no extra
 circuitry at all. Reach for a hold (software > discrete timer) only if a real steam-heavy bench test
-shows drift.
+shows drift. If you want fill driven by _level_ rather than pump activity (and HA / leak
+integration), **Fix 4** is the root-cause fix — power it continuously, keep a mechanical high-high
+backstop, and wire the MVP (PSU + reed switch + solenoid) before any machine-on gate.
 
 ## Pre-flight: verify source-water hardness
 
