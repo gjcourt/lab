@@ -95,6 +95,129 @@ mechanical **float valve** controls fill, not pump enable.
    it's plugged in — see the control-board wiring reference — so a "switched-mains" tap does not
    exist to gate on.)
 
+## Fill-rate robustness: pump-gating limits and alternatives
+
+Pump-gating the NC solenoid (see [Solenoid wiring](#3-build-the-regulation-stack)) is fail-safe but
+has one real limit: the valve opens **only while the pump runs**, so refill happens only in those
+windows — there is no catch-up while the machine sits idle. Whether that bites is purely a **flow**
+question, and the fix is usually **no extra circuitry**.
+
+> ⚠️ **The PUMP tap is now committed as ito's `SNS` sense** (see
+> [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md)). A small parallel coil PSU on that
+> tab is still fine (it doesn't change whether the tab is _live_, which is what ito senses), but
+> **avoid hanging further loads or triggers on it** that could disturb the sense. This is a point in
+> favour of **Fix 4** (electronic level control), which is wholly independent of the PUMP tap, and a
+> caveat on **Fix 3** (timer-relay trigger off the tap).
+
+**The reframing.** The reservoir is a buffer of ~liters. You don't need fill ≥ draw at every
+instant; you need, averaged over a fill window, `fill_flow × open_time ≥ draw`. So the knob is
+either `fill_flow` or `open_time` — and `fill_flow` is free.
+
+**Per-operation draw (what the tank actually sees):**
+
+| Operation             | Tank draw             | Notes                                     |
+| --------------------- | --------------------- | ----------------------------------------- |
+| Brew shot             | ~120 mL/min (~2 mL/s) | OPV bypass recirculates at the pump inlet |
+| Steam-boiler autofill | ~600 mL/min           | pump at ~free-flow — **the worst case**   |
+| Hot-water tap         | ~tap flow             | occasional                                |
+
+A decent RO float valve flows ~500–1000 mL/min at 20–25 psi (tapering to 0 as it reaches level). So
+during a **brew**, fill (≈500+) already exceeds draw (120) — the tank actually _rises_ during the
+shot and pump-gating needs nothing. The only case where pump-gating can drift is **steam autofill**
+(600 mL/min), where fill may lag draw with no catch-up window.
+
+### Fix 1 (preferred — zero added parts): size fill_flow > worst-case draw
+
+Make the float valve's open flow exceed the ~600 mL/min autofill: a **larger-orifice float valve**
+and/or **a few psi more** at the regulator (30–40 psi), and a **short, fat supply run** (minimise
+line loss). Then even autofill nets positive and plain pump-gating works with **no timer, no smart
+plug**. `fill_flow` is a free knob — spend it before adding circuitry. **Bench-test:** back-to-back
+shots + a steam session; level holds/recovers ⇒ done.
+
+**Bonus — this also protects profiling.** With `fill_flow > draw` the reservoir never depletes
+during a shot, so the pump inlet stays fed and the **leva! pressure ramp is never starved** of
+water. Fill adequacy isn't just a nuisance-avoidance win; it keeps the atmospheric-inlet assumption
+the pressure loop relies on (see
+[Compatibility with pressure profiling](#compatibility-with-pressure-profiling-06-001)).
+
+### Fix 2 (only if heavy-steam drift persists): software hold, not a discrete timer
+
+If sizing still can't keep up under sustained steam, don't build an analog off-delay — put the hold
+in **software on an MCU that already senses the pump**. The ESP32 button-automation sidecar
+([06-014](06-014-esp32-button-automation-sidecar.md)) or the ito-adjacent controller reads the PUMP
+/ `SNS` signal and holds a relay to the solenoid open for T≈5–10 min after each draw
+(retriggerable), giving the float minutes to catch up, then closes. Fail-safe preserved (no activity
+→ closed; MCU down → NC relay → closed). A few lines of code + one relay module, not a breadboard.
+
+### Fix 3 (hardware version if no MCU): off-delay timer relay
+
+A single off-the-shelf **12 V off-delay timer relay** (~$10–20 DIN module, retriggerable) on the
+PUMP tap does the same hold in hardware. One module wired inline — a modest added part, no custom
+circuitry.
+
+### Fix 4 (root-cause): electronic level control — replace the float valve
+
+Instead of a mechanical float valve + pump-gating, let a **level sensor** drive the solenoid
+directly. Fill is then triggered by **tank level, not pump activity** — which removes the duty-cycle
+problem at its source (no timer, no hold). This is the same pattern the Mini V2 already uses for its
+**steam-boiler autofill** (level probe → EV.AL + pump).
+
+**Blocks:**
+
+- **Sensor:** a **reed float switch** at the high setpoint (reliable, no fouling — preferred over a
+  conductivity probe for a cold reservoir). Add hysteresis (a second reed ~½" lower, or a controller
+  dead-band) so it doesn't chatter at the line.
+- **Control:** the **ESP32 sidecar ([06-014](06-014-esp32-button-automation-sidecar.md))** reading
+  the switch and driving a relay/MOSFET to the coil (adds HA telemetry, remote cutoff, and a
+  drip-tray leak-sensor hard-cutoff) — or a discrete **latching relay** (set-on-low, reset-on-high)
+  for a no-MCU build.
+- **Actuator:** the existing **NC solenoid** (12 or 24 VDC — match the PSU), now switched by the
+  controller.
+- **Power:** a DC PSU (12/24 V) — an off-the-shelf supply / wall-wart, **not a custom transformer**.
+
+⚠️ **Power the rail CONTINUOUSLY (off always-live F/N), not off the PUMP tap.** Gating this rail on
+the PUMP tap would re-tie fill to pump-run time and **reintroduce the exact duty-cycle problem this
+option exists to solve.** The level sensor is the control; the solenoid's NC state is the fail-safe
+(control / power loss → closed). "Machine-on" detection is **not required** here.
+
+**Optional extra safety layer — machine-on gate (do later, the harder wire):** if you also want fill
+impossible unless the machine is on, AND the level condition with a **continuous** machine-on signal
+— a **smart plug** on the machine (continuous while on), _not_ the intermittent PUMP tap. Two
+independent conditions (machine-on AND level-low) must both hold to fill. Nice-to-have, not needed
+for correctness.
+
+**Flood backstop (required — you lose the float valve's mechanical fail-closed):** the new risk is a
+**sensor stuck reading "not full" → solenoid held open → overfill**. Mitigate, cheapest first: (a)
+keep a **mechanical float valve set ~½" higher** as a pure overflow stop (~$10, reversible — best);
+(b) an MCU **max-open timeout** (open > N s without reaching full → close + alarm) + the leak
+sensor.
+
+**Build order (easy thing first):** DC PSU on always-live F/N → reed switch in series with the coil
+(or via the relay / ESP32) → mechanical backstop float valve ½" higher. That's the MVP; add the
+smart-plug machine-on gate and HA / leak integration later.
+
+### Rejected: gate on the brew-boiler heater
+
+Tempting ("always on when the machine's on"), but the brew-boiler heater is a **PID-cycling triac**
+driving a resistive element — using it to gate the coil would make the valve **chatter/buzz** with
+the heater duty and wear the float seat. And a clean _steady_ "on-not-standby" rail likely doesn't
+exist on this board (the
+[no-switched-mains-rail finding](_reference/mini-v2-control-board-wiring.md)). Not worth it versus
+Fix 1.
+
+### Fallback: continuous-open via smart plug
+
+Power the machine from a smart plug and gate the coil on machine power → valve open the whole time
+the machine is on. Zero timer, simplest wiring, but reintroduces the external smart-plug dependency
+this build set out to avoid, and only fails closed when the plug cuts. Use only if the PUMP tap is
+unreachable.
+
+**Bottom line:** try Fix 1 first — with a well-sized float valve, pump-gating needs no extra
+circuitry at all. Reach for a hold (software > discrete timer) only if a real steam-heavy bench test
+shows drift. If you want fill driven by _level_ rather than pump activity (and HA / leak
+integration), **Fix 4** is the root-cause fix — power it continuously, keep a mechanical high-high
+backstop, and wire the MVP (PSU + reed switch + solenoid) before any machine-on gate.
+
 ## Pre-flight: verify source-water hardness
 
 The **Aquasana Claryum is a contaminant/taste filter (chlorine, chloramine, PFAS, lead, etc.) — it
