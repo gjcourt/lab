@@ -1,0 +1,3 @@
+# kicad-cli regen artifacts (the committed deliverable is flow-tap-gerbers.zip)
+gerbers/
+*.rpt
