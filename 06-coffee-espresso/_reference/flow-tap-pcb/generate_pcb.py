@@ -158,4 +158,21 @@ for a, b in zip(corners, corners[1:]+corners[:1]):
                                       layer="Edge.Cuts", width=0.15, tstamp=uid()))
 
 board.to_file(OUT)
+
+# --- Fix kiutils round-trip of (remove_unused_layers no) ----------------------
+# The stock JST/THT footprints carry `(remove_unused_layers no)` — copper kept on
+# BOTH sides so the vertical connectors are solderable from the bottom. kiutils
+# misreads the "no" (treats the token's presence as True) and re-emits a bare
+# `(remove_unused_layers)`, which KiCad reads as ENABLED. On this 2-layer board
+# that strips the BOTTOM annular ring from every THT pin routed on a single layer
+# (all JST signal/power pins) → those pads become unsolderable from the bottom
+# (vertical housing blocks the top). Restore the footprint's intent explicitly.
+with open(OUT) as _f:
+    _txt = _f.read()
+_n = _txt.count("(remove_unused_layers)")
+if _n:
+    with open(OUT, "w") as _f:
+        _f.write(_txt.replace("(remove_unused_layers)", "(remove_unused_layers no)"))
+    print(f"  fixup: restored (remove_unused_layers no) on {_n} THT pad(s)")
+
 print(f"saved {OUT}: outline {x1-x0:.1f} x {y1-y0:.1f} mm = {(x1-x0)*(y1-y0):.0f} mm^2")
