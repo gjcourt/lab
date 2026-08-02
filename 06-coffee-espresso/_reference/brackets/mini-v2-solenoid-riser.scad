@@ -39,7 +39,11 @@ CORE_X   = 30.0;   // riser width (toward the pump) — shrink if the gap is tig
 EDGE     = 7.0;    // margin around each M5 hole (also clears the Ø9 head bore)
 
 /* ---------- BASE-PLATE FIXING (drill new) ---------- */
-EAR_REACH   = 16.0;// foot length beyond the core, each end (Y)
+// v2 (2026-08-02): the printed v1 (Y = 69 mm) was too long on the Y (long) axis;
+// target Y = 60 mm. The valve-mounting core is fixed by the valve (HOLE_CTC + EDGE),
+// so the length comes off the feet: 16 -> 11.5 (-4.5 each end).
+// Total Y = core_y + 2*EAR_REACH = 37 + 23 = 60 mm.
+EAR_REACH   = 11.5;// foot length beyond the core, each end (Y)  << v2: was 16 (-9 mm total → Y 60)
 BASE_HOLE_D = 5.5; // M5 clearance (drill + bolt the base plate; tap it or use a nut)
 GUSSET      = true;
 
