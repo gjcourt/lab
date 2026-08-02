@@ -24,16 +24,16 @@ Monitored/controlled from **Vibrato**, our own clean-room TS app, deployed in th
 
 ## As-built hardware state
 
-| Component                              | Status          | Detail                                                                                                                                                                                                                                                                                                                                               |
-| -------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **ito V2.0 module**                    | ✅ installed    | HLK-PM01 PSU soldered (2026-07-16) → runs on its own clean 5 V off mains. On the IoT VLAN at **`10.42.7.11`**, `leva!` flashed (`1 - ito with rotary encoder`).                                                                                                                                                                                      |
-| **Progressive Preinfusion chamber**    | ✅ **removed**  | Was factory-fitted. It's a mechanical hydraulic accumulator that La Spaziale document as incompatible with electronic pre-infusion (saturates → dumps ~6 s of uncontrolled PI mid-profile). Removing it was a prerequisite for clean profiling — done.                                                                                               |
-| **Pressure sensor**                    | ✅ installed    | Mounted **in the vacated factory pre-infusion port** on the left of the group head (**1/8" BSP**, kit G1/8 fitting threads straight in, PTFE-sealed) — reads brew-chamber pressure directly, no tee, no cut plumbing. Wired to the **ADC** header. This replaces the old "T-tap into the brew line" plan in `06-001` — the port is the better mount. |
-| **Pump phase-angle control**           | ✅ in place     | Pump driven from ito **Relay 1 / SSR 1**; controller's pump-on lead moved to **SNS** (zero-cross + "pump on"). Profiled shots have been pulled and traced on Vibrato, so the closed loop is live.                                                                                                                                                    |
-| **Flow meter**                         | ⏳ pending      | Permanent path = stock **GICAR** meter → CD4011 buffer → `IMPULSE`, via the **`06-015` interposer PCB (in fab)**. Interim option = kit **Digmesa** straight into `IMPULSE` (5 V, no buffer). **Pressure profiling does not need flow** (leva! profiles on pressure; flow only feeds readout + `Flow Corr`), so this doesn't block the PI work.       |
-| **Over-pressure bypass / `PRESS OPV`** | ⚠️ verify       | Set the machine bypass to crack just above 9 bar and configure `PRESS OPV`, or it fights the profile and biases flow. Confirm current setting before trusting a plateau.                                                                                                                                                                             |
-| **Display / encoder + housing**        | ➖ optional     | `leva!` runs headless over WiFi, so a mounted OLED isn't required. PETG external housing is a `06-001` nicety, not a blocker.                                                                                                                                                                                                                        |
-| **Temperature / PID**                  | 🚫 out of scope | Stock board retains all temperature control. leva! PID conflicts with the A53 board → deferred to `06-012`.                                                                                                                                                                                                                                          |
+| Component                              | Status          | Detail                                                                                                                                                                                                                                                                                                                                                     |
+| -------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ito V2.0 module**                    | ✅ installed    | HLK-PM01 PSU soldered (2026-07-16) → runs on its own clean 5 V off mains. On the IoT VLAN at **`10.42.7.11`**, `leva!` flashed (`1 - ito with rotary encoder`).                                                                                                                                                                                            |
+| **Progressive Preinfusion chamber**    | ✅ **removed**  | Was factory-fitted. It's a mechanical hydraulic accumulator that La Spaziale document as incompatible with electronic pre-infusion (saturates → dumps ~6 s of uncontrolled PI mid-profile). Removing it was a prerequisite for clean profiling — done.                                                                                                     |
+| **Pressure sensor**                    | ✅ installed    | Mounted **in the vacated factory pre-infusion port** on the left of the group head (**1/8" BSP**, kit G1/8 fitting threads straight in, PTFE-sealed) — reads brew-chamber pressure directly, no tee, no cut plumbing. Wired to the **ADC** header. This matches `06-001`'s updated primary mount (the port; a brew-line T-tap is the documented fallback). |
+| **Pump phase-angle control**           | ✅ in place     | Pump driven from ito **Relay 1** (per the M5 wiring doc); controller's pump-on lead moved to **SNS** (zero-cross + "pump on"). Profiled shots have been pulled and traced on Vibrato, so the closed loop is live.                                                                                                                                          |
+| **Flow meter**                         | ⏳ pending      | Permanent path = stock **GICAR** meter → CD4011 buffer → `IMPULSE`, via the **`06-015` interposer PCB (in fab)**. Interim option = kit **Digmesa** straight into `IMPULSE` (5 V, no buffer). **Pressure profiling does not need flow** (leva! profiles on pressure; flow only feeds readout + `Flow Corr`), so this doesn't block the PI work.             |
+| **Over-pressure bypass / `PRESS OPV`** | ⚠️ verify       | Set the machine bypass to crack just above 9 bar and configure `PRESS OPV`, or it fights the profile and biases flow. Confirm current setting before trusting a plateau.                                                                                                                                                                                   |
+| **Display / encoder + housing**        | ➖ optional     | `leva!` runs headless over WiFi, so a mounted OLED isn't required. PETG external housing is a `06-001` nicety, not a blocker.                                                                                                                                                                                                                              |
+| **Temperature / PID**                  | 🚫 out of scope | Stock board retains all temperature control. leva! PID conflicts with the A53 board → deferred to `06-012`.                                                                                                                                                                                                                                                |
 
 ---
 
@@ -54,39 +54,38 @@ Monitored/controlled from **Vibrato**, our own clean-room TS app, deployed in th
 
 ## Current focus: get pre-infusion to execute, and capture it on the Vibrato chart
 
-The hardware is ready and Vibrato is live. The device is believed to have a PI step programmed; the
-open problem is that PI **does not execute** on a pull.
+The hardware is ready and Vibrato is live. The device **has** a PI step programmed — "Profile 1"
+(dark decline) is **PI 8 s @ 2.0 bar → shot 2 s @ 8.0 bar → 23 s @ 4.0 bar**, entered in bar
+(closed-loop pressure, not phase-angle degrees). The open problem: **on a manual, switch-triggered
+pull the pump jumps straight to the shot curve and skips pre-infusion** (shot targets from t=0, no
+2-bar bloom). Triple-confirmed — leva!'s Status Monitor, the port-23 MC telemetry, and the OLED all
+agree.
 
 **⚠️ Tooling gotcha — `/api/profiles` is NOT the machine.** It reads Vibrato's **local profile
 store** (`data/profiles/<slot>.json`). Vibrato pushes profiles one way (editor → machine via
-`write-to-machine`, "edits existing points in place only") and does **not** import PI/shot step
-definitions back from the device. So an empty `pi: []` there means "Vibrato's store has no steps,"
-**not** "the ito has none." To see what's actually programmed on the machine, read it directly — a
-raw **`MCu` setup dump** over port 23 — never infer the device's profile from `/api/profiles`.
+`write-to-machine`) and does **not** import PI/shot step definitions back from the device, so an
+empty `pi: []` there says nothing about the machine. Read the device directly — a raw **`MCu` setup
+dump** over port 23 — to see what's actually programmed. (The 2026-08-02 shot trace corroborates the
+skip independently: `pressureTargetBar` — decoded from the machine's own rich-telemetry setpoint
+column, not the store — **began at 8 bar with no 2-bar PI plateau**.)
 
-**What DID run is answered by the shot trace, not the store.** The trace's `pressureTargetBar` /
-`pressureMinBar` / `pressureMaxBar` are decoded from **fixed-width columns of the machine's rich
-telemetry frame** (the firmware's own reported setpoint + tolerance band, live during the shot). On
-the 2026-08-02 shot (`id 1785699032614`, "Dark", peak 7.8 bar) that setpoint **began at 8 bar with
-the pump full-power (0°) straight to peak — no sub-2.5 bar plateau → PI did not execute**, even
-though the device likely has a PI step defined.
+**Leading hypothesis (from the #74 bug record):** PI may only run when the shot is launched as a
+**dose-program execution (`MCcDOSE`)**, not a manual pump-switch pull — untestable until **Relay 2
+(the group solenoid) is wired**
+([`_reference/mini-v2-e2-group-solenoid-relay2.md`](_reference/mini-v2-e2-group-solenoid-relay2.md));
+every pull to date has been switch-triggered free-pour.
 
-So the gap is PI **execution**, not definition. Suspects, to check next time it's online:
+**Already ruled out — do NOT re-chase (per the #74 record):** the PI segment is stored and reads
+back correctly on the machine; it is **not disabled** (it's an active segment); it's not a stray
+"NEXT" segment-skip; not a units error (values are bar, not degrees); **not the ~0.7 bar
+boiler-fill/flood confound** (leva! gates fill separately); and Execute-shot-off gives the same
+result. So this is **not** a missing definition, a disabled/Execute-PI toggle, or flood masking.
 
-1. **Global `Profiles → Execute PI` toggle** — machine-global, _not_ in any Vibrato read; the #74
-   root cause. Eyeball it on the machine.
-2. **PI/shot phase overlap** — the other #74 cause.
-3. **Flood masking PI** — `floodEnabled` was true and the pump flooded straight to 8 bar. If the
-   flood target sits **≥ the PI pressure**, the fill phase swallows the low PI plateau and it never
-   shows. Compare flood pressure vs PI pressure.
+**Interim workaround being tested:** fold the bloom into the shot segment itself (e.g.
+`1 s @ 2 bar → 8 s @ 2 bar → 11 s @ 8 bar → 32 s @ 3 bar`) so pre-infusion happens inside the shot
+curve rather than as a separate PI phase.
 
-**Next online session:** (a) `MCu`-dump the device's real profile and confirm the PI step + step
-values; (b) confirm the global Execute PI toggle is ON; (c) check flood-vs-PI pressures; (d) pull a
-shot and re-check the **trace setpoint** for a sub-2.5 bar opening plateau (the un-clipped chart
-will show it). A sane PI to aim for: **~10 s @ 1.5 bar** (`Gen Lever` recipe; phase-angle PI is
-capped ~1 bar).
-
-**PI-skip history:** the earlier "PI never executes" saga is recorded in
+**Full bug record + Home Barista draft:**
 [`_reference/ito-preinfusion-forum-draft.md`](_reference/ito-preinfusion-forum-draft.md) (lab #74).
 
 ---
