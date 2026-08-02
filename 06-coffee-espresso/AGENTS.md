@@ -71,9 +71,8 @@ column, not the store — **began at 8 bar with no 2-bar PI plateau**.)
 
 **Leading hypothesis (from the #74 bug record):** PI may only run when the shot is launched as a
 **dose-program execution (`MCcDOSE`)**, not a manual pump-switch pull — untestable until **Relay 2
-(the group solenoid) is wired**
-([`_reference/mini-v2-e2-group-solenoid-relay2.md`](_reference/mini-v2-e2-group-solenoid-relay2.md));
-every pull to date has been switch-triggered free-pour.
+(the group solenoid) is wired** (see `_reference/mini-v2-e2-group-solenoid-relay2.md`, landing on
+the `docs/e2-group-solenoid-relay2` branch); every pull to date has been switch-triggered free-pour.
 
 **Already ruled out — do NOT re-chase (per the #74 record):** the PI segment is stored and reads
 back correctly on the machine; it is **not disabled** (it's an active segment); it's not a stray
