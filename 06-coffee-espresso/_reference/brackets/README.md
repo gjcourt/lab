@@ -29,6 +29,12 @@ Coffee (Winters PEM-LF) pressure regulator and bolts to a **vertical wall/frame*
 Solid pedestal that stands the WIC 2BCK-1/4-24VDC-D fill solenoid **25–28 mm off the horizontal base
 plate**, next to the vibratory pump.
 
+> **v2 (2026-08-02):** the long-axis (Y) footprint was shortened **69 mm → 60 mm** — the printed v1
+> was too long there. The reduction comes entirely off the fixing feet (`EAR_REACH` 16 → 11.5 mm);
+> the valve bolt pattern, 32.75 mm body coverage, and 26 mm stand-off are unchanged. STL bbox
+> verified **60 × 30 × 26 mm**. The tracked `.png` still shows v1 (OpenSCAD hangs headless in CI/
+> podman here) — **trust the `.scad`/`.stl`, not the preview**; regenerate the PNG on a GUI machine.
+
 | Measured input                  | Value                         |
 | ------------------------------- | ----------------------------- |
 | Stand-off height                | 26 mm                         |
