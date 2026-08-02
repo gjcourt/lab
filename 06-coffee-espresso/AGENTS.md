@@ -52,26 +52,42 @@ Monitored/controlled from **Vibrato**, our own clean-room TS app, deployed in th
 
 ---
 
-## Current focus: capture pre-infusion on the Vibrato chart
+## Current focus: get pre-infusion to execute, and capture it on the Vibrato chart
 
-The hardware is ready and Vibrato is live. The remaining gap is **machine-side profile config**:
+The hardware is ready and Vibrato is live. The device is believed to have a PI step programmed; the
+open problem is that PI **does not execute** on a pull.
 
-- As of 2026-08-02 the two live profiles on the machine (**"Dark"**, **"Profile 2"**) both have
-  `piEnabled=false` and **no PI steps** (read off `/api/profiles`) → a shot on either produces **no
-  pre-infusion to capture.** This is the firmware model, not a Vibrato gap: a profile is a PI
-  segment plus a shot segment, **each independently enabled** (leva! docs §4).
-- **To run the PI-capture test:**
-  1. Program a PI phase into the active profile — good starting point: **~10 s @ 1.5 bar** (the
-     thread's `Gen Lever` recipe). PI lives in the sub-2.5 bar band; phase-angle PI is capped ~1
-     bar.
-  2. Set that profile's **`piEnabled` on**.
-  3. Confirm the **global `Profiles → Execute PI` toggle is ON** — this is machine-global and _not_
-     surfaced in `/api/profiles`, so it must be eyeballed on the machine.
-  4. Pull a shot → the un-clipped chart should show a clean sub-2.5 bar PI plateau before the ramp.
-- **PI-skip history:** the earlier "PI never executes" saga is recorded in
-  [`_reference/ito-preinfusion-forum-draft.md`](_reference/ito-preinfusion-forum-draft.md) (lab
-  #74). Root cause was the global `Execute PI` toggle OFF + a PI/shot phase overlap — check these
-  first if PI goes missing again.
+**⚠️ Tooling gotcha — `/api/profiles` is NOT the machine.** It reads Vibrato's **local profile
+store** (`data/profiles/<slot>.json`). Vibrato pushes profiles one way (editor → machine via
+`write-to-machine`, "edits existing points in place only") and does **not** import PI/shot step
+definitions back from the device. So an empty `pi: []` there means "Vibrato's store has no steps,"
+**not** "the ito has none." To see what's actually programmed on the machine, read it directly — a
+raw **`MCu` setup dump** over port 23 — never infer the device's profile from `/api/profiles`.
+
+**What DID run is answered by the shot trace, not the store.** The trace's `pressureTargetBar` /
+`pressureMinBar` / `pressureMaxBar` are decoded from **fixed-width columns of the machine's rich
+telemetry frame** (the firmware's own reported setpoint + tolerance band, live during the shot). On
+the 2026-08-02 shot (`id 1785699032614`, "Dark", peak 7.8 bar) that setpoint **began at 8 bar with
+the pump full-power (0°) straight to peak — no sub-2.5 bar plateau → PI did not execute**, even
+though the device likely has a PI step defined.
+
+So the gap is PI **execution**, not definition. Suspects, to check next time it's online:
+
+1. **Global `Profiles → Execute PI` toggle** — machine-global, _not_ in any Vibrato read; the #74
+   root cause. Eyeball it on the machine.
+2. **PI/shot phase overlap** — the other #74 cause.
+3. **Flood masking PI** — `floodEnabled` was true and the pump flooded straight to 8 bar. If the
+   flood target sits **≥ the PI pressure**, the fill phase swallows the low PI plateau and it never
+   shows. Compare flood pressure vs PI pressure.
+
+**Next online session:** (a) `MCu`-dump the device's real profile and confirm the PI step + step
+values; (b) confirm the global Execute PI toggle is ON; (c) check flood-vs-PI pressures; (d) pull a
+shot and re-check the **trace setpoint** for a sub-2.5 bar opening plateau (the un-clipped chart
+will show it). A sane PI to aim for: **~10 s @ 1.5 bar** (`Gen Lever` recipe; phase-angle PI is
+capped ~1 bar).
+
+**PI-skip history:** the earlier "PI never executes" saga is recorded in
+[`_reference/ito-preinfusion-forum-draft.md`](_reference/ito-preinfusion-forum-draft.md) (lab #74).
 
 ---
 
