@@ -4,11 +4,32 @@ Draft forum post reporting that leva! skips the pre-infusion segment on a manual
 pull on the Mini Vivaldi II. Kept here alongside the espresso-project reference docs so the writeup
 and the ruled-out list don't live only in chat.
 
-**Status:** not yet posted. The "PI only runs under a dose-program execution" line is an **untested
-hypothesis** — the dose-program (`MCcDOSE`) path can't be exercised until Relay 2 (group solenoid)
-is wired (see `mini-v2-e2-group-solenoid-relay2.md`), so every pull to date has been
-switch-triggered free-pour. Related: `project_leva_controller` / `project_espresso_profiling`
-(memory), where the full debugging trail lives.
+**Status: NOT POSTED — blocked on two on-machine checks (see below).** The firmware manual names two
+mechanisms that produce exactly this symptom and that the ruled-out list didn't cover. Both are
+one-glance checks on the device, and both are the first thing a reader — very likely `sandc`, the
+firmware author, who is active in that thread — would ask.
+
+**Blocking checks:**
+
+1. **`Setup → Profiles → Execute PI` is checked.** Firmware manual p.133: _"The preinfusion part is
+   only executed if 'Execute PI' is checked in the profiles menu (p.126), and accordingly the shot
+   part is only executed if 'Execute shot' is checked."_ This is a **global toggle in the Profiles
+   menu — not the per-profile PI segment**, and it is not visible in any Vibrato read
+   (`/api/profiles` reflects Vibrato's local store, not the machine). "The PI segment is programmed
+   and stored" and "Execute PI is checked" are two different facts; only the first was established.
+2. **`Setup → Profiles → Drop ends PI` is off** (manual p.127). With a wireless scale connected the
+   firmware will _"automatically skip from the preinfusion to the shot when the first drop is
+   recorded."_ Expected to be a non-issue here (no scale), but it is a one-line check and it
+   produces precisely the reported symptom.
+
+If (1) turns out to be unchecked, that is the whole answer and there is nothing to post.
+
+**Still untested:** the "PI only runs under a dose-program execution" hypothesis — the dose-program
+(`MCcDOSE`) path can't be exercised until Relay 2 (group solenoid) is wired (see
+`mini-v2-e2-group-solenoid-relay2.md`), so every pull to date has been switch-triggered free-pour.
+
+Related: `project_leva_controller` / `project_espresso_profiling` (memory), where the full debugging
+trail lives.
 
 ---
 
@@ -24,7 +45,8 @@ Sanity-checking whether this is a bug or just how the firmware is meant to work.
 - Factory Progressive Preinfusion chamber removed; pressure sensor (Honeywell MIPAN2XX250PSAAX, 250
   psi) threaded into the group-head port the chamber used to occupy → into the ito ADC.
 - Pump driven off the ito relay; sense on the pump line for zero-cross.
-- **No flowmeter** in this build — pressure-only profiling, so there are no flow targets anywhere.
+- **No flowmeter and no scale** in this build — pressure-only profiling, so there are no flow
+  targets or drop-detection inputs anywhere.
 - Firmware: **ito 1.1 (2019-06-30)**, running leva! pressure profiling.
 
 **The profile** (dark decline, "Profile 1"):
@@ -37,31 +59,43 @@ Sanity-checking whether this is a bug or just how the firmware is meant to work.
 declines from 8 to 4 bar.
 
 **Observed:** on a manual, switch-triggered pull, **the pump jumps straight to the shot profile and
-skips pre-infusion entirely** — shot targets from t=0, no 2-bar bloom. Triple-confirmed: leva!'s own
-Status Monitor plot, my telemetry capture off the port-23 MC stream, and the machine's OLED all show
-the same thing.
+skips pre-infusion entirely** — shot targets from t=0, no 2-bar bloom.
+
+One detail worth stating precisely, because it rules out the obvious "your pump just can't hold 2
+bar" reading: I'm not inferring this from measured pressure. I log the **firmware's own reported
+setpoint** — the target and tolerance-band fields in the rich telemetry frame on TCP 23 — and at t=0
+that setpoint is already **8.0 bar**, the shot segment's opening target, with the band tracking it.
+The machine isn't trying and failing to hold 2 bar; it never adopts the 2 bar setpoint at all. Same
+picture on leva!'s own Status Monitor plot and on the OLED.
 
 **What I've ruled out:**
 
+- **`Execute PI` is checked** in the Profiles menu (p.126) — the segment is enabled globally, not
+  merely programmed.
+  <!-- TODO(George): confirm on the machine before posting. If it turns out to be UNCHECKED, that is
+  the answer — don't post, just tick it. -->
+- **`Drop ends PI` is off** (p.127), and there's no scale connected for drop detection to fire from.
 - **Config is correct and saved** — the PI segment reads back correctly on the machine and in my
   telemetry; genuinely stored, not a lost edit.
-- **Not a "NEXT" skip** — the segment isn't being advanced past by a stray input.
-- **PI isn't disabled** — it's an active segment in the profile.
+- **Not a "NEXT" skip** — no long encoder/button click during the shot, so the segment isn't being
+  advanced past by a stray input.
 - **Not a units problem** — pump values are in bar, not degrees.
-- **Not the boiler-fill / flood confound** — leva! distinguishes boiler-fill from a shot via its
-  ~0.7 bar flood-pressure gate, and this isn't that.
-- **Isolated with Execute-shot off** — same result.
+- **Not the boiler-fill / flood confound** — leva! gates boiler-fill with its own ~0.7 bar flood
+  pressure, and the observed setpoint goes straight to 8 bar rather than sitting at the flood gate.
+- **Isolated with `Execute shot` off** — same result.
 
 The one pattern I can't rule out: pre-infusion may only run when the shot is launched as a
 **dose-program execution**, rather than a manual pump-switch pull. I haven't been able to test the
-dose-program path myself yet — I'm still switch-triggering every pull — so that's a hypothesis, not
-something I've confirmed. Which is really what I'm asking:
+dose-program path yet — the group solenoid isn't on the ito's second relay, so I'm still
+switch-triggering every pull — so that's a hypothesis, not something I've confirmed. Which is really
+what I'm asking:
 
 > **Does anyone get pre-infusion to run on a manual, switch-triggered pull — or does PI require
 > running the shot as a dose program?**
 
 If it's by design, that's worth documenting. If it's a bug, I'm happy to grab whatever
-logs/plots/settings-dumps are useful (I can pull full MC state over TCP 23).
+logs/plots/settings dumps are useful — I can pull the full `MCu` setup dump and per-shot setpoint
+traces over TCP 23.
 
 **Workaround I'm testing** in the meantime — folding the bloom into the shot segment itself, e.g.
 `1 s @ 2 bar → 8 s @ 2 bar → 11 s @ 8 bar → 32 s @ 3 bar`, so pre-infusion happens inside the shot
@@ -70,3 +104,22 @@ curve rather than as a separate PI phase. Early days on whether it's as good as 
 Thanks — great firmware overall, this is the one thing that's had me stumped.
 
 — George
+
+---
+
+## Corroborating check worth running before posting
+
+The manual (p.152) states the PI and shot **time scales are independent**, with the worked example
+that an event defined for the 23rd second of the shot occurs at 29 s in the actual brew when
+preinfusion is 6 s. So for this profile a correct run should end at **8 s (PI) + 23 s (shot) = 31
+s**, and a PI-skipped run should end at **23 s**.
+
+If the observed brew duration lands at the shot segment's own length, that's clean arithmetic
+confirmation independent of the setpoint trace, and worth one line in the post. Don't state it until
+it's been measured **on this profile** — the traces captured so far are from a different profile.
+
+## Posting mechanics
+
+home-barista.com sits behind Cloudflare and returns **403 to a headless browser**, so this can't be
+posted by automation. Post it by hand, or drive a headed browser with the Cloudflare challenge
+solved manually.
