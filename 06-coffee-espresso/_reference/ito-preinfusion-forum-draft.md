@@ -4,25 +4,19 @@ Draft forum post reporting that leva! skips the pre-infusion segment on a manual
 pull on the Mini Vivaldi II. Kept here alongside the espresso-project reference docs so the writeup
 and the ruled-out list don't live only in chat.
 
-**Status: NOT POSTED — blocked on two on-machine checks (see below).** The firmware manual names two
-mechanisms that produce exactly this symptom and that the ruled-out list didn't cover. Both are
-one-glance checks on the device, and both are the first thing a reader — very likely `sandc`, the
-firmware author, who is active in that thread — would ask.
+**Status: READY TO POST.** Both blocking checks are cleared (2026-08-03):
 
-**Blocking checks:**
+1. **`Execute PI` is checked** — verified on the machine, and pre-infusion is _still_ skipped. This
+   is the global Profiles-menu toggle (manual p.126), the one the firmware manual says gates PI at
+   p.133: _"The preinfusion part is only executed if 'Execute PI' is checked in the profiles menu."_
+   With it confirmed on, the documented gate is not the cause.
+2. **No scale on this build**, so `Drop ends PI` (p.127) — which auto-skips PI→shot on the first
+   recorded drop — has no input it could fire from.
 
-1. **`Setup → Profiles → Execute PI` is checked.** Firmware manual p.133: _"The preinfusion part is
-   only executed if 'Execute PI' is checked in the profiles menu (p.126), and accordingly the shot
-   part is only executed if 'Execute shot' is checked."_ This is a **global toggle in the Profiles
-   menu — not the per-profile PI segment**, and it is not visible in any Vibrato read
-   (`/api/profiles` reflects Vibrato's local store, not the machine). "The PI segment is programmed
-   and stored" and "Execute PI is checked" are two different facts; only the first was established.
-2. **`Setup → Profiles → Drop ends PI` is off** (manual p.127). With a wireless scale connected the
-   firmware will _"automatically skip from the preinfusion to the shot when the first drop is
-   recorded."_ Expected to be a non-issue here (no scale), but it is a one-line check and it
-   produces precisely the reported symptom.
+A full sweep of the firmware manual turns up no other documented mechanism that suppresses or
+short-circuits the pre-infusion segment. The remaining hypothesis is the dose-program one below.
 
-If (1) turns out to be unchecked, that is the whole answer and there is nothing to post.
+Home Barista runs phpBB, so paste the **BBCode** rendering rather than this markdown.
 
 **Still untested:** the "PI only runs under a dose-program execution" hypothesis — the dose-program
 (`MCcDOSE`) path can't be exercised until Relay 2 (group solenoid) is wired (see
@@ -70,11 +64,10 @@ picture on leva!'s own Status Monitor plot and on the OLED.
 
 **What I've ruled out:**
 
-- **`Execute PI` is checked** in the Profiles menu (p.126) — the segment is enabled globally, not
-  merely programmed.
-  <!-- TODO(George): confirm on the machine before posting. If it turns out to be UNCHECKED, that is
-  the answer — don't post, just tick it. -->
-- **`Drop ends PI` is off** (p.127), and there's no scale connected for drop detection to fire from.
+- **`Execute PI` is checked** in the Profiles menu (p.126) — I've verified the global toggle is on,
+  not just that the segment is programmed. PI is still skipped with it checked.
+- **`Drop ends PI` can't be the cause** (p.127) — there's no scale on this build, so there's no drop
+  detection to end preinfusion early.
 - **Config is correct and saved** — the PI segment reads back correctly on the machine and in my
   telemetry; genuinely stored, not a lost edit.
 - **Not a "NEXT" skip** — no long encoder/button click during the shot, so the segment isn't being
