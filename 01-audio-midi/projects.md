@@ -1,4 +1,4 @@
-# Audio & MIDI Projects (18)
+# Audio & MIDI Projects (19)
 
 This category focuses on digital signal processing (DSP), custom MIDI controllers, and audio
 hardware.

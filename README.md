@@ -1,6 +1,6 @@
-# 124 Multidisciplinary Engineering & Skill-Building Projects
+# 125 Multidisciplinary Engineering & Skill-Building Projects
 
-Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 124 engineering and skill-building
+Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 125 engineering and skill-building
 projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
 (`In Progress`) to `Done`. They span software engineering, hardware, woodworking, finance, and
 music.
@@ -22,7 +22,7 @@ Kubernetes, Docker, etc.):
 
 The 122 projects are divided into the following categories:
 
-1. **[Audio & MIDI](01-audio-midi/projects.md)** (17 Projects) - DSP, custom controllers, and audio
+1. **[Audio & MIDI](01-audio-midi/projects.md)** (19 Projects) - DSP, custom controllers, and audio
    hardware.
 2. **[Woodworking](02-woodworking/projects.md)** (15 Projects) - Functional furniture, speaker
    cabinets, and homelab enclosures.
