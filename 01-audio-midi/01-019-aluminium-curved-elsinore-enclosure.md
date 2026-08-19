@@ -5,8 +5,8 @@ category: 'audio-midi'
 difficulty: 'Hard'
 time_commitment: 'Months'
 target_skills:
-  'Enclosure acoustics, CAD, design-for-manufacture (extrusion/CNC), overseas supplier
-  management, anodising/finishing'
+  'Enclosure acoustics, CAD, design-for-manufacture (extrusion/CNC), overseas supplier management,
+  anodising/finishing'
 status: 'Not Started'
 depends_on:
   - hardware/loudspeaker
@@ -30,9 +30,9 @@ box.**
 ## ⚠️ What this does not solve
 
 **It is not a space project.** The temptation is to treat "new enclosure" as a way to reclaim floor
-area. It is not, unless the **internal volume shrinks** — and volume is set by the alignment for
-4× 6.5″ woofers per side, not by the material. Aluminium walls are thinner than MDF for the same
-stiffness, so external dimensions drop *slightly* for the same internal volume, but that is
+area. It is not, unless the **internal volume shrinks** — and volume is set by the alignment for 4×
+6.5″ woofers per side, not by the material. Aluminium walls are thinner than MDF for the same
+stiffness, so external dimensions drop _slightly_ for the same internal volume, but that is
 centimetres, not a different footprint.
 
 **Shrinking the volume meaningfully means changing the alignment** (vented → sealed, or a different
@@ -69,13 +69,13 @@ measurement (accelerometer or a nearfield panel measurement) rather than by asse
 
 Curved aluminium can be produced several ways, and they are not close in cost at this size:
 
-| Route | Curvature possible | Tooling | Verdict |
-|---|---|---|---|
-| **Extrusion** | Curved **cross-section**, constant along the length | **Die** — one-time, low thousands USD | ✅ **The route.** Standard for high-end cabinets |
-| Rolled / welded sheet | One axis | Minimal | Cheap, but thin walls ring; needs heavy damping |
-| CNC from billet | Anything | None | Cost scales with removed material — prohibitive |
-| Casting | Complex 3D curves | Heavy pattern/mould cost | Porosity risk, wrong volume for 2 units |
-| Hydroforming | Compound curves | Heavy die cost | Wrong volume for 2 units |
+| Route                 | Curvature possible                                  | Tooling                               | Verdict                                          |
+| --------------------- | --------------------------------------------------- | ------------------------------------- | ------------------------------------------------ |
+| **Extrusion**         | Curved **cross-section**, constant along the length | **Die** — one-time, low thousands USD | ✅ **The route.** Standard for high-end cabinets |
+| Rolled / welded sheet | One axis                                            | Minimal                               | Cheap, but thin walls ring; needs heavy damping  |
+| CNC from billet       | Anything                                            | None                                  | Cost scales with removed material — prohibitive  |
+| Casting               | Complex 3D curves                                   | Heavy pattern/mould cost              | Porosity risk, wrong volume for 2 units          |
+| Hydroforming          | Compound curves                                     | Heavy die cost                        | Wrong volume for 2 units                         |
 
 **Extrusion gives the curved side walls for free in the die profile** — the cabinet becomes a cut
 length of profile with machined aluminium end caps and a separate baffle. This is exactly how a lot
@@ -99,7 +99,7 @@ Three ways out, and they should be chosen deliberately:
 1. **Accept it.** Treat the die as the price of the object. Legitimate if the point is to own the
    thing.
 2. **Design for a no-tooling route.** Flat panels bolted to machined curved corner extrusions using
-   *stock* profiles, or rolled sheet with heavy internal damping. Loses some of the aesthetic intent
+   _stock_ profiles, or rolled sheet with heavy internal damping. Loses some of the aesthetic intent
    but removes the die entirely.
 3. **Make a small batch.** Amortise the die over 6–10 cabinets and sell the rest. This turns a
    personal project into a **product**, with all that implies. Almost certainly not wanted — but it
@@ -110,8 +110,8 @@ Three ways out, and they should be chosen deliberately:
 
 ## Sequencing — this should come after `01-017`
 
-[`01-017`](01-017-elsinore-passive-crossover-refinement.md) has an exit criterion reading *"ULD kit
-built in the boxes."* **Which boxes is currently undecided, and that ambiguity blocks it.**
+[`01-017`](01-017-elsinore-passive-crossover-refinement.md) has an exit criterion reading _"ULD kit
+built in the boxes."_ **Which boxes is currently undecided, and that ambiguity blocks it.**
 
 **Resolve it in favour of the existing cabinets.** Building the ULD kit into the MDF boxes first
 means the drivers get playing, the measurement set gets captured, and the crossover work completes
@@ -123,8 +123,8 @@ with no baseline to attribute a problem to either.
 
 ## Exit Criteria
 
-- [ ] Supplier confirms **maximum extrusion circumscribing circle**, and it accommodates the required
-      profile width
+- [ ] Supplier confirms **maximum extrusion circumscribing circle**, and it accommodates the
+      required profile width
 - [ ] Die + per-unit quote obtained from at least **two** suppliers; tooling-amortisation decision
       made explicitly (accept / no-tooling redesign / batch)
 - [ ] CAD model with the **same internal volume and alignment** as the MDF cabinet, verified against
@@ -150,4 +150,5 @@ with no baseline to attribute a problem to either.
   [`01-017`](01-017-elsinore-passive-crossover-refinement.md)
 - Active redesign, where a volume change would push this:
   [`01-010`](01-010-active-crossover-network-for-speakers.md)
-- Prior cabinet-building project: [`02-001`](../02-woodworking/02-001-custom-studio-monitor-speaker-cabinets.md)
+- Prior cabinet-building project:
+  [`02-001`](../02-woodworking/02-001-custom-studio-monitor-speaker-cabinets.md)
