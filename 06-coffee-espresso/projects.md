@@ -1,4 +1,4 @@
-# Coffee & Espresso Projects (18)
+# Coffee & Espresso Projects (19)
 
 This category focuses on espresso profiling, the Lucca A53 Mini, `leva!` firmware, and sensor
 integration.
@@ -25,3 +25,4 @@ integration.
 | 06-016 | [A53 Control-Board Reverse Engineering (bench board)](06-016-a53-control-board-reverse-engineering.md)           | Not Started | Hard       | Weeks–months    |
 | 06-017 | [A53 Mini HASS On/Off Interposer (ESP32 / ESPHome)](06-017-a53-hass-onoff-interposer.md)                         | Not Started | Medium     | 1-2 days        |
 | 06-018 | [DIY BLE Espresso Scale (Skale 2-emulating, for leva! gravimetric)](06-018-diy-ble-espresso-scale.md)            | Not Started | Hard       | Weeks           |
+| 06-019 | [Lagom P64 Catch Cup for 53mm Workflow](06-019-lagom-p64-53mm-catch-cup.md)                                      | In Progress | Easy       | 1-2 days        |
