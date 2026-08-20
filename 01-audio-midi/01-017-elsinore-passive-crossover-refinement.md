@@ -233,7 +233,7 @@ constraints visible in the build photos.
 
 Joe's **outer** dimensions held, **25.4 mm** walls, **19 mm** front:
 
-```
+```text
 internal ≈ 1185 × 175 × 321  →  ~66.6 L   (vs 75 L, −11%)
 ```
 
@@ -244,7 +244,7 @@ Directionally solid, numerically soft.
 
 Smaller box → higher tuning. Holding the published port length:
 
-```
+```text
 Fb ≈ 40 × √(75 / 66.6) ≈ 42.4 Hz
 ```
 
@@ -256,7 +256,7 @@ LONGER**, not shorter. Do not shorten a port reasoning that a smaller box needs 
 
 _(Port arithmetic uses an approximate end correction — treat as indicative.)_
 
-## ✅ Don't calculate the volume. Measure the tuning.
+## ✅ Don't calculate the volume — measure the tuning
 
 **A vented box's impedance curve has two peaks with a saddle between them, and that saddle is Fb.**
 Measuring it reads the box's real tuning directly — including bracing, damping and driver
