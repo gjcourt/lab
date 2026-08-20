@@ -209,35 +209,74 @@ specified at 40–50% of internal volume for exactly this.
 lower its Q. Aluminium still rings. Constrained-layer damping on the inner face is non-negotiable
 and is the single thing that decides whether this beats 1″ Baltic birch or embarrasses it.
 
-## The second reference — and it points at a different project
+## The second reference — GamuT **Zodiac**, and it points at a different project
 
-The other stated inspiration is a **GamuT RS-series** loudspeaker (Denmark, RS3 ≈ £13,190).
-Identified from an unusually specific detail: the grille is _"horizontal elastic straps spaced 35 mm
-apart, suspended from vertical metal rods near the edges of the front baffle."_
+The other stated inspiration is the **GamuT Zodiac** (Denmark) — their flagship, not the RS series.
+Identified from an unusually specific detail the owner remembered: a grille of metal rods with cord
+strung on them.
 
-Its cabinet is **21 layers of ash and birch, 1–2 mm thick, form-pressed into curved panels** — built
-by **Kvist Industries, a Danish furniture manufacturer.**
+**The grille** (The Absolute Sound, ⚠️ _via search index only — the page 403s, so unverified against
+the live source_): _"two 3/8″ diameter by 56″ long metal rods running vertically along the outside
+edge of each side of the front baffle, supported by five matching 3/8″ round, 5/8″ tall standoffs...
+Between those two rails are **42 narrow elastic bands**, each wrapped with a proprietary woven
+fabric, with a 3/16″ total diameter... spaced... about an inch and a quarter [~32 mm] apart."_
 
-**That is bent lamination.** Not metal fabrication, not offshore tooling — a bending form, thin
-plies and pressure.
+**The cabinet** — built by **Kvist of Denmark**, a furniture manufacturer: _"nearly **30 layers** of
+fine wood, glued together and **formed under over a ton of pressure**"_ (Tone Publications, 2024).
+Ash is named as the outer veneer.
 
-|                  | Magico M6                          | GamuT RS                        |
-| ---------------- | ---------------------------------- | ------------------------------- |
-| Structure        | rolled/tapered aluminium monocoque | 21-ply form-pressed ash + birch |
-| Made by          | metal fabricator                   | furniture maker                 |
-| Curve from       | plate roller + welded seam         | bending form + press            |
-| Owner capability | none — needs a vendor              | **already owns the shop**       |
+⚠️ **Do not reuse the RS-series figures here.** An earlier draft of this note attributed _"21 layers
+of ash and birch, 1–2 mm"_ to the Zodiac. That is the **RS-series** recipe. Sources for the Zodiac
+give **27, ~30, or "21–28 varying by section"** — no consistent number, no published ply thickness,
+and **birch is not confirmed** for the Zodiac at all. Treat the Zodiac's layer recipe as _"high
+twenties to thirty, form-pressed"_ and nothing more precise.
+
+### Scale check — the Zodiac is not an Elsinore
+
+|         | Zodiac                                                      | Elsinore           |
+| ------- | ----------------------------------------------------------- | ------------------ |
+| Height  | **165 cm**                                                  | ~120 cm internal   |
+| Weight  | **196 kg per cabinet**                                      | 40–50 kg           |
+| Drivers | 3-way: 38 mm ring radiator, 178 mm mid, **3 × 250 mm bass** | 4 × 6.5″ + tweeter |
+| Retail  | **$159,000–179,000** (2024); £100,000 (2018)                | DIY                |
+
+**So the ~$10–20k US Audio Mart listing was a different GamuT** — an RS3 or similar sibling. The
+Zodiac is the _form_ inspiration; it is not the thing seen for sale. Used ex-demo Zodiacs have
+appeared around **$56,000**.
+
+At nearly **4× an Elsinore's mass**, a literal translation of Zodiac construction to this cabinet is
+not the project. What transfers is the **method**: form-pressed thin plies over a curved former,
+done by a furniture shop.
+
+### ⚠️ The two designs disagree about damping, and it matters
+
+GamuT braces the Zodiac with _"complex, fan-shaped internal bracing"_ and **deliberately minimises
+conventional absorptive damping material** — structure instead of stuffing.
+
+Joe Rasmussen specifies the **opposite**: wool/Dacron filling **40–50% of the internal volume**
+(`01-017`).
+
+A GamuT-inspired cabinet housing an Elsinore therefore inherits a genuine design conflict. Following
+the form without the damping philosophy is fine; following both is incoherent. **Joe's alignment was
+voiced with his stuffing in place** — a stiffer, emptier box is a different acoustic system, not a
+better-built version of the same one.
+
+### Why this route is still the strong one
+
+|                  | Magico M6                          | GamuT Zodiac                |
+| ---------------- | ---------------------------------- | --------------------------- |
+| Structure        | rolled/tapered aluminium monocoque | ~30-ply form-pressed wood   |
+| Made by          | metal fabricator                   | **furniture maker** (Kvist) |
+| Curve from       | plate roller + welded seam         | bending form + press        |
+| Owner capability | none — needs a vendor              | **already owns the shop**   |
 
 The first Elsinore pair was **built by hand in 1″ Baltic birch**, and the mappa burl is still
-unused. A bent-laminated wooden cabinet needs no die, no MOQ, no supplier, no springback
-trial-and-fit with a plate roller — and it is the same material and the same craft as the pair that
-already exists.
+unused. Bent lamination needs a form, thin plies and pressure — no die, no MOQ, no supplier, no
+springback trial-and-fit with a plate roller.
 
-⚠️ **This note is titled for the aluminium project. On the evidence, the wood route may be the
-better project** — cheaper, executable solo, and closer to why the speakers were built in the first
-place. The aluminium path stays documented because the _form_ ambition is real; but it should be
-entered knowing the wood path delivers the same curve for a fraction of the cost and none of the
-vendor risk.
+⚠️ **This note is titled for the aluminium project. On the evidence the wood route may be the better
+one** — cheaper, executable solo, and closer to why these speakers were built in the first place.
+The aluminium path stays documented because the form ambition is real.
 
 ## Open, and blocking
 
@@ -247,3 +286,8 @@ vendor risk.
 - **Internal volume** — see `01-017`. Needed before any enclosure is sized, and before a ULD port is
   cut.
 - Which reference is actually being chased: **bare metal, or layered wood.**
+- **Zodiac cross-section — constant or varying?** NOT STATED in any source reached. This decides
+  whether a constant-profile method could ever produce the form, and no review gives geometric
+  detail. Only photographs will answer it.
+- **Damping philosophy** — Joe's 40–50% fill vs GamuT's near-empty braced shell. Pick one
+  deliberately.
