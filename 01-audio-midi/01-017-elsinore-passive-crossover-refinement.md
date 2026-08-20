@@ -210,7 +210,7 @@ _(Access: the Immich API key lives at `~/.config/immich/api-key`. An older key s
 the memory store flagged "recommend revoke" in July — it has since been revoked and now 401s. The
 dead string should still be scrubbed.)_
 
-## Cabinet dimensions — ESTIMATED, pending measurement
+## ~~Cabinet dimensions — ESTIMATED~~ SUPERSEDED — see the Onshape model below
 
 ⚠️ **Every number in this section is inferred, not measured.** Joe publishes external dimensions
 only inside GIF construction drawings. These are derived from the figures he _does_ publish plus
@@ -290,3 +290,55 @@ measurement to take is Fb, not volume, and it is not blocking so much as schedul
 | Port length (as built)             | ⬜       |      |
 | **Fb from impedance saddle (MFC)** | ⬜       |      |
 | Fb after ULD fit                   | ⬜       |      |
+
+## ✅ Cabinet dimensions — FROM THE ONSHAPE MODEL (supersedes the estimates above)
+
+**A model has existed since 2022 and nobody looked.** Onshape document **"Elsinore v6.1"**
+(`7e8247547443715fc6935342`), 12 features, **seven named panels** — Top, Bottom, Left, Right, Rear,
+Front, Front sub — matching the `TOP/BOTTOM PANEL #3` pencil marks in the build photos.
+
+Read via the Onshape API 2026-08-20. Part volumes are model data; panel faces are derived from those
+volumes at the stated thicknesses (25.4 mm, front 19.05 mm), and `Front sub` is independently
+confirmed by its bounding box.
+
+| Panel                  | Volume               | Face                  | Thickness           |
+| ---------------------- | -------------------- | --------------------- | ------------------- |
+| Front, Rear, Front sub | 4.79 / 6.39 / 6.39 L | **1099.8 × 228.6 mm** | 19.05 / 25.4 / 25.4 |
+| Left, Right            | 10.64 L each         | **1099.8 × 380.9 mm** | 25.4                |
+| Top, Bottom            | 2.70 L each          | **279.1 × 380.9 mm**  | 25.4                |
+
+Front/rear sit **between** the sides (228.6 + 2 × 25.4 = 279.4), capped top and bottom.
+
+|                                    |                                                   |
+| ---------------------------------- | ------------------------------------------------- |
+| **External**                       | **1150.6 × 279.1 × 380.9 mm** (45.3″ × 11″ × 15″) |
+| **Internal**                       | 1099.8 × 228.3 × 311.05 mm                        |
+| **Internal gross**                 | **78.1 L**                                        |
+| Less bracing, 5 drivers, crossover | **≈ 73 L net** (estimated deductions)             |
+| Total panel material               | 44.26 L                                           |
+
+### ⚠️ This overturns the earlier estimate, and it changes the ULD conclusion
+
+The estimate above put this build at **66.6 L** on the assumption that external dimensions matched a
+_guessed_ version of Joe's. They do not — **the cabinet is 279 mm wide where the estimate guessed
+226 mm.**
+
+At ~73 L net this is **essentially Joe's 75 L**, not 11% under it. So:
+
+- **The published ULD port length should be approximately correct.** The re-tuning concern was an
+  artifact of a bad estimate.
+- The measure-Fb-first sequence below is still the right method — but it is now **confirmation, not
+  rescue**.
+
+### The baffle is a full-height lamination
+
+`Front sub` is **1099.8 × 228.6 × 25.4** — full height, not Joe's local 230 × 200 mm patch at the
+tweeter. So the baffle is **19.05 + 25.4 = 44.45 mm laminated over its entire height**, where the
+published design laminates only locally. Same intent, executed more thoroughly, and it partly
+explains why the box measures stiffer than spec.
+
+### Still not in the model
+
+Bracing, drivers, crossover and damping are **not modelled** — the seven panels are the whole
+studio, and the Assembly element is empty. So 78.1 L is a _gross cavity_, and the ~73 L net figure
+carries the uncertainty of those deductions. Measuring Fb remains the only way to settle it.
