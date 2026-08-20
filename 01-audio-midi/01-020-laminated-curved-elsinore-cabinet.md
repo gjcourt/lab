@@ -74,7 +74,8 @@ the curve costs. Same footprint, same volume, same baffle — curved.
 
 ## Exit Criteria
 
-- [ ] Onshape model of the shell section at the shared geometry above
+- [ ] Onshape model (import `_reference/curved-cabinet/former.dxf`) of the shell section at the
+      shared geometry above
 - [ ] Former design, with springback allowance, cut and trued
 - [ ] Test lamination on scrap — confirm ply thickness, glue and press method
 - [ ] Measured springback of the test piece, former corrected
@@ -85,8 +86,15 @@ the curve costs. Same footprint, same volume, same baffle — curved.
 ## Progress
 
 - [x] Shared section geometry solved
+- [x] Parametric tool + DXF emitted — `_reference/curved-cabinet/`
 - [ ] Onshape model
 - [ ] Test lamination
+
+## Geometry tool
+
+**`_reference/curved-cabinet/`** — parametric solver emitting DXF for Onshape sketch import:
+internal section, shell at thickness, lamination former (with springback allowance) and the rolling
+flat pattern. Run `python3 section.py`.
 
 ## References
 

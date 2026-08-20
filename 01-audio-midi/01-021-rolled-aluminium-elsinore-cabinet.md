@@ -80,7 +80,8 @@ accelerometer or nearfield panel measurement — not by assertion.
 
 ## Exit Criteria
 
-- [ ] Onshape model of the shell at the shared geometry
+- [ ] Onshape model (import `_reference/curved-cabinet/section-shell-4mm.dxf`) of the shell at the
+      shared geometry
 - [ ] Flat pattern (developed blank) generated and checked against sheet size
 - [ ] Plate-rolling shop identified; top-roll diameter confirmed against 114.3 mm
 - [ ] Test roll on the spare blank; springback measured and compensated
@@ -91,9 +92,16 @@ accelerometer or nearfield panel measurement — not by assertion.
 ## Progress
 
 - [x] Shared section geometry solved
+- [x] Parametric tool + DXF emitted — `_reference/curved-cabinet/`
 - [x] Alloy, radii, sheet yield researched (`01-019`)
 - [ ] Onshape model
 - [ ] Shop identified
+
+## Geometry tool
+
+**`_reference/curved-cabinet/`** — parametric solver emitting DXF for Onshape sketch import:
+internal section, shell at thickness, lamination former (with springback allowance) and the rolling
+flat pattern. Run `python3 section.py`.
 
 ## References
 
