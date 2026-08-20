@@ -5,7 +5,7 @@ category: 'coffee-espresso'
 difficulty: 'Easy'
 time_commitment: '1-2 days'
 target_skills: 'Parametric CAD (Onshape), 3D printing or machining, dimensional fit'
-status: 'In Progress'
+status: 'Not Started'
 depends_on:
   - hardware/lagom-p64
 ---
@@ -47,7 +47,7 @@ means the stock catch cup matches neither dosing workflow cleanly.
 
 ## Progress
 
-- [x] Onshape document started
+- [x] Onshape document created (empty — no geometry yet)
 - [ ] Fit reference confirmed
 - [ ] First iteration produced
 
