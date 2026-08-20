@@ -209,3 +209,84 @@ would be.
 _(Access: the Immich API key lives at `~/.config/immich/api-key`. An older key sat in plaintext in
 the memory store flagged "recommend revoke" in July — it has since been revoked and now 401s. The
 dead string should still be scrubbed.)_
+
+## Cabinet dimensions — ESTIMATED, pending measurement
+
+⚠️ **Every number in this section is inferred, not measured.** Joe publishes external dimensions
+only inside GIF construction drawings. These are derived from the figures he _does_ publish plus
+constraints visible in the build photos.
+
+**Anchors:** internal volume **75 L**; front damping panels **1200 mm tall** (so internal height ≈
+1200); 6.5″ drivers (~165 mm frame) must fit the baffle with margins; front panel **18 mm**.
+
+### Joe's cabinet (estimated)
+
+|        | Internal | External @ 18 mm walls |
+| ------ | -------- | ---------------------- |
+| Height | ~1200    | **~1236 mm**           |
+| Width  | ~190     | **~226 mm**            |
+| Depth  | ~329     | **~365 mm**            |
+
+1200 × 190 × 329 = 75.0 L, and ~48.7″ × 8.9″ × 14.4″ matches the proportions in the build photos.
+
+### This build (estimated)
+
+Joe's **outer** dimensions held, **25.4 mm** walls, **19 mm** front:
+
+```
+internal ≈ 1185 × 175 × 321  →  ~66.6 L   (vs 75 L, −11%)
+```
+
+**Confidence:** height ±30 mm; **width and depth no better than ±25 mm**, i.e. **±8 L on volume**.
+Directionally solid, numerically soft.
+
+### The volume loss probably lands inside Joe's own sanctioned window
+
+Smaller box → higher tuning. Holding the published port length:
+
+```
+Fb ≈ 40 × √(75 / 66.6) ≈ 42.4 Hz
+```
+
+Joe explicitly allows this: _"increasing Fb up to 42-44 Hertz (just shorten the vent)"_ for a static
+alignment. **So the deviation may be self-correcting.**
+
+⚠️ Note the counterintuitive part: to hold **40 Hz** in a _smaller_ box the port must get **~18 mm
+LONGER**, not shorter. Do not shorten a port reasoning that a smaller box needs less port.
+
+_(Port arithmetic uses an approximate end correction — treat as indicative.)_
+
+## ✅ Don't calculate the volume. Measure the tuning.
+
+**A vented box's impedance curve has two peaks with a saddle between them, and that saddle is Fb.**
+Measuring it reads the box's real tuning directly — including bracing, damping and driver
+displacement that no external measurement captures. It makes the whole estimate above irrelevant.
+
+Spare **Parts Express ports** are on hand, which makes iterative trimming practical.
+
+**Sequence:**
+
+1. **Measure the current MFC cabinet's impedance.** The saddle gives real Fb, and back-solves
+   effective volume better than a tape measure. Needs a series-resistor jig rather than the UMIK —
+   same session as the gated acoustic measurements in the Method above.
+2. **Fit the ULD drivers, then re-measure.** Different Vas/Qts move the alignment at identical
+   volume.
+3. **Trim a port toward target, re-measure, repeat.** Cutting is one-way — start long and bracket
+   down. A too-long port tunes low and can be shortened; a too-short one is scrap.
+
+⚠️ **Fit the ULD drivers BEFORE finalising port length.** Joe's per-variant port lengths exist
+because the drivers differ. Trimming to a target derived from the MFC drivers and then swapping to
+Purifi mistunes it a second time.
+
+**This supersedes the "measure the internal volume before cutting a ULD port" blocker above** — the
+measurement to take is Fb, not volume, and it is not blocking so much as scheduling.
+
+### Placeholder — replace with measured values
+
+| Quantity                           | Measured | Date |
+| ---------------------------------- | -------- | ---- |
+| External H × W × D                 | ⬜       |      |
+| Baffle width                       | ⬜       |      |
+| Port length (as built)             | ⬜       |      |
+| **Fb from impedance saddle (MFC)** | ⬜       |      |
+| Fb after ULD fit                   | ⬜       |      |
