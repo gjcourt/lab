@@ -172,3 +172,40 @@ result of **−18° at 2200 Hz** (`elsinore_mk2.htm`). He also confirms the conj
 
 The removal thesis is unaffected: it rests on amp output impedance, not on the exact centre
 frequency. But the numbers should be labelled as derived.
+
+## Build photography — Immich, 2021
+
+Construction photos are in Immich and searchable via the smart-search API. Two clear build sessions,
+**2021-05-04** and **2021-06-12**, with outliers from 2020-12 through 2022-06 — consistent with the
+recorded 20-month build.
+
+| Asset                                  | Date       | Shows                                             |
+| -------------------------------------- | ---------- | ------------------------------------------------- |
+| `61657eb1-5c4a-49b2-a20f-d937be070e48` | 2021-05-04 | Baffle with all five drivers dry-fitted           |
+| `69120e42-743a-4ee6-ab8d-5bdc8ef38efc` | 2021-05-04 | Open driver holes — **crossover visible in situ** |
+| `d1032f3c-2039-4e28-a130-641c05fbb374` | 2021-05-04 | Baffle / carcass                                  |
+| `ce3e62ce-2aaf-4800-a273-9ff9d3dce6f3` | 2021-06-12 | Later session                                     |
+
+### What the photos establish
+
+- **Four 6.5″ midbass + one tweeter, tweeter fourth from top** — the graduated EL-6 array, as
+  designed.
+- **Baltic birch throughout**, laminations countable on the baffle edge, with a chamfer worked into
+  the front edge.
+- **Rebated, flush-mounted driver cutouts** — routed to the drawings.
+- Panels pencil-marked to Joe's cut list (_"TOP/BOTTOM PANEL #3"_) — built panel-by-panel from the
+  published drawings.
+
+### ⚠️ The crossover is mounted INSIDE the cabinet
+
+Asset `69120e42` shows it plainly through the open driver holes: green resistors, a copper air-core
+inductor and terminal blocks, sitting on the cabinet floor.
+
+**So the ULD crossover swap happens through the driver cutouts** — the same access route Joe
+specifies for fitting damping after assembly. No cabinet disassembly, no veneer at risk. Fiddly but
+feasible, and it makes the build step materially less invasive than a rear-panel-mounted network
+would be.
+
+_(Access: the Immich API key lives at `~/.config/immich/api-key`. An older key sat in plaintext in
+the memory store flagged "recommend revoke" in July — it has since been revoked and now 401s. The
+dead string should still be scrubbed.)_
