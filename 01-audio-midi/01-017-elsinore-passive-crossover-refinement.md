@@ -103,3 +103,72 @@ is ever wanted, the leg goes back.
 - Active/3-way counterpart: [`01-010`](01-010-active-crossover-network-for-speakers.md)
 - DSP-crossover option shared with [`01-016`](01-016-diy-digital-domain-streamer.md) (DSPi /
   CamillaDSP)
+
+## Designer's published specification (customanalogue.com, read 2026-08-20)
+
+Joe Rasmussen's own documentation, which had not previously been read into this note. Chapter pages
+`elsinore_1` … `elsinore_25` plus `elsinore_mk2.htm` and `elsinore_kit.htm`.
+
+|                    |                                                                                                     |
+| ------------------ | --------------------------------------------------------------------------------------------------- |
+| Internal volume    | **75 litres** (`elsinore_3.htm`)                                                                    |
+| Alignment          | **Vented**, **Fb = 40 Hz**, F3 ≈ 53 Hz (F3/Fb = 1.325)                                              |
+| Port               | 90 mm cut-out, **86–87 mm ID**; length adjusts for smaller tube                                     |
+| Finished weight    | **40–50 kg each** (`elsinore_4.htm`)                                                                |
+| Front panel        | **18 mm**; plus a 230 × 200 × 25 mm sub-front panel at the tweeter                                  |
+| Current revision   | **Mk6** (author's note, September 2024)                                                             |
+| External H × W × D | ⚠️ **NOT PUBLISHED AS TEXT** — exists only inside the construction-drawing GIFs on `elsinore_4.htm` |
+
+**Damping** (`elsinore_5.htm`) — wool 60% / Dacron 40%, low density, covering "forty to fifty
+percent of the volume", cut as **2 × 1200 × 160 × 25 mm** front, **1 × 850 × 110 × 75 mm** centre
+rear, **2 × 1100 × 50 × 75 mm** corner rear. All fit through the 6.5″ driver holes after assembly.
+
+**Bracing philosophy** (`elsinore_11.htm`) — _"Longitudinal bracing where the brace is off centre
+(asymmetrical) is better than lateral bracing. **Bracing the edges of a panel is totally
+ineffective.**"_ Main brace sits 170–178 mm behind the sub-front panels.
+
+**Internal wiring** (`elsinore_5.htm`) — 22 AWG PTFE, 19 strands silver-clad copper, Farnell
+**1184037**. _"INCORRECT WIRING OR WRONG PHASE WILL SERIOUSLY DEGRADE PERFORMANCE."_
+
+### ✅ The variant question is settled — and it unblocks this project
+
+> **"All variants share identical box designs with modified port lengths."**
+
+| Variant | Midbass                      | Status                                            |
+| ------- | ---------------------------- | ------------------------------------------------- |
+| **MFC** | SB Acoustics **SB17MFC35-8** | current standard kit — **this is the built pair** |
+| **ULD** | Purifi **PT6.5W08-NFA-01**   | premium — **this is the boxed kit**               |
+| NBAC    | aluminium cone               | needs ~2× amplification                           |
+| NRX     | SB17NRXC35-8                 | legacy, discontinued                              |
+
+Tweeter from Mk2 onward is the **Scan-Speak Discovery D2608/913000**; Mk1/Mk2 used **Peerless HDS**
+— which is where the owner's "I thought they were Peerless" recollection comes from. He was
+remembering an earlier revision, not misremembering.
+
+**So the ULD kit drops into the existing cabinets.** Driver and crossover change only, no cabinet
+change. This is the fact this project was implicitly betting on and it is now confirmed from the
+designer.
+
+### ⚠️ OPEN — measure the internal volume before cutting a ULD port
+
+The variants differ by **port length**, and Joe's lengths are computed for **75 litres**.
+
+The built pair uses **Joe's outer dimensions** but **1″ Baltic birch** on the back, sides, top and
+bottom, with a **3/4″ front** (≈ his 18 mm spec). Thicker walls at unchanged outer dimensions means
+**less internal volume** — plausibly around 67 L, i.e. ~10% down, though the true figure is unknown
+because Joe never publishes a wall thickness for the non-front panels.
+
+**Using the published ULD port length in a box that is not 75 L will mistune the alignment.**
+Measure the real internal volume first. This is a prerequisite for the build step below, not a
+nicety.
+
+### Correction — the conjugate frequencies in this note are DERIVED, not published
+
+The 65 Hz bass conjugate and 2.8 kHz tweeter conjugate quoted above were computed from the schematic
+component values (`L4 18mH · R2 8R · C3 300µF`). **Neither figure appears in Joe's prose.** He
+describes the network as flattening impedance between **300 Hz and 1500 Hz**, and quotes a phase
+result of **−18° at 2200 Hz** (`elsinore_mk2.htm`). He also confirms the conjugate filter is
+**optional** (`elsinore_22.htm`) — though omitting it breaks his documented static test procedure.
+
+The removal thesis is unaffected: it rests on amp output impedance, not on the exact centre
+frequency. But the numbers should be labelled as derived.

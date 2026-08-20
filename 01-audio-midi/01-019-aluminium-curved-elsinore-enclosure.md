@@ -152,3 +152,98 @@ with no baseline to attribute a problem to either.
   [`01-010`](01-010-active-crossover-network-for-speakers.md)
 - Prior cabinet-building project:
   [`02-001`](../02-woodworking/02-001-custom-studio-monitor-speaker-cabinets.md)
+
+## Research, 2026-08-20 — the design changed substantially
+
+### Extrusion is dead
+
+Three independent reasons, any one sufficient:
+
+1. **It cannot taper.** The stated inspiration is the **Magico M6**, whose form narrows front to
+   back. An extrusion is a constant cross-section pushed through a die and physically cannot do
+   this.
+2. **Circumscribing circle.** A ~250 × 350 mm section has a **~430 mm (16.9″)** diagonal, above the
+   common 7″/9″/12″ press classes. Needs a 16″+ high-tonnage press — exists, but not at the first
+   mill you email.
+3. **MOQ, not the die.** Dies run $300–800 simple / $2,000–5,000+ large hollow. But **minimum orders
+   are 200–1,000 kg** and this build needs **~43 kg**. You would buy 5–23× the material required.
+
+### Rolled sheet is the aluminium route — and curvature is why
+
+**Curvature is structural, not cosmetic.** A flat panel resists bending through `E·t³`; a curved
+shell converts bending into membrane stress and is far stiffer. That single fact rewrites the
+material budget.
+
+Matching **1″ Baltic birch** on _flat-panel_ bending stiffness needs **~12 mm** aluminium (E ratio
+~9, equal `E·t³`) — about **48 kg of metal per cabinet**, i.e. the weight of an entire finished MDF
+Elsinore in walls alone. Not viable.
+
+**Curved, 3–8 mm is plausible instead**, and it removes both blockers: no die, no MOQ. You buy
+sheet.
+
+_(Note: this also corrects a claim relayed from diyAudio that "1/4″ aluminium ≈ 3/4″ plywood". Equal
+bending stiffness for 3/4″ ply is ~9 mm of aluminium, not 6.35 mm. Their figure was optimistic —
+consistent with that poster concluding it did not pencil out and abandoning the plan.)_
+
+|                        | Finding                                                                                                                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Alloy**              | **5052-H32.** Min bend radius ~1t to 3 mm, ~1.5t to 6 mm, ~2t above                                                                                                               |
+| **Why not 6061-T6**    | Cracks cold; needs forming in T4 then ageing. Worse, it is heat-treatable so **everything within ~15 mm of a weld loses T6**. 5052 is non-heat-treatable and does not suffer this |
+| **Roll crack floor**   | 6–10 × thickness → **18–80 mm** at 3–8 mm stock. Target radius 100–200 mm is comfortably clear                                                                                    |
+| **Real constraint**    | **The shop's top-roll diameter** (≈1.5× for a one-pass roll), not the material                                                                                                    |
+| **Springback**         | 5052 ~1.5–4°. For two units expect trial-and-fit, not a computed number                                                                                                           |
+| **Welding**            | TIG/laser on a rolled seam is standard. 5052 avoids the HAZ softening problem                                                                                                     |
+| ⚠️ **JLCPCB / PCBWay** | **Neither offers roll bending.** JLC lists press-brake bends and R3–R20 arc dies; PCBWay lists laser cutting and bending only. This goes to a dedicated plate-rolling shop        |
+
+### ⚠️ Correction — curved walls do NOT fix standing waves
+
+An earlier version of this reasoning claimed curved walls reduce internal standing waves. **That is
+largely a marketing claim.** At low frequencies the wavelengths are far longer than the cabinet; you
+get a _change_ versus parallel walls, not a meaningful reduction. **Diffraction** benefit at the
+baffle edge has some support; the standing-wave benefit does not.
+
+Curve it for stiffness and for form. Leave the standing waves to Joe's wool/Dacron, which is
+specified at 40–50% of internal volume for exactly this.
+
+**Damping remains unsolved either way.** Curvature raises panel resonance in frequency; it does not
+lower its Q. Aluminium still rings. Constrained-layer damping on the inner face is non-negotiable
+and is the single thing that decides whether this beats 1″ Baltic birch or embarrasses it.
+
+## The second reference — and it points at a different project
+
+The other stated inspiration is a **GamuT RS-series** loudspeaker (Denmark, RS3 ≈ £13,190).
+Identified from an unusually specific detail: the grille is _"horizontal elastic straps spaced 35 mm
+apart, suspended from vertical metal rods near the edges of the front baffle."_
+
+Its cabinet is **21 layers of ash and birch, 1–2 mm thick, form-pressed into curved panels** — built
+by **Kvist Industries, a Danish furniture manufacturer.**
+
+**That is bent lamination.** Not metal fabrication, not offshore tooling — a bending form, thin
+plies and pressure.
+
+|                  | Magico M6                          | GamuT RS                        |
+| ---------------- | ---------------------------------- | ------------------------------- |
+| Structure        | rolled/tapered aluminium monocoque | 21-ply form-pressed ash + birch |
+| Made by          | metal fabricator                   | furniture maker                 |
+| Curve from       | plate roller + welded seam         | bending form + press            |
+| Owner capability | none — needs a vendor              | **already owns the shop**       |
+
+The first Elsinore pair was **built by hand in 1″ Baltic birch**, and the mappa burl is still
+unused. A bent-laminated wooden cabinet needs no die, no MOQ, no supplier, no springback
+trial-and-fit with a plate roller — and it is the same material and the same craft as the pair that
+already exists.
+
+⚠️ **This note is titled for the aluminium project. On the evidence, the wood route may be the
+better project** — cheaper, executable solo, and closer to why the speakers were built in the first
+place. The aluminium path stays documented because the _form_ ambition is real; but it should be
+entered knowing the wood path delivers the same curve for a fraction of the cost and none of the
+vendor risk.
+
+## Open, and blocking
+
+- **External cabinet dimensions are still unrecorded.** Joe publishes them only inside GIF
+  construction drawings. **Measure the existing pair** — H × W × D and baffle width. Every
+  fabrication number above rests on an assumed 250 × 350 section.
+- **Internal volume** — see `01-017`. Needed before any enclosure is sized, and before a ULD port is
+  cut.
+- Which reference is actually being chased: **bare metal, or layered wood.**
