@@ -42,8 +42,9 @@ exactly the depth the curve costs.
 ## Usage
 
 ```bash
-python3 section.py                              # defaults: 78.1 L, 4 mm wall
-python3 section.py --volume 75 --thickness 6    # explore
+python3 section.py                              # 78.1 L, stern 80, 4 mm wall
+python3 section.py --stern 114.3                # stadium — no taper
+python3 section.py --stern 60 --thickness 6     # strong taper, thicker shell
 python3 section.py --springback 2.5             # former compensation
 ```
 
