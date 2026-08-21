@@ -25,7 +25,7 @@ furniture manufacturer**.
 no offshore supplier, no springback trial-and-fit with a plate roller. The **mappa burl** is still
 unused and is the obvious outer veneer.
 
-## Shared geometry (solved 2026-08-20)
+## Shared geometry — profile D (DECIDED)
 
 Both curved-cabinet projects target the **same section**, derived from the as-built cabinet in
 `01-017` (Onshape "Elsinore v6.1"). Only fabrication differs.

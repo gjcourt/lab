@@ -23,7 +23,7 @@ separate flat baffle.
 ~12 mm aluminium — ~48 kg of metal per cabinet. A curved shell converts bending into membrane
 stress, so **3–8 mm** plausibly suffices. See `01-019` for the full analysis.
 
-## Shared geometry (solved 2026-08-20)
+## Shared geometry — profile D (DECIDED)
 
 Both curved-cabinet projects target the **same section**, derived from the as-built cabinet in
 `01-017` (Onshape "Elsinore v6.1"). Only fabrication differs.
