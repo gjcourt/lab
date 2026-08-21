@@ -85,6 +85,10 @@ is ever wanted, the leg goes back.
       confirmed) — 18 mH inductor + 20 W resistor eliminated.
 - [ ] Tweeter level set to the gated target.
 - [ ] KiCad crossover model (from the Windows box) reconciled with the as-built network + archived.
+- [ ] **Impedance sweep on the built MFC pair — Fb _and_ Ql recorded** (reference alignment for the
+      curved-cabinet projects; see § TASK above).
+- [ ] **Ql-vs-fill-mass curve measured** by weighed increments on the existing cabinet, so the
+      minimal-damping target in `01-020` / `01-021` is a number rather than a philosophy.
 
 ## Progress
 
@@ -94,6 +98,9 @@ is ever wanted, the leg goes back.
 - [ ] Retrieve the KiCad model from the Windows box
 - [ ] Gated measurement set → VituixCAD
 - [ ] Remove bass conjugate + re-measure + tweeter tune
+- [ ] Build impedance jig → baseline Fb + Ql sweep on the MFC pair (**next physical step; needs no
+      new parts**)
+- [ ] Fill-removal + weighed-increment re-sweeps → Ql-vs-mass curve
 
 ## References
 
@@ -281,6 +288,49 @@ Purifi mistunes it a second time.
 **This supersedes the "measure the internal volume before cutting a ULD port" blocker above** — the
 measurement to take is Fb, not volume, and it is not blocking so much as scheduling.
 
+### ✅ The same sweep measures Ql — and that is the damping decision
+
+**One impedance sweep yields both numbers.** The saddle gives Fb; the two peaks give **Ql**, the
+box-loss Q. Record five values per sweep — `fL`, `fb`, `fH`, and the impedance magnitude at each
+peak and at the saddle — and the standard vented-box impedance fit (REW's box fitting, or Small's
+equations) returns Ql.
+
+**Reading it by eye:** a **shallow saddle** and **low, broad peaks** mean more loss and a **lower
+Ql**. A deep saddle approaching Re with tall narrow peaks means a **lossless, high-Ql box** — which
+sounds boomier near tuning, not tighter.
+
+This matters because the curved-cabinet projects
+([`01-020`](01-020-laminated-curved-elsinore-cabinet.md) /
+[`01-021`](01-021-rolled-aluminium-elsinore-cabinet.md)) are targeting **minimal internal damping**,
+and fill is what sets Ql. **The existing MFC pair, built to Joe's spec with Joe's 40–50% fill, is
+the reference alignment** — measure it before touching anything, and the new cabinet has a real
+target instead of a philosophy.
+
+### 🔬 TASK — the damping / tuning sweep
+
+**A. Baseline on the existing pair — do this first, it needs no new hardware**
+
+1. Build the series-resistor jig; sweep impedance on the built MFC pair **as it stands**.
+2. Record `fL / fb / fH` + magnitudes → **Fb and Ql of Joe's spec with Joe's fill.** This is the
+   reference row.
+3. Weigh the fill on removal (see B) so the reference has a mass, not a percentage.
+
+**B. Fill sensitivity — establishes the curve, on the cabinet already in the room**
+
+4. Remove all fill. Re-sweep. Record Fb and Ql **empty**.
+5. Re-add fill in **weighed increments**, logging mass → Fb → Ql each step.
+6. Plot Ql vs fill mass. **This one afternoon converts the damping argument into a lookup table**
+   and is reusable for both curved-cabinet routes.
+
+⚠️ **Do not cut any port during A or B.** Port length is set last, against final drivers and final
+damping — see the ULD-drivers-first warning above.
+
+**C. Carry it forward**
+
+7. New cabinet gets bare curved walls + damped caps (per `01-020` § Damping decision), then
+   sweep-and-fill to the **Ql from step 2**, not to a fill percentage.
+8. **Trim the port last**, to whatever Fb the finished damping produced.
+
 ### Placeholder — replace with measured values
 
 | Quantity                           | Measured | Date |
@@ -289,6 +339,10 @@ measurement to take is Fb, not volume, and it is not blocking so much as schedul
 | Baffle width                       | ⬜       |      |
 | Port length (as built)             | ⬜       |      |
 | **Fb from impedance saddle (MFC)** | ⬜       |      |
+| **Ql, MFC as-built (Joe's fill)**  | ⬜       |      |
+| **Fill mass as-built, per box**    | ⬜       |      |
+| Fb / Ql, fill removed              | ⬜       |      |
+| Ql vs fill-mass curve              | ⬜       |      |
 | Fb after ULD fit                   | ⬜       |      |
 
 ## ✅ Cabinet dimensions — FROM THE ONSHAPE MODEL (supersedes the estimates above)
