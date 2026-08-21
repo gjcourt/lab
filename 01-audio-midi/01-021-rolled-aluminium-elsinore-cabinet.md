@@ -62,6 +62,55 @@ sheet does both cabinets** with a spare for a test roll.
 - **Springback 1.5–4°** — for two units expect trial-and-fit, which is what the spare blank is for.
 - ⚠️ **Neither JLCPCB nor PCBWay offers roll bending.** This goes to a dedicated plate-rolling shop.
 
+## Rolling schedule — profile D is piecewise, not one radius
+
+⚠️ **Profile D is a Bézier: curvature varies continuously.** A plate roller cannot do that in one
+pass — it holds one radius per setting. The earlier stadium section was a single constant radius;
+**that property was given up when the bulge was adopted, and the cost is a multi-pass rolling
+schedule.**
+
+**This constrains only this project.** For bent lamination (`01-020`) a varying radius is free — the
+former defines whatever curve is cut into it. It is one of the clearest practical differences
+between the two routes.
+
+### Measured curvature along the top outline (396 mm of arc, baffle → centreline)
+
+| Along      | Position                   | Radius                      |
+| ---------- | -------------------------- | --------------------------- |
+| 0–13 mm    | leaving the baffle         | ~281–305 mm                 |
+| 33–66 mm   |                            | 343–406 mm                  |
+| 134 mm     | widest point               | **496 mm** (flattest)       |
+| 201 mm     |                            | 480 mm                      |
+| 263 mm     |                            | 343 mm                      |
+| **315 mm** | **Bézier → stern tangent** | **discontinuity: 343 → 80** |
+| 315–396 mm | stern                      | **80 mm exactly**           |
+
+**Real range is 80–496 mm.** Well inside 5052's crack floor (6–10 × t = 24–40 mm at 4 mm), so
+nothing here is a tight bend.
+
+_(An earlier reading of "7 mm minimum radius" was a numerical artifact — a three-point circle fit
+straddling the curvature discontinuity. Exactly one sample out of 1199. Not a real feature of the
+geometry.)_
+
+### Practical decomposition — 3 rolled sections per side + flat baffle
+
+Break at curvature changes, not at equal lengths (equal-length segmentation gives poor fits —
+spreads of ±150 mm were measured).
+
+| Section                  | Arc     | Roller setting      | Notes             |
+| ------------------------ | ------- | ------------------- | ----------------- |
+| 1 — baffle to mid-bulge  | ~135 mm | **R ≈ 320 mm**      | leaves the baffle |
+| 2 — mid-bulge to tangent | ~180 mm | **R ≈ 460 mm**      | flattest part     |
+| 3 — stern                | ~81 mm  | **R = 80 mm exact** | already constant  |
+
+**The section-1/2 and 2/3 boundaries are where seams belong anyway** — the 2/3 boundary is a genuine
+curvature discontinuity, so a weld or joint there is invisible in a way it would not be mid-curve.
+
+⚠️ **The curvature discontinuity may show in a gloss finish.** Tangent-continuous (G1) but not
+curvature-continuous (G2), so a reflection sweeping across it will kink. If that matters, the fix is
+a G2 blend at the tangent point — which changes the section slightly and must be re-solved for
+volume.
+
 ## ⚠️ The unsolved problem is damping, not stiffness
 
 Curvature raises panel resonance **in frequency**; it does not lower its **Q**. Aluminium still
