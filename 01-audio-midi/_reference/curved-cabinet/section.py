@@ -138,10 +138,11 @@ def section_metrics(baffle_w, height, target_l, t, stern_r=None, max_w=None, pea
     depth, g, r = solve_depth(baffle_w, height, target_l, stern_r, max_w, peak)
     if "wrap_half" in g:            # bulged hull: wrap measured along the outline
         wi = 2 * g["wrap_half"]
+        achieved = 2 * max(abs(y) for _, y in (g["up"] + g["arc"]))
         return dict(depth=depth, area=g["area"], vol=g["area"] * height / 1e6, r=r, g=g,
                     tangent_len=g["tangent_len"], stern_arc_deg=math.degrees(g["phi"]) * 2,
-                    stern_width=2 * r, max_w=max_w,
-                    narrowing=100 * (1 - 2 * r / max_w),
+                    stern_width=2 * r, max_w=max_w, achieved_w=achieved,
+                    narrowing=100 * (1 - 2 * r / achieved),
                     wrap_inner=wi, wrap_neutral=wi + math.pi * t,
                     wrap_outer=wi + 2 * math.pi * t)
     area = g["area"]
@@ -155,7 +156,16 @@ def section_metrics(baffle_w, height, target_l, t, stern_r=None, max_w=None, pea
 
 
 # ---------- minimal R12 ASCII DXF ----------
-def _hdr():  return "0\nSECTION\n2\nENTITIES\n"
+def _hdr():
+    """R12 header declaring MILLIMETRES.
+
+    Without $INSUNITS the importer has to guess, and a wrong guess scales the
+    part by 25.4.  This bit me: the first DXFs shipped with no HEADER at all."""
+    return ("0\nSECTION\n2\nHEADER\n"
+            "9\n$INSUNITS\n70\n4\n"          # 4 = millimeters
+            "9\n$MEASUREMENT\n70\n1\n"       # 1 = metric
+            "0\nENDSEC\n"
+            "0\nSECTION\n2\nENTITIES\n")
 def _ftr():  return "0\nENDSEC\n0\nEOF\n"
 def _line(x1, y1, x2, y2, layer="0"):
     return (f"0\nLINE\n8\n{layer}\n10\n{x1:.4f}\n20\n{y1:.4f}\n30\n0.0\n"
@@ -223,7 +233,9 @@ def main():
     print(f"  baffle width         {a.baffle:8.1f} mm     FIXED — driver array")
     print(f"  internal height      {a.height:8.1f} mm")
     if mw:
-        print(f"  max width            {mw:8.1f} mm     bulges behind the baffle (baffle untouched)")
+        print(f"  max width ACHIEVED   {m['achieved_w']:8.1f} mm     bulges behind the baffle (baffle untouched)")
+        print(f"    (--maxwidth {mw:.0f} is a Bezier CONTROL value; the curve does not")
+        print(f"     reach it — it is bounded by the control hull)")
         print(f"  bulge peak at        {a.peak*100:8.0f} %      of depth")
     print(f"  stern radius         {r:8.1f} mm     (stern width {m['stern_width']:.1f} = {m['narrowing']:.1f}% narrowing)")
     print(f"  tangent run          {m['tangent_len']:8.1f} mm     each side")
