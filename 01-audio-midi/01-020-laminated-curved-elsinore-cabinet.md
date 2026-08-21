@@ -145,6 +145,82 @@ a great deal of cutting.** Rib it.
 
 Mappa burl already owned. Baffle uses the existing 19.05 + 25.4 mm birch stack.
 
+## Damping decision — minimal, but not empty
+
+**Resolved 2026-08-20.** Supersedes the open conflict recorded in `01-019` (Joe's 40-50% wool/Dacron
+fill vs the Zodiac's near-empty braced shell). **Applies to both build routes** — `01-020` and
+`01-021` share profile D and the same internal volume, so this is a section decision, not a material
+one.
+
+**The decision: bare curved walls, damped caps, fill set by measurement.**
+
+Internal damping in a vented box does three separate jobs, and the curved shell only does one of
+them for you.
+
+### What the curve genuinely buys — drop wall lining
+
+The side walls are no longer parallel, so the lateral mode is gone as a coherent reflection rather
+than merely absorbed. **This is the legitimate saving and it is the one that matters
+philosophically.** Wall lining on a curved monocoque is largely doing a job the geometry already
+did.
+
+Joe's own position supports this from the other direction: _"bracing the edges of a panel is totally
+ineffective."_ A curved shell is not a braced panel — its stiffness is geometric, not added.
+
+### ⚠️ What the curve does NOT buy — the height mode
+
+**Top and bottom caps are still flat and still parallel.** Profile D is 1099.8 mm tall; with 19 mm
+caps the internal height is 1061.7 mm.
+
+| Axis       | Internal  | f1           | f2        | Status                           |
+| ---------- | --------- | ------------ | --------- | -------------------------------- |
+| **Height** | 1061.7 mm | **161.5 Hz** | 323.1 Hz  | ⚠️ **untouched by the curve**    |
+| Depth      | 342.4 mm  | 500.9 Hz     | 1001.8 Hz | weakened — curved stern scatters |
+| Width      | 224.0 mm  | 765.6 Hz     | 1531.2 Hz | ✅ eliminated — non-parallel     |
+
+**161.5 Hz is the lowest-frequency and highest-Q mode in the box, it is squarely in the woofer
+passband, and the vertical axis is the one dimension the curve cannot help.** It couples out through
+both the cones and the port.
+
+**Therefore: absorbent on the top and bottom caps is not optional.** That is the one place the
+empty-shell aesthetic costs real performance, and it is invisible from outside.
+
+### ⚠️ What the curve does NOT buy — Ql
+
+Fill is not only about midrange absorption. It sets the **box losses**, and box losses set the
+vented alignment's behaviour near tuning.
+
+Going from Joe's 40-50% fill to near-empty:
+
+- **Fb rises.** Fill slows propagation (adiabatic → isothermal), raising apparent volume; removing
+  it shrinks the box acoustically and tunes the port up. **Joe's port lengths were computed for a
+  stuffed box** — and the variant table already says all variants share identical boxes with
+  _modified port lengths_, so port length is the designed adjustment point.
+- **Ql rises.** Less lossy means higher Q: taller impedance peaks, a ripple near tuning, and longer
+  port ringing in the time domain. **An empty vented box is boomier, not tighter** — which is the
+  opposite of what the empty-shell instinct is reaching for.
+- **Midrange leaks out of the port.** The port is a direct acoustic path from the interior to the
+  room. In a stuffed box the fill attenuates the mid before it reaches the mouth. This is the main
+  audible reason vented boxes get lined at all.
+
+### The method — measure, don't guess
+
+**The impedance sweep already planned to find Fb measures Ql at the same time.** Peak height and
+width give it directly. The instrument for this decision is already in the build plan.
+
+1. Build the shell with **bare curved walls** and absorbent bonded to **both caps**.
+2. Sweep impedance **empty otherwise**. Record Fb and Ql.
+3. Add fill in measured increments — by mass, logged — re-sweeping each time.
+4. **Stop when Ql lands in the target range**, not when the box looks full.
+5. **Cut port length last**, to the Fb the finished damping actually produced. George already owns
+   spare Parts Express ports specifically to cut down.
+
+This gets the minimal-damping cabinet honestly: the least fill that holds the alignment, established
+by measurement rather than by dogma in either direction.
+
+**Expect to land well under Joe's 40-50%** — the curve really did remove one mode and one set of
+wall reflections. **Do not expect to land at zero.**
+
 ## Open questions
 
 - **Ply thickness and count.** Thinner plies bend tighter and laminate stronger but multiply the
