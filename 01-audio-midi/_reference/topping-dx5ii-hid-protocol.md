@@ -477,7 +477,7 @@ write side is where the information is.
 
 A frame is trivial to construct — no checksum required:
 
-```
+```text
 22 33 20 01 01 <reg> <sub> <int32 BE> 00 00 66 77 00
 ```
 
