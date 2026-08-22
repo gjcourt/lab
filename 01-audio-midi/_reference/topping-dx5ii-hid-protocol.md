@@ -33,7 +33,7 @@ mechanism. None affect PEQ, volume, gain or power.
 
 ### HID report descriptor
 
-```
+```text
 05 01  Usage Page (Generic Desktop)
 09 00  Usage (0x00)                 <- undefined: a raw vendor pipe
 a1 01  Collection (Application)
@@ -59,7 +59,7 @@ c0     End Collection
 
 Both directions use a fixed 16-byte frame.
 
-```
+```text
  offset  0  1   2    3    4    5     6     7  8  9 10   11 12   13 14  15
         22 33  20  <ln> <ln> <reg> <sub>  <value BE32>  <ck>   66 77  00
         \___/                                           \___/  \___/
@@ -86,7 +86,7 @@ Both directions use a fixed 16-byte frame.
 Almost every frame uses `0x20` = write. Two frames in the settings capture used **`0x10` with a zero
 payload**, which reads as a **read/query**:
 
-```
+```text
 22 33 10 01 01 71 0c 00 00 00 00 00 00 66 77 00
 22 33 10 01 01 71 37 00 00 00 00 00 00 66 77 00
 ```
@@ -94,7 +94,7 @@ payload**, which reads as a **read/query**:
 **Tested from a third-party client 2026-08-07: reads do NOT return state.** A read request is
 answered with an _echo of the request_, value still zero, but with the **checksum filled in**:
 
-```
+```text
 sent: 22 33 10 01 01 91 02 00 00 00 00 00 00 66 77 00
 recv: 22 33 10 01 01 91 02 00 00 00 00 7d 73 66 77 00
                                        ^^^^^ device-computed
@@ -114,7 +114,7 @@ individual registers found nothing.
 
 The dump frames use a **different header layout** — this is what made them unrecognisable earlier:
 
-```
+```text
 22 33 20 | 4e | 08 | 11 06 | 00 fc 05 01 | ac 16 | 66 77 00
   magic    ^^   ^^   reg/sub   payload      cksum   footer
         count  index
@@ -138,7 +138,7 @@ would explain how the vendor app knows them.
 **To trigger it,** replay the app's connect preamble; `12 06` alone is enough in testing, but the
 full sequence is what the app sends:
 
-```
+```text
 11 01 = 2        71 0c READ (0x10)     71 0f = 0
 71 37 READ       11 20 = 1             12 06 = 0     <- dump follows
 ```
@@ -223,7 +223,7 @@ Two's complement. Observed during a gain drag: `ff ff ff ea` = −22 (−2.2 dB)
 
 ### Preamp encoding (register `0x9c`)
 
-```
+```text
 value = round( 10^(dB/20) * 2^25 )
 dB    = 20 * log10( value / 2^25 )
 ```
@@ -234,7 +234,7 @@ predicted `0x01009B9D` for −6.0 dB, a third-party client wrote it, and the ven
 > **The vendor app truncates the display toward zero.** A mathematically exact −6.0000000 dB renders
 > as **"−5.9"**. This is a display convention, not an encoding error — a client should not
 > compensate for it.
-
+>
 > **Band-count discrepancy.** Eleven registers (`0x91`–`0x9b`) accept band writes and the vendor app
 > writes all of them on commit, but its UI reports capacity as **"BANDS n / 10"**. Either `0x9b` is
 > not a usable band or the app caps below the hardware limit. `dx5ctl` writes 11 to match the app's
@@ -269,7 +269,7 @@ filters.
 
 UI showed: Bass 1, **Low Shelf, 200 Hz, +6.0 dB, Q 0.7070**, L+R.
 
-```
+```text
 22 33 20 01 01 91 01 00 00 00 04 00 00 66 77 00   type  = 4     Low Shelf
 22 33 20 01 01 91 02 00 00 00 c8 00 00 66 77 00   freq  = 200   Hz
 22 33 20 01 01 91 03 00 00 00 3c 00 00 66 77 00   gain  = 60    +6.0 dB
@@ -284,7 +284,7 @@ from bands that are off.
 
 ### Factory default for an unused band
 
-```
+```text
 type = 1 (peaking), freq = 632, gain = 0, Q = 7070, enabled = 0
 ```
 
@@ -332,14 +332,14 @@ driving each control in the vendor UI and correlating against the displayed stat
 
 The UI displayed **−28.5 dB** while the device held value **57** (`0x39`):
 
-```
+```text
 57 × 0.5 = 28.5   ->   -28.5 dB      ✓
 ```
 
 A slow volume ramp upward produced a strictly _decreasing_ sequence (59, 58, 57 … 52 = −29.5 dB →
 −26.0 dB), confirming the value is **attenuation**, not gain. Each step is 0.5 dB.
 
-```
+```text
 22 33 20 01 01 71 02 00 00 00 39 00 00 66 77 00     set -28.5 dB
 ```
 
@@ -351,7 +351,7 @@ followed by a `71 34` commit.
 Power is the **only** register observed to carry a real checksum, and it also uses `byte4 = 00`
 rather than `01`:
 
-```
+```text
 22 33 20 01 00 71 01 00 00 00 00 dc 65 66 77 00     sleep
 22 33 20 01 00 71 01 00 00 00 01 1c a4 66 77 00     wake
                              ^^ ^^^^^
@@ -374,14 +374,14 @@ Two known plaintext/checksum pairs, for anyone attempting the algorithm:
 
 Two writes seen alongside output/toggle changes; meaning unknown.
 
-```
+```text
 22 33 20 01 01 11 01 00 00 00 02 00 00 66 77 00
 22 33 20 01 01 11 20 00 00 00 01 00 00 66 77 00
 ```
 
 Also seen once at the head of a settings capture, unexplained:
 
-```
+```text
 22 33 20 01 01 12 06 00 00 00 00 00 00 66 77 00     register 0x12
 ```
 
@@ -425,7 +425,7 @@ the toolbar.
 > Volume Step only affecting knob and remote increments) or whether the scale follows the setting. A
 > client that assumes half-dB could set the wrong level after a user changes this. Test before
 > relying on it.
-
+>
 > ⚠️ **Factory Reset is in this register space.** Do not sweep unknown registers with writes.
 > Read-only probing is safe; blind writes are not.
 
@@ -435,7 +435,7 @@ When a host holds the HID interface open, the device free-streams a fixed set of
 roughly 500 Hz. These proved **static** across volume changes and PEQ edits, so they are not live
 state. Content unidentified.
 
-```
+```text
 type30 idx00   22 33 20 02 00 71 30 ff c4 ff c4 87 69 66 77 00
 type30 idx01   22 33 20 02 01 71 30 00 00 00 00 cd 48 66 77 00
 type31 idx00   22 33 20 08 00 71 31 c4 c4 c4 c4 2c ca 66 77 00
