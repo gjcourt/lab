@@ -19,24 +19,24 @@ unreachable.
 Mutual inductance `M = k√(L₁L₂)`, so two identical coils in series give `L = L₁ + L₂ ± 2M`. For two
 10 mH coils with `C = 300 µF`:
 
-| k | Geometry | Aiding | f₀ | Opposing | f₀ |
-| ---: | --- | ---: | ---: | ---: | ---: |
-| 0.00 | 90°, separated — ideal | 20 mH | **65.0 Hz** | 20 mH | **65.0 Hz** |
-| 0.05 | side by side, ~1 dia apart | 21 mH | 63.4 Hz | 19 mH | 66.7 Hz |
-| 0.15 | side by side, touching | 23 mH | 60.6 Hz | 17 mH | 70.5 Hz |
-| 0.30 | coaxial, ~1 dia apart | 26 mH | 57.0 Hz | 14 mH | 77.7 Hz |
-| 0.50 | coaxial, close | 30 mH | 53.1 Hz | 10 mH | 91.9 Hz |
-| 0.70 | coaxial, stacked touching | 34 mH | 49.8 Hz | 6 mH | **118.6 Hz** |
+|    k | Geometry                   | Aiding |          f₀ | Opposing |           f₀ |
+| ---: | -------------------------- | -----: | ----------: | -------: | -----------: |
+| 0.00 | 90°, separated — ideal     |  20 mH | **65.0 Hz** |    20 mH |  **65.0 Hz** |
+| 0.05 | side by side, ~1 dia apart |  21 mH |     63.4 Hz |    19 mH |      66.7 Hz |
+| 0.15 | side by side, touching     |  23 mH |     60.6 Hz |    17 mH |      70.5 Hz |
+| 0.30 | coaxial, ~1 dia apart      |  26 mH |     57.0 Hz |    14 mH |      77.7 Hz |
+| 0.50 | coaxial, close             |  30 mH |     53.1 Hz |    10 mH |      91.9 Hz |
+| 0.70 | coaxial, stacked touching  |  34 mH |     49.8 Hz |     6 mH | **118.6 Hz** |
 
 **Coplanar side-by-side is mild. Coaxial-and-close is not.** Stacking boards produces the second
 case for any pair of coils that overlap in XY.
 
 ## ⚠️ The constraint that causes it
 
-**The crossover is serviced through the driver cutouts** — the assembly must pass through a
-~150–160 mm hole. One large board does not fit. **Stacking is a correct answer to an aperture
-constraint**, which is why this is a design trap rather than an error: the obvious fix (one big
-board, coils spaced) is unbuildable.
+**The crossover is serviced through the driver cutouts** — the assembly must pass through a ~150–160
+mm hole. One large board does not fit. **Stacking is a correct answer to an aperture constraint**,
+which is why this is a design trap rather than an error: the obvious fix (one big board, coils
+spaced) is unbuildable.
 
 So the real problem is: **maximise magnetic separation subject to fitting through the driver
 cutout.**
@@ -49,7 +49,7 @@ cutout.**
 board on a side wall has horizontal coil axes. That is a true 90°, `k ≈ 0` — and **each board still
 passes through the cutout individually**, because they are separate boards entering one at a time.
 
-Standoff stacking forces parallel axes by construction. Perpendicular *surfaces* is the only way to
+Standoff stacking forces parallel axes by construction. Perpendicular _surfaces_ is the only way to
 get orthogonality in an assembly that must go through a hole.
 
 ### 2. Where coils must share a plane, space them
@@ -61,7 +61,7 @@ near `k ≈ 0.05`.
 ### 3. Where boards must stack, break the XY overlap
 
 If perpendicular mounting is impossible, **offset the coils laterally so none is coaxial with
-another.** Counter-intuitively, in-plane rotation of one board *does* help here — not by changing
+another.** Counter-intuitively, in-plane rotation of one board _does_ help here — not by changing
 any axis, but by moving coils out of vertical alignment. **Coaxial-and-close is the failure mode;
 laterally offset by one diameter is nearly harmless even with parallel axes.**
 

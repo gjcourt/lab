@@ -38,31 +38,31 @@ crossing ~2.7 kHz. Two **shunt conjugate networks sit across the amp terminals**
 input, ahead of the series inductors — so they shape _impedance_, not the acoustic transfer
 function):
 
-| Network               | Parts                                    | Purpose                                            | Eigentakt verdict               |
-| --------------------- | ---------------------------------------- | -------------------------------------------------- | ------------------------------- |
-| **Bass conjugate**    | `L4 20mH · R2 7R · C3 300µF` (65.0 Hz)   | Pulls the vented upper-bass impedance peak to ~8 Ω | **Delete** — audibly invisible  |
-| **Tweeter conjugate** | `L5 0.1mH · R3 9R · C4 33µF` (2.77 kHz)  | Flattens the voice-coil-inductance rise at the XO  | Evaluate; small, lower priority |
+| Network               | Parts                                   | Purpose                                            | Eigentakt verdict               |
+| --------------------- | --------------------------------------- | -------------------------------------------------- | ------------------------------- |
+| **Bass conjugate**    | `L4 20mH · R2 7R · C3 300µF` (65.0 Hz)  | Pulls the vented upper-bass impedance peak to ~8 Ω | **Delete** — audibly invisible  |
+| **Tweeter conjugate** | `L5 0.1mH · R3 9R · C4 33µF` (2.77 kHz) | Flattens the voice-coil-inductance rise at the XO  | Evaluate; small, lower priority |
 
 ### ✅ Bass conjugate values corrected 2026-08-21 — and one conflict left open
 
 An earlier version of this table read `L4 18mH · R2 ≈8R`. **Both were wrong**, and the arithmetic
 had been quietly disagreeing with the note the whole time:
 
-| L4 | with C3 = 300 µF | |
-| --- | --- | --- |
-| 18 mH | 68.5 Hz | the value the note stated |
-| **20 mH** | **65.0 Hz** | the frequency the note stated |
+| L4        | with C3 = 300 µF |                               |
+| --------- | ---------------- | ----------------------------- |
+| 18 mH     | 68.5 Hz          | the value the note stated     |
+| **20 mH** | **65.0 Hz**      | the frequency the note stated |
 
-A direct schematic reading confirms **`L4 = 20 mH`, `R2 = 7 R`**. George's built pair uses
-**2 × 10 mH air-cored inductors in series** — which is Joe's spec exactly, not a substitution.
+A direct schematic reading confirms **`L4 = 20 mH`, `R2 = 7 R`**. George's built pair uses **2 × 10
+mH air-cored inductors in series** — which is Joe's spec exactly, not a substitution.
 
 ⚠️ **Unresolved — the tweeter conjugate.** Two readings exist and **frequency cannot discriminate
 them**, because their LC products are identical (3.3 × 10⁻⁹, both → 2.77 kHz):
 
-| Reading | L5 | C4 |
-| --- | --- | --- |
+| Reading                  | L5         | C4        |
+| ------------------------ | ---------- | --------- |
 | Schematic reading (2026) | **0.1 mH** | **33 µF** |
-| Earlier note value | 0.15 mH | 22 µF |
+| Earlier note value       | 0.15 mH    | 22 µF     |
 
 **Only the schematic settles it.** The table above takes the schematic reading; treat it as
 provisional and confirm against the printed values, or against the parts actually fitted.
@@ -91,27 +91,27 @@ An earlier version of this section said the win was to _"lose the 18 mH **cored*
 George 2026-08-21. Air core has **no core** — no saturation, no hysteresis, no core-material
 nonlinearity. **The distortion mechanism being invoked does not exist in this build.**
 
-**Provenance, because the error travelled.** It originates in a 2026-07 design conversation
-(see References — `elsinore.txt`) which wrote _"shed the cored-inductor distortion mechanism"_,
-was copied into this note, and was repeated back to George in analysis two days running before he
+**Provenance, because the error travelled.** It originates in a 2026-07 design conversation (see
+References — `elsinore.txt`) which wrote _"shed the cored-inductor distortion mechanism"_, was
+copied into this note, and was repeated back to George in analysis two days running before he
 mentioned the actual parts. **Three documents deep, corrected only by the owner looking at the
 object** — the same failure mode as the SawStop wings and the Delta model plate.
 
-⚠️ **"Costs sensitivity" was also wrong**, and this note contradicted itself on it. The conjugate
-is a **shunt** branch: with a voltage-source amp the drivers see the same voltage either way, so
-SPL is unchanged — which is exactly what this note predicts for _removal_. If removing it does not
-change SPL, its presence cannot have been costing SPL.
+⚠️ **"Costs sensitivity" was also wrong**, and this note contradicted itself on it. The conjugate is
+a **shunt** branch: with a voltage-source amp the drivers see the same voltage either way, so SPL is
+unchanged — which is exactly what this note predicts for _removal_. If removing it does not change
+SPL, its presence cannot have been costing SPL.
 
 **What removal actually wins**, corrected:
 
-| Claim | Verdict |
-| --- | --- |
-| ~~Core distortion~~ | ❌ Air core. No such mechanism |
-| ~~Sensitivity~~ | ❌ Shunt branch; SPL unchanged either way |
-| **Heat** | ✅ ~1.1 W at the 2.83 V reference, but **30–55 W instantaneous** at realistic bass levels — hence the "10 W min, 20 W recommended" rating. That is dissipated **inside a sealed cabinet, on stacked boards with no airflow, next to electrolytics** |
-| **Amplifier current** | ✅ Real, though the Eigentakt does not care |
-| **Size** | ✅ Two 10 mH air cores are the largest components on the assembly |
-| **Magnetic coupling** | ✅ **The strongest reason** — see below |
+| Claim                 | Verdict                                                                                                                                                                                                                                             |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~Core distortion~~   | ❌ Air core. No such mechanism                                                                                                                                                                                                                      |
+| ~~Sensitivity~~       | ❌ Shunt branch; SPL unchanged either way                                                                                                                                                                                                           |
+| **Heat**              | ✅ ~1.1 W at the 2.83 V reference, but **30–55 W instantaneous** at realistic bass levels — hence the "10 W min, 20 W recommended" rating. That is dissipated **inside a sealed cabinet, on stacked boards with no airflow, next to electrolytics** |
+| **Amplifier current** | ✅ Real, though the Eigentakt does not care                                                                                                                                                                                                         |
+| **Size**              | ✅ Two 10 mH air cores are the largest components on the assembly                                                                                                                                                                                   |
+| **Magnetic coupling** | ✅ **The strongest reason** — see below                                                                                                                                                                                                             |
 
 ## ⚠️ The build as found — three stacked boards, all coil axes parallel
 
@@ -123,10 +123,10 @@ impossible.
 
 Coupling `M = k√(L₁L₂)`, so two 10 mH coils in series give `L = 20 ± 20k mH`:
 
-| Regime | Geometry | k | Effect |
-| --- | --- | --- | --- |
-| **Within a board** | side by side, coplanar | 0.05–0.15 | modest |
-| **Between boards** | XY-overlapping → **coaxial**, separated only by standoff height | **0.3–0.7** | large |
+| Regime             | Geometry                                                        | k           | Effect |
+| ------------------ | --------------------------------------------------------------- | ----------- | ------ |
+| **Within a board** | side by side, coplanar                                          | 0.05–0.15   | modest |
+| **Between boards** | XY-overlapping → **coaxial**, separated only by standoff height | **0.3–0.7** | large  |
 
 **The coupling that matters is not between the two conjugate coils** — that network is being
 removed, so its detuning is irrelevant. It is whether a conjugate coil sits coaxially above or below
@@ -148,14 +148,14 @@ to an aperture constraint. The layout rules that satisfy both are in
 George's ordering, 2026-08-21 — **one crossover design, two component populations**, with the
 cabinet decision as an _output_ rather than a prerequisite:
 
-| Step | | Gate |
-| --- | --- | --- |
-| **0** | ⚠️ **Do the Purifi drivers fit the existing baffle?** Cutout Ø, frame Ø, mounting depth, magnet clearance | **If they do not, the whole sequence inverts** — enlarging a cutout on a veneered cabinet is irreversible, so the new cabinet would have to come first |
-| **0b** | **Full gated measurement set, including the vertical fan** — see Method below | Must precede design freeze: if the array combs vertically, the target is not "Joe minus the conjugate" |
-| **1** | Design + build the new crossover, conjugate branch deleted | Fits through the cutout; perpendicular mounting surfaces; terminal blocks, not soldered leads |
-| **2** | Test with **existing SB17 MFC drivers** | Only the crossover changes — the clean experiment. Needs the before-sweep from 0b |
-| **3** | Test with **Purifi drivers** (ULD values) | Two variables move at once; read as a system comparison, not a driver one. Re-measure Fb |
-| **4** | Decide whether a second cabinet is worth building | **Define the thresholds in step 0**, before data arrives, or it gets rationalised |
+| Step   |                                                                                                           | Gate                                                                                                                                                   |
+| ------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **0**  | ⚠️ **Do the Purifi drivers fit the existing baffle?** Cutout Ø, frame Ø, mounting depth, magnet clearance | **If they do not, the whole sequence inverts** — enlarging a cutout on a veneered cabinet is irreversible, so the new cabinet would have to come first |
+| **0b** | **Full gated measurement set, including the vertical fan** — see Method below                             | Must precede design freeze: if the array combs vertically, the target is not "Joe minus the conjugate"                                                 |
+| **1**  | Design + build the new crossover, conjugate branch deleted                                                | Fits through the cutout; perpendicular mounting surfaces; terminal blocks, not soldered leads                                                          |
+| **2**  | Test with **existing SB17 MFC drivers**                                                                   | Only the crossover changes — the clean experiment. Needs the before-sweep from 0b                                                                      |
+| **3**  | Test with **Purifi drivers** (ULD values)                                                                 | Two variables move at once; read as a system comparison, not a driver one. Re-measure Fb                                                               |
+| **4**  | Decide whether a second cabinet is worth building                                                         | **Define the thresholds in step 0**, before data arrives, or it gets rationalised                                                                      |
 
 **The first design question:** how much of the network is common between the MFC and ULD variants —
 topology, or only values? Joe notes the NRX differs from the MFC in **only `L2` and `R3`**, so the
