@@ -291,3 +291,7 @@ The aluminium path stays documented because the form ambition is real.
   detail. Only photographs will answer it.
 - **Damping philosophy** — Joe's 40–50% fill vs GamuT's near-empty braced shell. Pick one
   deliberately.
+
+> **Damping conflict RESOLVED 2026-08-20** — see `01-020` § Damping decision. Outcome: bare curved
+> walls (the curve earns that), absorbent on the flat parallel caps (161.5 Hz height mode survives
+> the curve), fill set by impedance sweep rather than by either philosophy.

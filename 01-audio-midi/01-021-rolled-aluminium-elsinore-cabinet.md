@@ -118,6 +118,13 @@ rings. **Constrained-layer damping on the inner face is non-negotiable** and is 
 that decides whether this beats 1" Baltic birch or embarrasses it. Verify by measurement —
 accelerometer or nearfield panel measurement — not by assertion.
 
+## Damping
+
+**Decided in `01-020` — bare curved walls, damped top and bottom caps, fill set by impedance
+measurement.** It is a section decision, not a material one: profile D's flat parallel caps leave a
+161.5 Hz height mode the curve cannot touch, and removing fill raises both Fb and Ql. Port length is
+cut last, to the measured Fb.
+
 ## Open questions
 
 - Wall thickness: 3, 4, 5 or 6 mm — trades mass, cost and how much CLD is needed
