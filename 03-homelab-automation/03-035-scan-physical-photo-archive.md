@@ -50,9 +50,9 @@ that there was nothing to extract:
 - **The fronts carry no date burn-in.** Borderless prints, no orange corner stamp.
 
 So the project's founding assumption — _"the prints have lab date stamps on the back"_ — is false
-for this batch. **Do not generalise from one envelope in either direction**; see the corpus survey
-below. But where it holds, the dating chain is: your memory of the event → the folder name → EXIF.
-There is no second opinion available anywhere in the artifact.
+for this batch. **Do not generalise from one batch in either direction**; see the survey below. But
+where it holds, the dating chain is: your memory of the event → the folder name → EXIF. There is no
+second opinion available anywhere in the artifact.
 
 ### The most precise date source is usually the image content, not the artifact
 
@@ -66,9 +66,13 @@ kinds of signal did the work, and both generalise:
   visible classroom topic pins the grade independently — which either corroborates the estimate or
   exposes it.
 
-This is slow per photo and fast per envelope, since one identified event dates everything shot at
-it. It argues for a triage pass that sorts by _recognisable event_ rather than by print appearance,
-and for doing that pass with someone who was there.
+One identified event dates everything shot at it, so this is slow per photo and fast per _group_ —
+worth far more when the groups have to be rebuilt from loose prints. It argues for a triage pass
+that sorts by _recognisable event_ rather than by print appearance, done with someone who was there.
+
+**Order that pass by witness, not by chronology.** Whoever can date a given photograph sets its
+schedule, and for anything predating your own reliable memory that person is not you. Do those
+first. Prints you can date yourself have no deadline at all and can wait indefinitely.
 
 ### A blank back is still evidence — the paper's backprint is datable
 
@@ -92,14 +96,35 @@ Two things follow:
 Coverage is thin outside Kodak — Agfa is partially documented, Fuji is forum-tier, and Konica has no
 published chronology at all.
 
-### Consequence: scan one back per paper stock, not every back
+### Most of the archive is loose prints, so there are no batches to work with
 
-The backprint is identical across a paper batch, so the signal is captured by **one** back per
-envelope and the rest are duplicate photographs of blank cardboard. Full double-sided capture spends
-a third of the file count and all of the handling time to learn nothing extra.
+This is the fact the rest of the plan bends around. Only a minority of the collection is still in
+envelopes; most is loose in a box. Loose prints have **no batch boundary at all**, which removes the
+unit that folder-name dating, per-batch subfolders, pre-feed counts and one-event-dates-many all
+depend on.
 
-Scan or photograph a single back per envelope into the archive directory, and leave double-sided off
-for the run — enabling it only where a survey shows the backs are actually written on.
+**Do not tidy or reorder the box.** If the prints were emptied out roughly as they came, their
+current physical order is the last surviving trace of the original grouping — and unlike a date it
+cannot be reconstructed later, or even detected as missing once disturbed. Scan them in the order
+they are sitting and carry that sequence in the filenames. It costs nothing, and it is the only
+batch signal a single careless handling destroys permanently.
+
+### Consequence: capture every back, and cluster afterwards
+
+Were the archive still in envelopes, one back per envelope would do, since the backprint is
+identical across a paper batch. Loose prints invert that: **you cannot know which prints share a
+stock until you have looked at each one**, so the back becomes the only physical grouping key
+available and all of them are needed. Double-sided capture goes on.
+
+Clustering then happens **digitally, on the scans, after the fact** — not by flipping hundreds of
+fragile prints into piles beforehand. One handling pass instead of two, and the sort becomes
+reversible.
+
+Temper expectations about the yield. If the archive is mostly one manufacturer and one decade, the
+whole box may produce only two or three distinct backprints, giving coarse piles like "1991–1995"
+and "1995–1997". That is a useful bound and a cross-check, not a timeline. Content recognition stays
+the primary method — it simply costs more without envelopes, because it now runs per photo or per
+visually-related group.
 
 ### One print emits up to three files, and `_a` is an overloaded suffix
 
@@ -168,16 +193,20 @@ needs a third bucket and a configuration change, not just a new folder on disk.
 
 ## Open questions
 
-- **Do any envelopes have written backs?** One batch says no. The answer decides whether
-  double-sided capture is ever worth enabling, and it is cheap to settle — see the survey task.
-- **Which events are still recognisable, and by whom?** The content-dating route depends on someone
-  identifying the occasion. That capacity is not permanent, which is the one part of this project
-  with a real deadline attached.
-- **Are the prints still in chronological runs?** Prints that end up loose in a box are often the
-  ones pulled _out_ of envelopes and re-sorted by subject or person. Batch dating is cheap only if
-  batch boundaries mean something.
+- **Do any prints have written backs?** One batch of seven says no. Cheap to settle across a wider
+  sample — see the survey task.
+- **Which photographs can only someone else date?** This is the one part of the project whose
+  schedule you do not set, and it is worth scoping precisely rather than dramatically. For
+  photographs inside your own reliable memory there is no external clock, and that covers most of
+  the recent archive. For anything earlier, or any relative's photographs, the constraint is another
+  person's availability and recall — which does not degrade smoothly, does not announce itself, and
+  cannot be bought back with money or a spare weekend. Identifying that subset is the only genuinely
+  time-sensitive ordering decision here.
+- **Does box order carry information?** Loose prints emptied from envelopes may retain rough
+  adjacency. If they do, in-situ scan order partially reconstructs the lost batches; if they were
+  shuffled or sorted by subject, it buys nothing. Preserving it costs nothing either way.
 - **Do reprints break the batch?** A reprint or enlargement run carries one date that can postdate
-  the photographs by years and typically mixes eras within one envelope.
+  the photographs by years and typically mixes eras within one batch.
 
 ## Exit Criteria
 
@@ -198,26 +227,33 @@ needs a third bucket and a configuration change, not just a new folder on disk.
 ## Tasks
 
 - [x] **Pilot: scan a batch and inspect the output.** Done twice. Findings above.
-- [ ] **Survey the corpus before committing to a workflow.** Sample ten envelopes or album sections
-      at random and record, for each: how many prints, how many have written backs, how many
-      distinct dates appear within the envelope, and whether it looks like a reprint run. This is
-      fifteen minutes and it decides double-sided capture, batch-vs-per-photo dating, and whether
-      the chronological-runs assumption holds. A ten-photo scan cannot answer any of those.
+- [ ] **Survey the loose pile before committing to a workflow.** Take ~100 prints off the top
+      _without reordering them_ and record: how many distinct backprint wordings appear, how many
+      have anything written on the back, whether physically adjacent prints look like they belong
+      together, and how many look like reprint runs. The distinct-backprint count sets the ceiling
+      on what paper clustering can ever resolve; the adjacency count decides whether preserving box
+      order buys real information or is only cheap insurance. Fifteen minutes, and it shapes
+      everything downstream.
 - [ ] Triage the physical archive for feeder safety; separate and record the exclusions.
 - [ ] Look up each distinct backprint wording in the published chronology once, and keep the
       resulting date windows as a per-paper-stock lookup. It is a fixed cost per _wording_, not per
-      print, and it bounds every envelope on that stock.
-- [ ] **Do the dating pass on the prints, not on the scans** — sort by recognisable event, with
-      someone who was there, and write the year and month on the envelope. Cross-check each result
-      against that envelope's backprint window and investigate any contradiction rather than
-      averaging it away. This is the step that actually produces the dates; everything downstream is
-      mechanical.
-- [ ] **Scan at final settings, entering year and month per envelope while the envelope is in your
-      hand.** 600 dpi, enhancement on (both copies are kept), double-sided only where the survey
-      says the backs are written on. Use the per-batch subfolder option — it namespaces the filename
-      counter, so an interrupted session costs one envelope rather than the whole mapping.
-- [ ] Write a per-envelope print count on the envelope before feeding, and reconcile against files
-      emitted immediately — while the prints are still out.
+      print, and it bounds every print on that stock.
+- [ ] **Do the dating pass on the scans, in witness order.** With loose prints there is nothing to
+      write a date on and no envelope to hold, so this moves off the physical prints and onto
+      contact sheets — which also means it can be done remotely, with whoever remembers, rather than
+      needing them in the room. Start with the photographs only someone else can date. Cross-check
+      every result against that print's backprint window and investigate contradictions rather than
+      averaging them away. This step produces the dates; everything downstream is mechanical.
+- [ ] **Scan at final settings, in the order the prints are sitting.** 600 dpi, enhancement on (both
+      copies kept), double-sided on. Prints still in envelopes keep the old path — enter year and
+      month at scan time, since that is still the cheapest dating available — so do those first and
+      separately. For the loose bulk, use a running batch name and let the sequence number carry the
+      order. Use the per-batch subfolder option: it namespaces the filename counter, so an
+      interrupted session costs one tray rather than the whole sequence.
+- [ ] Count each tray before feeding and reconcile against files emitted immediately — while the
+      prints are still out.
+- [ ] Cluster the scanned backs by backprint wording and record the resulting date window against
+      each cluster. Digital and reversible; do not pre-sort the physical prints.
 - [ ] Flip through contact sheets before the prints are put away, to catch skew and half-captures
       while re-feeding is still cheap.
 - [ ] **Back up the raw scans.** This is the only irreversible software step against irreplaceable
