@@ -100,8 +100,39 @@ way to consume a credit balance.
 - [x] Assemble a corpus of historical dependency PRs with known outcomes
 - [x] Identify ground truth — a merged PR with a confirmed post-merge revert
 - [x] Run a blind two-reviewer backtest and record agreement and hit rate
-- [ ] Write the reviewer prompt as a version-controlled artifact, not an inline string
-- [ ] Build the runner: enumerate open PRs, filter to judgement calls, review, comment
-- [ ] Prove the read-only constraint at the token level
-- [ ] Deploy as a CronJob and observe one week without commenting (shadow mode)
+- [x] Write the reviewer prompt as a version-controlled artifact, not an inline string
+- [x] Build the runner: enumerate open PRs, filter to judgement calls, review, comment
+- [x] Replay the corpus through the built filter — selects 58 of 258 (22%), known-bad included
+- [x] Mock-run the full pipeline with agents standing in for the API, exercising the JSON contract,
+      consensus gate, dedup and comment rendering
+- [x] Make the hold binding: a `held-by-review` label the automerge classifier honours
+- [x] Write the ConfigMap and CronJob, shipped suspended
+- [ ] Buy API credits on a personal account and land the SOPS secret
+- [ ] Prove the read-only constraint on the real token — `issues:write`, no `contents:write`
+- [ ] Unsuspend and observe one week in shadow mode without commenting
 - [ ] Enable commenting; record the false-positive rate here after a month
+
+## Build notes
+
+The only untested leg is the HTTP call itself. Everything either side of it was exercised by
+replaying the historical corpus and by a mock run that swapped the API transport for verdict files
+on disk.
+
+Two things the mock run settled that were genuinely uncertain beforehand:
+
+**Root-cause slugs agree across independent reviewers.** Dedup groups on exact string match, so a
+reviewer writing "node runtime major" for one PR and "major node runtime bump" for another would
+defeat it. Both reviewers independently produced byte-identical slugs. Free text is sufficient; a
+fixed enum is not needed yet.
+
+**Consensus removes a specific class of false positive.** The three PRs one reviewer held and the
+other passed were all the same `actions/checkout` finding — a real breaking change that does not
+apply to how these workflows use the action. The reviewer sees the PR body, not the repository, so
+it cannot know that. The second reviewer catches it. This is also the clearest known limitation:
+giving the reviewer the workflow file would fix it directly, at the cost of tokens and surface area,
+and that trade is worth making only once a real false-positive rate has been measured.
+
+**The hold has to be enforced, not requested.** The reviewer comments; the classifier does not read
+comments. Without the label the reviewer would flag a PR at 01:00 and the classifier would merge it
+at 06:00 anyway. The label is the enforcement, and the token lacking `contents:write` is what keeps
+the reviewer incapable of doing it any other way.
