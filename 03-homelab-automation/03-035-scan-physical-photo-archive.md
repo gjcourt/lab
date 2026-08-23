@@ -234,4 +234,9 @@ needs a third bucket and a configuration change, not just a new folder on disk.
 
 ## Related
 
-- `03-026` — the same storage layout and library, from the disc side.
+Nothing here shares storage or tooling with this project — the photo library is separate from the
+video and music one, and this note's dependencies live in the homelab repo rather than in lab.
+
+- `03-026` — bulk-ingesting physical media into a self-hosted library, from the disc side. Different
+  library and different storage, but the same triage → capture → verify shape, and the same problem
+  of reconciling a physical count against an indexed one.
