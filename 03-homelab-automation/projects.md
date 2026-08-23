@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (34)
+# Homelab & Automation Projects (35)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -40,3 +40,4 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-032 | [Audio CD Ripping on macOS (AccurateRip → FLAC → music library)](03-032-audio-cd-ripping-macos.md)                             | Not Started | Easy       | 1-2 hours       |
 | 03-033 | [Renovate Dependency Review Agent (LLM second reader)](03-033-renovate-dependency-review-agent.md)                             | In Progress | Medium     | 1-2 weeks       |
 | 03-034 | [Household Chat Service (open-webui on a hosted API backend)](03-034-household-chat-service.md)                                | Not Started | Medium     | 1-2 weeks       |
+| 03-035 | [Scan the Physical Photo Archive into the Family Library](03-035-scan-physical-photo-archive.md)                               | Not Started | Medium     | 1-2 weeks       |
