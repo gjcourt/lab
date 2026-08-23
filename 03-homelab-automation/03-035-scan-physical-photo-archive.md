@@ -23,54 +23,42 @@ The scanning is the easy half. The prints have lab date stamps on the back and t
 both sides in a single pass, so the dates exist — they just have to end up in the right EXIF field
 before the library ever sees the files.
 
-## The actual problem: a scan has no capture date
+## What the pilot established
 
-The existing photo import sorts on `DateTimeOriginal > CreateDate > FileModifyDate`. A scanned print
-has **no `DateTimeOriginal`** — the scanner writes the date of the _scan_. So without intervention
-every photo either:
+A seven-print pilot ran before this note was finalised, and it disproved the premise the plan
+originally rested on. Recorded here so it is not re-derived.
 
-- lands in the current month, burying a 1987 birthday in this week's phone snaps and destroying the
-  exact chronology the project exists to build; or
-- falls through to the importer's "no readable date — left in place" branch and never arrives.
+**The scans are not dateless.** The bundled software writes `CreateDate` (EXIF and XMP) derived from
+**the folder name you type at scan time**. A folder called `1990s` produced
+`CreateDate 1990:01:01 12:00:00` on every file. `DateTimeOriginal` is absent, but the existing
+import chain is `FileModifyDate` → `CreateDate` → `DateTimeOriginal` with last-listed winning, so
+`CreateDate` beats the file's modification time. These sort to **1990/01, not the current month.**
 
-The second failure is at least loud. The first is silent and corrupts the timeline.
+The original fear — that scans get buried among this week's phone photos — was wrong.
 
-So the deliverable is not "scanned files". It is **scanned files carrying a plausible
-`DateTimeOriginal`**.
+**The real problem is granularity, not absence.** Every print in a decade-named folder receives an
+identical timestamp. Scan a whole decade and 300 photos stack on one January day. That is not a
+timeline either, it is just a differently-shaped mess.
 
-## Design decisions, and why
+**Which makes the folder name the dating mechanism.** Naming a folder `1996` instead of `1990s` pins
+that batch to 1996. The date is therefore set _at scan time, for free_, by typing a better guess —
+no contact sheets, no CSV, no `exiftool` pass for the common case. This replaces most of the tooling
+this project was originally going to need.
 
-### Date by batch, not by photo — and don't build OCR
+**Two defaults must be changed before the real run:**
 
-The tempting design is OCR on the scanned backs, parsing the lab date automatically. Rejected at
-this volume.
+- Resolution defaults to **300 dpi**. A 4×6 at 300 gives ~1700×1180. Use 600.
+- Double-sided capture is **off by default** — the pilot produced no back-side images at all. The
+  back stamps are the entire reason the dates are recoverable, so this must be enabled.
 
-Lab date codes are typically dot-matrix or thermal on glossy stock: low contrast, odd fonts, often
-skewed. OCR will read _most_ of them, which is the worst outcome — every photo still needs checking
-to find the failures, and a silently wrong date is worse than an absent one.
+Both are unrecoverable without re-feeding the print; dates are not. That asymmetry decides what is
+worth re-scanning.
 
-The manual path is cheaper than it looks because **prints come in runs**. Lab envelopes are
-chronological, so 750 photos is more like 40–70 batches than 750 independent decisions. Typing 60
-dates takes minutes. Building and tuning OCR takes an afternoon and still needs review.
-
-Approximate is the correct target. The stamps "may not be accurate but range the photos reasonably"
-— and a photo placed in the right season of the right year is worth far more in a timeline than one
-placed precisely in the wrong decade.
-
-**Revisit only if** the pilot shows the prints are _not_ grouped in chronological runs, which would
-turn 60 decisions back into 750.
-
-### Scan first, date second
-
-Feeding paper through a machine is the irreversible-effort half; assigning dates is software that
-can be redone forever. Do not block a scanning session on finished tooling. Get the prints through,
-get them back in the box, then take as long as necessary over metadata.
-
-### Keep unenhanced originals
-
-The bundled software offers auto-colour, red-eye and rotation correction. Enhancement is lossy and
-taste-dependent, and these prints get scanned once. Keep the untouched scan as the archival master
-and treat any enhanced version as derived.
+**Both an original and an enhanced version are kept automatically.** The pilot produced pairs:
+`NNNN.jpg` and `NNNN_a.jpg`, identical in dimensions and EXIF. The `_a` file is measurably brighter,
+higher-contrast and more saturated — it is the auto-enhanced version, and the base file is the
+untouched scan. Retaining an archival master needs no special handling; it needs a decision about
+which of the two the library indexes.
 
 ## Risks
 
@@ -95,7 +83,8 @@ on disk.
 - [ ] Scrolling the library to any given year shows scanned prints interleaved with digital photos
       from that year, in order.
 - [ ] Unenhanced archival masters are retained and identifiable as such.
-- [ ] Back-side images are archived and are **not** indexed as library assets.
+- [ ] Back-side images and enhanced duplicates are archived and **not** indexed as library assets.
+      Verified by asset count, not by inspecting configuration.
 - [ ] Zero prints damaged. Any print judged too fragile to feed is recorded as deliberately excluded
       rather than quietly skipped.
 - [ ] The count of prints in the box reconciles against the count of assets in the library.
@@ -116,6 +105,8 @@ on disk.
 - [ ] Apply dates with `exiftool`, writing `DateTimeOriginal` on fronts only.
 - [ ] Separate back-side images into the archive directory.
 - [ ] Add the family bucket to the library's indexed paths and trigger a scan.
+- [ ] Back up the scans before any `exiftool` run. It writes in place, and a bad mapping applied
+      across hundreds of files is only recoverable against a pristine copy.
 - [ ] Reconcile counts and spot-check chronology across several decades.
 
 ## Related
