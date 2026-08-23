@@ -8,8 +8,6 @@ target_skills:
   'Sheet-fed scanning, EXIF surgery with exiftool, batch metadata workflows, Immich external
   libraries'
 status: 'Not Started'
-depends_on:
-  - '03-028'
 ---
 
 # Scan the Physical Photo Archive into the Family Library
@@ -19,97 +17,193 @@ depends_on:
 Digitise roughly 500–1000 physical prints on an Epson FF-680W and land them in the existing family
 photo library so they appear **in chronological order** alongside everything else.
 
-The scanning is the easy half. The prints have lab date stamps on the back and the scanner captures
-both sides in a single pass, so the dates exist — they just have to end up in the right EXIF field
-before the library ever sees the files.
+Scanning is the easy half and takes an afternoon. Dating is the project, and it is a records problem
+rather than a software one: **the date has to be captured while the print is still in your hand**,
+because nothing recoverable from the file itself will tell you later.
 
-## What the pilot established
+## What the pilots established
 
-A seven-print pilot ran before this note was finalised, and it disproved the premise the plan
-originally rested on. Recorded here so it is not re-derived.
+Two pilot batches ran before this note was finalised. Together they disproved the premise the plan
+originally rested on, so the evidence is recorded here rather than re-derived.
 
-**The scans are not dateless.** The bundled software writes `CreateDate` (EXIF and XMP) derived from
-**the folder name you type at scan time**. A folder called `1990s` produced
-`CreateDate 1990:01:01 12:00:00` on every file. `DateTimeOriginal` is absent, but the existing
-import chain is `FileModifyDate` → `CreateDate` → `DateTimeOriginal` with last-listed winning, so
-`CreateDate` beats the file's modification time. These sort to **1990/01, not the current month.**
+### The scans are not dateless — they carry the folder name
 
-The original fear — that scans get buried among this week's phone photos — was wrong.
+The bundled software writes EXIF `CreateDate` derived from **the folder name typed at scan time**. A
+folder named `1990s` produced `1990:01:01 12:00:00`; a folder named `1996` produced
+`1996:01:01 12:00:00`. Every file in a batch gets the identical value.
 
-**The real problem is granularity, not absence.** Every print in a decade-named folder receives an
-identical timestamp. Scan a whole decade and 300 photos stack on one January day. That is not a
-timeline either, it is just a differently-shaped mess.
+The original fear — that scans land among this week's phone photos — was wrong. **The real problem
+is granularity**, not absence: name a folder for a decade and 300 photos stack on one January day.
+That is not a timeline, just a differently-shaped mess.
 
-**Which makes the folder name the dating mechanism.** Naming a folder `1996` instead of `1990s` pins
-that batch to 1996. The date is therefore set _at scan time, for free_, by typing a better guess —
-no contact sheets, no CSV, no `exiftool` pass for the common case. This replaces most of the tooling
-this project was originally going to need.
+Enter the finest interval you can actually justify. The stock flow accepts year _and_ month, so
+month-level granularity is free at scan time and unavailable at every later point.
 
-**Two defaults must be changed before the real run:**
+### The folder name is the only date source that exists
 
-- Resolution defaults to **300 dpi**. A 4×6 at 300 gives ~1700×1180. Use 600.
-- Double-sided capture is **off by default** — the pilot produced no back-side images at all. The
-  back stamps are the entire reason the dates are recoverable, so this must be enabled.
+The second pilot was designed to check whether the software extracts a date from the image — from a
+camera's date burn-in, say — and prefers it over the folder name. It does not, and the reason is
+that there was nothing to extract:
 
-Both are unrecoverable without re-feeding the print; dates are not. That asymmetry decides what is
-worth re-scanning.
+- **The backs are blank.** Seven of seven, at 600 dpi with double-sided capture on. Mean luminance
+  254.5/255, zero pixels below 100. No lab stamp, no handwriting — only the paper's own watermark.
+- **The fronts carry no date burn-in.** Borderless prints, no orange corner stamp.
 
-**Both an original and an enhanced version are kept automatically.** The pilot produced pairs:
-`NNNN.jpg` and `NNNN_a.jpg`, identical in dimensions and EXIF. The `_a` file is measurably brighter,
-higher-contrast and more saturated — it is the auto-enhanced version, and the base file is the
-untouched scan. Retaining an archival master needs no special handling; it needs a decision about
-which of the two the library indexes.
+So the project's founding assumption — _"the prints have lab date stamps on the back"_ — is false
+for this batch. **Do not generalise from one envelope in either direction**; see the corpus survey
+below. But where it holds, the dating chain is: your memory of the event → the folder name → EXIF.
+There is no second opinion available anywhere in the artifact.
+
+### The most precise date source is usually the image content, not the artifact
+
+The pilot batch was dated to a single year not from any stamp but from what is _in_ the frame. Two
+kinds of signal did the work, and both generalise:
+
+- **Institutional anchors.** If a subject's school start year is known, apparent grade level
+  converts directly to a calendar year, and a childhood archive is largely school events. One
+  remembered anchor date prices out a decade of photographs.
+- **Curriculum and setting cues.** Standardised school curricula are sequenced by grade, so a
+  visible classroom topic pins the grade independently — which either corroborates the estimate or
+  exposes it.
+
+This is slow per photo and fast per envelope, since one identified event dates everything shot at
+it. It argues for a triage pass that sorts by _recognisable event_ rather than by print appearance,
+and for doing that pass with someone who was there.
+
+### Consequence: double-sided scanning is off by default, and should mostly stay off
+
+Capturing blank backs costs a third of the file count and all of the handling time for zero
+information. Enable it per-envelope, only where a survey shows the backs are actually written on.
+
+### One print emits up to three files, and `_a` is an overloaded suffix
+
+At final settings each print produced `NNNN.jpg`, `NNNN_a.jpg` and `NNNN_b.jpg` — 7/7/7 across the
+batch. Measured: `_a` is brighter, higher-contrast and more saturated than the base, so **`_a` is
+the auto-enhanced copy and the base file is the untouched scan**. `_b` is the back — ~0.5 MB against
+~4.4 MB, consistent with a near-blank sheet.
+
+Note that on the predecessor model `_a`/`_b` meant _front_/_back_. A naive "exclude `*_b`" filter is
+therefore not portable, and the reconciliation identity should be written down explicitly:
+
+```text
+prints in box = indexed fronts + deliberate exclusions + failed feeds
+```
+
+Storage at final settings is roughly 10 MB per print for all three files, ~4.5 MB for fronts alone.
+
+### Resolution defaults to 300 dpi
+
+That yields ~1700×1180 on a 4×6 — thin. 600 dpi gives ~3400×2370 and is the right setting; 1200 is
+past the grain limit of consumer prints and is wasted storage.
 
 ## Risks
 
-**The feeder can destroy a print.** This is a roller-fed scanner. Curled, brittle, torn or oversized
-prints can jam, and a jam on a one-of-a-kind photo is unrecoverable. Sort for condition _before_
-feeding, and route anything irreplaceable or non-flat to a flatbed or a camera copy stand instead.
-This risk is front-loaded and permanent; every other risk here is recoverable.
+**The feeder can destroy a print.** This is a roller-fed scanner; a jam on a one-of-a-kind photo is
+unrecoverable. Sort for condition _before_ feeding and route anything brittle, curled, torn or
+irreplaceable to a flatbed or copy stand. This risk is front-loaded and permanent — every other risk
+here is recoverable.
 
-**Back-side images will pollute the library.** They carry the dates and sometimes handwritten notes,
-so they are worth keeping — but if they land in the library's import path they double the asset
-count with photographs of blank cardboard. They belong in a sibling archive directory outside the
-indexed paths.
+**A double-feed is silent.** Two prints stuck together produce N−1 files and no error at all. So
+does a skewed or half-captured frame. By the time it would be noticed, the prints are back in the
+box.
 
-**The library indexes specific per-person paths.** Inherited family photos do not belong to any
-current user, so this needs a third bucket and a library configuration change, not just a new folder
-on disk.
+**Importing before the date is final creates permanent duplicates.** The library's external-library
+mode identifies assets by **path**, not by content hash, and its maintainers have explicitly
+declined to add move detection. Re-dating changes the `YYYY/MM` path, so the re-dated file is
+ingested as a new asset and the original is orphaned — with no dedupe to catch it. This makes
+"import now, fix dates later" destructive rather than merely untidy.
+
+> **Invariant: no scan enters an indexed import path until its date is final.** Do all EXIF work in
+> a staging directory outside the library.
+
+**`DateTimeOriginal` alone is not sufficient.** The library's date precedence puts
+`SubSecDateTimeOriginal` and `SubSecCreateDate` _above_ `DateTimeOriginal`. If the scanner ever
+writes a sub-second variant carrying the scan time, it silently outranks whatever was written and
+the print lands in the current year. The pilot files carry only `CreateDate` and no sub-second tags,
+so this is currently latent rather than active — which is exactly the kind of thing that changes
+under a firmware update without announcing itself.
+
+**EXIF cannot express "year known, month unknown."** A month or day of `00` is rejected outright.
+Any year-only date therefore has to fabricate a month, and the fabrication is indistinguishable
+later from a real one. Pick a policy — unknown month → `YYYY:07:01 12:00:00` — and record the _true_
+precision separately, in a keyword or an XMP partial date, so a later pass can tell a guess from a
+reading.
+
+**`exiftool` defaults work against this workflow.** Without `-P` it bumps `FileModifyDate` to now;
+without `-overwrite_original` it scatters `*_original` copies that the library would index if the
+directory were ever inside an import path.
+
+**Back-side and enhanced images will pollute the library** if they reach an import path — the asset
+count triples rather than doubles. They belong in a sibling archive directory. Symlinking them in is
+not an escape hatch; the library does not follow symlinks in import paths.
+
+**The library indexes per-person paths.** Inherited family photos belong to no current user, so this
+needs a third bucket and a configuration change, not just a new folder on disk.
+
+## Open questions
+
+- **Do any envelopes have written backs?** One batch says no. The answer decides whether
+  double-sided capture is ever worth enabling, and it is cheap to settle — see the survey task.
+- **Which events are still recognisable, and by whom?** The content-dating route depends on someone
+  identifying the occasion. That capacity is not permanent, which is the one part of this project
+  with a real deadline attached.
+- **Is the paper watermark a usable dating signal?** Prints from one paper era share a watermark
+  design, which would give era-level clustering independent of memory. Whether the designs map to
+  useful date ranges is unresearched.
+- **Are the prints still in chronological runs?** Prints that end up loose in a box are often the
+  ones pulled _out_ of envelopes and re-sorted by subject or person. Batch dating is cheap only if
+  batch boundaries mean something.
+- **Do reprints break the batch?** A reprint or enlargement run carries one date that can postdate
+  the photographs by years and typically mixes eras within one envelope.
 
 ## Exit Criteria
 
-- [ ] Every scanned print carries a `DateTimeOriginal` within the correct year, and where the stamp
-      allows it, the correct month.
-- [ ] Scrolling the library to any given year shows scanned prints interleaved with digital photos
-      from that year, in order.
+- [ ] **Zero files lack a date tag.** Counted, as a gate before import — not sampled.
+- [ ] **No asset is dated after the scan date**, and the year histogram matches the expected shape
+      of the archive.
+- [ ] For the years where the archive overlaps the digital library, three named years each show
+      scanned prints correctly interleaved with digital photos.
+- [ ] Every date is recorded with its true precision, so a year-only guess is later distinguishable
+      from a month read off a stamp.
 - [ ] Unenhanced archival masters are retained and identifiable as such.
-- [ ] Back-side images and enhanced duplicates are archived and **not** indexed as library assets.
-      Verified by asset count, not by inspecting configuration.
-- [ ] Zero prints damaged. Any print judged too fragile to feed is recorded as deliberately excluded
-      rather than quietly skipped.
-- [ ] The count of prints in the box reconciles against the count of assets in the library.
+- [ ] Back-side images and enhanced duplicates are archived and **not** indexed. Verified by asset
+      count, not by inspecting configuration.
+- [ ] Zero prints damaged, against a **count taken before feeding**. A print judged too fragile is
+      recorded as a deliberate exclusion, not quietly skipped.
+- [ ] `prints in box = indexed fronts + deliberate exclusions + failed feeds` balances.
 
 ## Tasks
 
-- [ ] **Pilot: scan ten photos and inspect the output.** This is task one and everything else
-      depends on it. It answers, for the cost of five minutes: the file-naming convention for front
-      versus back, whether the back stamps are legible enough to date from at all, real throughput
-      per print, and actual file sizes. Do not plan further until this is done.
-- [ ] Decide scan resolution from the pilot. 600 dpi on a 4×6 yields roughly 2400×3600, which is
-      past the grain limit of most consumer prints; 1200 dpi is usually wasted storage.
-- [ ] Triage the physical archive for feeder safety, and separate the exclusions.
-- [ ] Establish the batch convention: one envelope or album section per scan run, preserving order.
-- [ ] Scan everything, double-sided, unenhanced. Physical work done in one pass.
-- [ ] Build the dating aid: contact sheets of the back images plus a CSV mapping filename ranges to
-      dates.
-- [ ] Apply dates with `exiftool`, writing `DateTimeOriginal` on fronts only.
-- [ ] Separate back-side images into the archive directory.
-- [ ] Add the family bucket to the library's indexed paths and trigger a scan.
-- [ ] Back up the scans before any `exiftool` run. It writes in place, and a bad mapping applied
-      across hundreds of files is only recoverable against a pristine copy.
+- [x] **Pilot: scan a batch and inspect the output.** Done twice. Findings above.
+- [ ] **Survey the corpus before committing to a workflow.** Sample ten envelopes or album sections
+      at random and record, for each: how many prints, how many have written backs, how many
+      distinct dates appear within the envelope, and whether it looks like a reprint run. This is
+      fifteen minutes and it decides double-sided capture, batch-vs-per-photo dating, and whether
+      the chronological-runs assumption holds. A ten-photo scan cannot answer any of those.
+- [ ] Triage the physical archive for feeder safety; separate and record the exclusions.
+- [ ] **Do the dating pass on the prints, not on the scans** — sort by recognisable event, with
+      someone who was there, and write the year and month on the envelope. This is the step that
+      actually produces the dates; everything downstream is mechanical.
+- [ ] **Scan at final settings, entering year and month per envelope while the envelope is in your
+      hand.** 600 dpi, enhancement on (both copies are kept), double-sided only where the survey
+      says the backs are written on. Use the per-batch subfolder option — it namespaces the filename
+      counter, so an interrupted session costs one envelope rather than the whole mapping.
+- [ ] Write a per-envelope print count on the envelope before feeding, and reconcile against files
+      emitted immediately — while the prints are still out.
+- [ ] Flip through contact sheets before the prints are put away, to catch skew and half-captures
+      while re-feeding is still cheap.
+- [ ] **Back up the raw scans.** This is the only irreversible software step against irreplaceable
+      data, and it comes before the first `exiftool` run.
+- [ ] Derive EXIF dates mechanically from the folder or filename, in a staging directory. Write
+      `-AllDates`, clear the higher-precedence scan-time tags explicitly, and use `-P` and
+      `-overwrite_original`. Verify on one file with `exiftool -time:all` _and_ by confirming the
+      date the library actually displays — not by re-reading the tag that was just written.
+- [ ] Increment seconds across each batch in scan order, so intra-batch ordering is defined rather
+      than left to tie-breaking.
+- [ ] Separate back-side and enhanced images into the archive directory, outside every import path.
+- [ ] Add the family bucket to the library's indexed paths and trigger a single scan. Only now.
 - [ ] Reconcile counts and spot-check chronology across several decades.
 
 ## Related
 
-- `03-028` — the household media library this feeds.
 - `03-026` — the same storage layout and library, from the disc side.
