@@ -70,10 +70,36 @@ This is slow per photo and fast per envelope, since one identified event dates e
 it. It argues for a triage pass that sorts by _recognisable event_ rather than by print appearance,
 and for doing that pass with someone who was there.
 
-### Consequence: double-sided scanning is off by default, and should mostly stay off
+### A blank back is still evidence — the paper's backprint is datable
 
-Capturing blank backs costs a third of the file count and all of the handling time for zero
-information. Enable it per-envelope, only where a survey shows the backs are actually written on.
+The backs carry no stamp, but they carry the manufacturer's repeating backprint, and for Kodak that
+text is a dated artifact. A published conservation chronology (Weaver & Keirstead, _Ektacolor Paper
+Backprint Chronology_, AIC Photographic Materials Group, 2009; and G. Weaver, "A Study of Kodak
+Color Prints, 1942–2008," _Topics in Photographic Preservation_ 13) maps backprint wording to date
+ranges, some of them sub-two-year. The pilot batch's backprint is placed by that chronology in a
+**21-month window**, which independently corroborated the year reached by content recognition.
+
+Two things follow:
+
+- **It is a falsifier for memory-based dating.** The content-recognition method above has no
+  internal error check — a confidently misremembered year looks exactly like a correct one. A
+  backprint window that contradicts the guess is the cheapest available way to catch that, and it is
+  the only signal here that does not depend on anyone's recall.
+- **The paper dates manufacture, not exposure.** Stock sits in a lab's inventory, conventionally up
+  to ~18 months, so treat the window as a hard floor and a soft ceiling. It excludes years; it does
+  not name one.
+
+Coverage is thin outside Kodak — Agfa is partially documented, Fuji is forum-tier, and Konica has no
+published chronology at all.
+
+### Consequence: scan one back per paper stock, not every back
+
+The backprint is identical across a paper batch, so the signal is captured by **one** back per
+envelope and the rest are duplicate photographs of blank cardboard. Full double-sided capture spends
+a third of the file count and all of the handling time to learn nothing extra.
+
+Scan or photograph a single back per envelope into the archive directory, and leave double-sided off
+for the run — enabling it only where a survey shows the backs are actually written on.
 
 ### One print emits up to three files, and `_a` is an overloaded suffix
 
@@ -147,9 +173,6 @@ needs a third bucket and a configuration change, not just a new folder on disk.
 - **Which events are still recognisable, and by whom?** The content-dating route depends on someone
   identifying the occasion. That capacity is not permanent, which is the one part of this project
   with a real deadline attached.
-- **Is the paper watermark a usable dating signal?** Prints from one paper era share a watermark
-  design, which would give era-level clustering independent of memory. Whether the designs map to
-  useful date ranges is unresearched.
 - **Are the prints still in chronological runs?** Prints that end up loose in a box are often the
   ones pulled _out_ of envelopes and re-sorted by subject or person. Batch dating is cheap only if
   batch boundaries mean something.
@@ -181,9 +204,14 @@ needs a third bucket and a configuration change, not just a new folder on disk.
       fifteen minutes and it decides double-sided capture, batch-vs-per-photo dating, and whether
       the chronological-runs assumption holds. A ten-photo scan cannot answer any of those.
 - [ ] Triage the physical archive for feeder safety; separate and record the exclusions.
+- [ ] Look up each distinct backprint wording in the published chronology once, and keep the
+      resulting date windows as a per-paper-stock lookup. It is a fixed cost per _wording_, not per
+      print, and it bounds every envelope on that stock.
 - [ ] **Do the dating pass on the prints, not on the scans** — sort by recognisable event, with
-      someone who was there, and write the year and month on the envelope. This is the step that
-      actually produces the dates; everything downstream is mechanical.
+      someone who was there, and write the year and month on the envelope. Cross-check each result
+      against that envelope's backprint window and investigate any contradiction rather than
+      averaging it away. This is the step that actually produces the dates; everything downstream is
+      mechanical.
 - [ ] **Scan at final settings, entering year and month per envelope while the envelope is in your
       hand.** 600 dpi, enhancement on (both copies are kept), double-sided only where the survey
       says the backs are written on. Use the per-batch subfolder option — it namespaces the filename
