@@ -5,9 +5,10 @@ device over WebHID, plus passive HID capture from macOS. Clean-room: no vendor c
 every field below was derived from watching traffic and correlating it against values displayed in
 the vendor UI.
 
-**Status:** decoded and **confirmed on hardware**. A third-party client (`~/src/dx5ctl`) drove the
-device on 2026-08-07: volume and gain changes were observed on the front-panel display, including a
-−45.5 dB half-step. Writes are accepted with no checksum on every register except power.
+**Status:** decoded and **confirmed on hardware**. A third-party client
+([`toppingctl`](https://github.com/gjcourt/toppingctl)) drove the device on 2026-08-07: volume and
+gain changes were observed on the front-panel display, including a −45.5 dB half-step. Writes are
+accepted with no checksum on every register except power.
 
 Remaining gaps are minor: the input enum, the `0x2b`/`0x2d` output model, and the scene-slot
 mechanism. None affect PEQ, volume, gain or power.
@@ -103,8 +104,8 @@ recv: 22 33 10 01 01 91 02 00 00 00 00 7d 73 66 77 00
 Band 1 frequency was 200 Hz at the time; the response carried 0. Verified on a single isolated
 request with a 3 s window, so it is not a timing artifact.
 
-**Consequence for THIS client:** the `0x10` request form does not return state, so `dx5ctl` caches
-what it writes.
+**Consequence for THIS client:** the `0x10` request form does not return state, so `toppingctl`
+caches what it writes.
 
 ### The read path: register `0x12` sub `0x06` — bulk state dump
 
@@ -184,10 +185,10 @@ trying to mirror the app's.
 
 ### Earlier note (superseded, kept for context)
 
-after `dx5ctl` wrote a band the vendor app had never seen (PK 1 kHz −12 dB Q 2.0), the app displayed
-it correctly on reconnect, along with a volume set externally. The app is therefore reading device
-state by some mechanism not yet identified. Finding it is the main remaining work if a third-party
-client wants true state sync rather than a write-through cache.
+after `toppingctl` wrote a band the vendor app had never seen (PK 1 kHz −12 dB Q 2.0), the app
+displayed it correctly on reconnect, along with a volume set externally. The app is therefore
+reading device state by some mechanism not yet identified. Finding it is the main remaining work if
+a third-party client wants true state sync rather than a write-through cache.
 
 ### The echo is a checksum oracle — but only for some registers
 
@@ -237,9 +238,9 @@ predicted `0x01009B9D` for −6.0 dB, a third-party client wrote it, and the ven
 >
 > **Band-count discrepancy.** Eleven registers (`0x91`–`0x9b`) accept band writes and the vendor app
 > writes all of them on commit, but its UI reports capacity as **"BANDS n / 10"**. Either `0x9b` is
-> not a usable band or the app caps below the hardware limit. `dx5ctl` writes 11 to match the app's
-> own commit traffic; if a preset ever needs the 11th band, verify it is audible before trusting it.
-> | `0x71` sub `0x34` | **Commit / apply**, value `1`. Brackets a transaction |
+> not a usable band or the app caps below the hardware limit. `toppingctl` writes 11 to match the
+> app's own commit traffic; if a preset ever needs the 11th band, verify it is audible before
+> trusting it. | `0x71` sub `0x34` | **Commit / apply**, value `1`. Brackets a transaction |
 
 ### Sub-index map (per band register)
 
@@ -395,7 +396,6 @@ output to HP BAL or HP SE.
 
 | Area               | Notes                                                                                                                                                                                                 |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0x9c`             | Subs 01/03 carry `0x016A77C4` with `1` on 02/04 — same two-channel shape. Likely preamp. Needs a preamp change to confirm                                                                             |
 | **Read responses** | Reads (`byte2 = 0x10`) are issued against `71 0c`, `71 33`, `71 37`. Where the _response_ arrives has not been determined — the 11-record status stream never varied. Worth probing from a client     |
 | Gain enum          | Blocked earlier because GAIN greys out unless output is a HP mode. Set output to HP BAL first, then toggle                                                                                            |
 | Input enum         | `71 04` is the register; only values 2 and 3 seen. Click each of USB / OPT / COAX / BT once                                                                                                           |
