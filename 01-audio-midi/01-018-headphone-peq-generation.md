@@ -7,7 +7,7 @@ time_commitment: '1-4 hours'
 target_skills:
   'AutoEQ, parametric EQ (peaking/shelf filters), headphone FR measurement & target curves, Topping
   Tune / DX5 II on-device PEQ'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - hardware/topping-dx5-ii
 ---
@@ -27,8 +27,14 @@ distortion. Do **not** apply "house sound" voicing unless explicitly flagged as 
 
 - **DAC/amp:** Topping DX5 II (dual ES9039Q2M). Drives all units with huge headroom — amplification
   is **not** a limiting factor.
-- **PEQ engine:** DX5 II on-device PEQ = **10 bands, parametric** (peaking + shelf filters), plus a
-  global preamp/gain. Configured via **Topping Tune** software (importable per-band values).
+- **PEQ engine:** DX5 II on-device PEQ = parametric peaking + shelf filters, plus a global
+  preamp/gain. **Loaded with [`toppingctl`](https://github.com/gjcourt/toppingctl)** — an
+  AutoEQ/oratory1990 `ParametricEQ.txt` is applied directly over USB HID, preamp included, with no
+  vendor software involved. Topping Tune remains a fallback and a cross-check.
+- **Band count is 10 for planning purposes, and the reason is unresolved.** Eleven registers
+  (`0x91`–`0x9b`) accept band writes and the vendor app writes all eleven, but its UI reports
+  capacity as "BANDS n / 10". Nobody has confirmed the 11th band is audible, so presets stay at 10.
+  See `_reference/topping-dx5ii-hid-protocol.md`.
 - **HARD LIMIT: max 10 filter bands per preset.** Every generated preset must fit in ≤10 bands. If
   AutoEQ's optimal solution exceeds 10, constrain the band count.
 - **Preamp/negative gain is mandatory.** Any preset that boosts must include a negative global
@@ -129,7 +135,8 @@ For each of the 5 units, produce:
 4. _(IEMs only, optional)_ an **IEF-target variant** for comparison.
 5. _(Over-ears, optional)_ a **wo_bass + bass-boost variant** if the owner prefers less bass.
 
-**Output format** (one block per preset, Topping-Tune-importable):
+**Output format** (one block per preset — this is `toppingctl apply <file>` input verbatim, and
+Topping-Tune-importable):
 
 ```text
 # <Model> — target: <target> — source: <source> — preamp: <-X.X dB>
@@ -153,6 +160,12 @@ Filter 10: ON HSC Fc <Hz> Gain <dB> Q <Q>
   if the peak's exact center differs on the owner's unit. Prefer moderate Q unless the source data
   justifies otherwise.
 - **Verify ≤10 bands and clipping-safe preamp on every preset before finalizing.**
+- **Preamp handling is conditional — check it per preset.** `toppingctl apply` writes the preset's
+  preamp to the confirmed `0x9c` register **only when the preset declares one** (a `Preamp:` line in
+  AutoEQ `.txt`, or `preamp_db` in JSON). For those, do not lower the volume by hand as well, or you
+  attenuate twice. A preset that boosts and declares no preamp writes nothing, and the device keeps
+  whatever preamp was last set — which cannot be read back. Every preset produced here must carry an
+  explicit preamp for that reason.
 
 ---
 
