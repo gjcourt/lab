@@ -240,7 +240,7 @@ predicted `0x01009B9D` for −6.0 dB, a third-party client wrote it, and the ven
 > writes all of them on commit, but its UI reports capacity as **"BANDS n / 10"**. Either `0x9b` is
 > not a usable band or the app caps below the hardware limit. `toppingctl` writes 11 to match the
 > app's own commit traffic; if a preset ever needs the 11th band, verify it is audible before
-> trusting it. | `0x71` sub `0x34` | **Commit / apply**, value `1`. Brackets a transaction |
+> trusting it.
 
 ### Sub-index map (per band register)
 

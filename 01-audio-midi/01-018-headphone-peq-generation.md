@@ -160,9 +160,12 @@ Filter 10: ON HSC Fc <Hz> Gain <dB> Q <Q>
   if the peak's exact center differs on the owner's unit. Prefer moderate Q unless the source data
   justifies otherwise.
 - **Verify ≤10 bands and clipping-safe preamp on every preset before finalizing.**
-- **Do not manually attenuate to compensate for the preamp.** `toppingctl apply` writes the preset's
-  preamp to the confirmed `0x9c` register automatically; lowering volume by hand as well attenuates
-  twice.
+- **Preamp handling is conditional — check it per preset.** `toppingctl apply` writes the preset's
+  preamp to the confirmed `0x9c` register **only when the preset declares one** (a `Preamp:` line in
+  AutoEQ `.txt`, or `preamp_db` in JSON). For those, do not lower the volume by hand as well, or you
+  attenuate twice. A preset that boosts and declares no preamp writes nothing, and the device keeps
+  whatever preamp was last set — which cannot be read back. Every preset produced here must carry an
+  explicit preamp for that reason.
 
 ---
 
