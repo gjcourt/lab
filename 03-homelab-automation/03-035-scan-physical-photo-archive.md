@@ -234,30 +234,38 @@ needs a third bucket and a configuration change, not just a new folder on disk.
       on what paper clustering can ever resolve; the adjacency count decides whether preserving box
       order buys real information or is only cheap insurance. Fifteen minutes, and it shapes
       everything downstream.
-- [ ] Triage the physical archive for feeder safety; separate and record the exclusions.
-- [ ] Look up each distinct backprint wording in the published chronology once, and keep the
-      resulting date windows as a per-paper-stock lookup. It is a fixed cost per _wording_, not per
-      print, and it bounds every print on that stock.
-- [ ] **Do the dating pass on the scans, in witness order.** With loose prints there is nothing to
-      write a date on and no envelope to hold, so this moves off the physical prints and onto
-      contact sheets — which also means it can be done remotely, with whoever remembers, rather than
-      needing them in the room. Start with the photographs only someone else can date. Cross-check
-      every result against that print's backprint window and investigate contradictions rather than
-      averaging them away. This step produces the dates; everything downstream is mechanical.
-- [ ] **Scan at final settings, in the order the prints are sitting.** 600 dpi, enhancement on (both
-      copies kept), double-sided on. Prints still in envelopes keep the old path — enter year and
-      month at scan time, since that is still the cheapest dating available — so do those first and
-      separately. For the loose bulk, use a running batch name and let the sequence number carry the
-      order. Use the per-batch subfolder option: it namespaces the filename counter, so an
-      interrupted session costs one tray rather than the whole sequence.
+- [ ] **Never bulk-sort the box.** A constraint on every task below, not a step of its own. Prints
+      leave the box one at a time in order, and anything set aside is recorded with the sequence
+      position it came from, so a gap in the numbering is explained rather than mysterious. Nothing
+      downstream can catch a violation: a reordered box looks exactly like a box that was always in
+      that order.
+- [ ] **Scan at final settings, in the order the prints are sitting, triaging as you go.** 600 dpi,
+      enhancement on (both copies kept), double-sided on. Assess each print for feeder safety as you
+      pick it up — brittle, curled, torn or oversized goes to the excluded pile with its position
+      noted; everything else is fed immediately. Triage is deliberately _not_ a separate bulk pass,
+      because a bulk pass means handling every print twice and reordering the box to do it. Prints
+      still in envelopes keep the old path — enter year and month at scan time, since that remains
+      the cheapest dating available — so do those first and separately. For the loose bulk, use a
+      running batch name and let the sequence number carry the order. Use the per-batch subfolder
+      option: it namespaces the filename counter, so an interrupted session costs one tray rather
+      than the whole sequence.
 - [ ] Count each tray before feeding and reconcile against files emitted immediately — while the
       prints are still out.
-- [ ] Cluster the scanned backs by backprint wording and record the resulting date window against
-      each cluster. Digital and reversible; do not pre-sort the physical prints.
 - [ ] Flip through contact sheets before the prints are put away, to catch skew and half-captures
       while re-feeding is still cheap.
-- [ ] **Back up the raw scans.** This is the only irreversible software step against irreplaceable
-      data, and it comes before the first `exiftool` run.
+- [ ] **Back up the raw scans.** The only irreversible software step against irreplaceable data, and
+      it comes before the first `exiftool` run.
+- [ ] Cluster the scanned backs by backprint wording and record the resulting date window against
+      each cluster. Digital and reversible; the physical prints are never pre-sorted.
+- [ ] Look up each distinct backprint wording in the published chronology once, and keep the
+      resulting date windows as a per-paper-stock lookup. A fixed cost per _wording_, not per print,
+      and it bounds every print on that stock.
+- [ ] **Do the dating pass on the scans, in witness order.** With loose prints there is nothing to
+      write a date on and no envelope to hold, so this runs on contact sheets rather than on the
+      prints — which also means it can be done remotely, with whoever remembers, rather than needing
+      them in the room. Start with the photographs only someone else can date. Cross-check every
+      result against that print's backprint window and investigate contradictions rather than
+      averaging them away. This step produces the dates; everything downstream is mechanical.
 - [ ] Derive EXIF dates mechanically from the folder or filename, in a staging directory. Write
       `-AllDates`, clear the higher-precedence scan-time tags explicitly, and use `-P` and
       `-overwrite_original`. Verify on one file with `exiftool -time:all` _and_ by confirming the
