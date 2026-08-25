@@ -4,6 +4,20 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 [06-011](../../06-011-mini-v2-direct-plumb-in.md)) inside the machine. Both are OpenSCAD source
 (`.scad`, edit the CAPS variables at the top) plus a ready-to-slice `.stl` and a preview `.png`.
 
+## Ordering
+
+Printed by **Forge Labs (Canada)** in glass-filled nylon. Confirm their current material naming at
+order time; the requirement is a glass-filled PA12-class powder, not the exact trade name.
+
+> ⚠️ **v2 has never been fitted.** It is verified against the measured inputs (see
+> `scripts/check_brackets.py`) but has not been in the machine. v1 was printed, found too long, and
+> v2 shortened the ears -- **the clearance that defeated v1 was never recorded**, so 60 mm is a
+> reduction from the part, not a fit to the space. If v1 overhung by more than 9 mm, v2 will not fit
+> either.
+>
+> **Measure the available Y run before ordering** and write it here. That is a caliper reading and a
+> line of markdown against the cost and lead time of a second print from Canada.
+
 ## Material and process
 
 **Ordered as glass-filled nylon (PA12-GF) from a print service.** That is the right call for this
