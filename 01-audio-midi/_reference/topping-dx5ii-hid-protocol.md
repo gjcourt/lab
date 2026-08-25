@@ -5,10 +5,13 @@ device over WebHID, plus passive HID capture from macOS. Clean-room: no vendor c
 every field below was derived from watching traffic and correlating it against values displayed in
 the vendor UI.
 
-**Status:** decoded and **confirmed on hardware**. A third-party client
-([`toppingctl`](https://github.com/gjcourt/toppingctl)) drove the device on 2026-08-07: volume and
-gain changes were observed on the front-panel display, including a −45.5 dB half-step. Writes are
-accepted with no checksum on every register except power.
+**Status:** decoded and **confirmed on hardware**, then **corrected against Topping's own web
+bundle** (home.toppingaudio.com, web v1.10.0) in August 2026. Everything below marked
+_vendor-sourced_ comes from their constant tables and settings parser, not from observation. Four
+conclusions reached by observation alone turned out to be wrong; they are marked where they appear.
+A third-party client ([`toppingctl`](https://github.com/gjcourt/toppingctl)) drove the device on
+2026-08-07: volume and gain changes were observed on the front-panel display, including a −45.5 dB
+half-step. Writes are accepted with no checksum on every register except power.
 
 Remaining gaps are minor: the input enum, the `0x2b`/`0x2d` output model, and the scene-slot
 mechanism. None affect PEQ, volume, gain or power.
@@ -392,18 +395,77 @@ The front-panel **GAIN** control is a **headphone-amp** gain stage. When the out
 LINE mode the vendor app **disables** the control, so it emits no frames. To capture it, first set
 output to HP BAL or HP SE.
 
-## 5. Not yet decoded
+## 5. Resolved against the vendor bundle (2026-08-24)
 
-| Area               | Notes                                                                                                                                                                                                 |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Read responses** | Reads (`byte2 = 0x10`) are issued against `71 0c`, `71 33`, `71 37`. Where the _response_ arrives has not been determined — the 11-record status stream never varied. Worth probing from a client     |
-| Gain enum          | Blocked earlier because GAIN greys out unless output is a HP mode. Set output to HP BAL first, then toggle                                                                                            |
-| Input enum         | `71 04` is the register; only values 2 and 3 seen. Click each of USB / OPT / COAX / BT once                                                                                                           |
-| Scene **recall**   | Save to C1 is `71 35`. Recall, and the C2 variants, are unmapped                                                                                                                                      |
-| Filter mode        | The DAC's digital filter selector                                                                                                                                                                     |
-| Display settings   | Brightness, theme, VU 0 dB level                                                                                                                                                                      |
-| Preset naming      | The device stores _named_ presets ("Bass 1", "Airy" …) under Local PEQ. Names never appeared in any capture — they may live only in the app's local storage, or be written through an uncaptured path |
-| Filter types 2, 3  | Unclaimed values, probably the pass filters                                                                                                                                                           |
+_Vendor-sourced._ Everything this section previously listed as undecoded is answered by Topping's
+own constant table and settings parser. What remains open is listed at the end.
+
+### Reads work, and always did
+
+`byte2` is a **protocolType**: `0x10 readNack`, `0x11 readAck`, `0x20 writeNack`, `0x21 writeAck`.
+This spec only ever recorded `0x20` being sent.
+
+Send `readNack` for `GetSettings` and the device replies with its **entire configuration** as a
+numbered array of 32-bit records — byte 4 of each frame is the record index. The earlier conclusion
+that "reads return an echo, not state" was wrong. The device streams **all-zero input reports while
+idle**, so listening without asking a question looks exactly like a device that never answers, which
+is what "the 11-record status stream never varied" was describing.
+
+### The three unknown reads, identified
+
+| Register | Actually                                                                      |
+| -------- | ----------------------------------------------------------------------------- |
+| `71 0c`  | **GetSettings** — full state dump                                             |
+| `71 0f`  | **GetSampling**                                                               |
+| `71 33`  | **UsbSerial** — returns the serial as little-endian ASCII. Treat as sensitive |
+| `71 37`  | **PeqPreviewState**                                                           |
+
+### Corrections to entries reached by observation
+
+| This spec said                                                                  | Actually                                     | How it went wrong                                                      |
+| ------------------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
+| `0x34` = "Commit / apply"                                                       | **Heartbeat**                                | It brackets transactions, which reads like a commit                    |
+| `0x2b` = output family, `0x2d` = balanced flag                                  | **CrossfeedType**, **CrossfeedSimpleOption** | Both tentative, both wrong                                             |
+| Output select: 6 options, `HP ALL/HP SE/HP BAL/LINE ALL/LINE SE/LINE BAL = 1–6` | **7 options** (below)                        | Built on one observation — `6 = LINE BAL` — which happened to be right |
+| Band 11 (`0x9b`) may be usable                                                  | **Inert.** Confirmed by hardware A/B/A test  | Vendor app writes all 11 registers, so traffic implied 11 bands        |
+
+### Scene save and recall
+
+| Register | Function                                                            |
+| -------- | ------------------------------------------------------------------- |
+| `71 11`  | **CallC1** — recall, previously "unmapped"                          |
+| `71 12`  | **CallC2**                                                          |
+| `71 35`  | SaveC1                                                              |
+| `71 36`  | **SaveC2** — a separate register, not value 2 on `71 35` as guessed |
+
+### Enums
+
+_Vendor-sourced, device value → vendor identifier._
+
+```text
+input        0=usb  1=fiber  2=coax  3=bt
+output       0=all  1=hp_all  2=line_all  3=hp_single  4=hp_balanced
+             5=line_single  6=line_balanced
+pcm_filter   0=f1 … 7=f8                      line_mode     0=preamp 1=dac
+crossfeed    0=convolution 1=simple 2=off      input_mode    0=auto 1=manual
+polarity     0=normal 1=reverse                uac_mode      0=uac1 1=uac2
+volume_step  0=half_db 1=one_db                brightness    0=low 1=medium 2=high
+home_page    0=normal 1=vu 2=fft               spdif_mode    0=mode1 1=mode2
+vu_bar_mode  0=all_on 1=normal 2=fft 3=all_off power_trigger 0=signal 1=trigger12v 2=off
+```
+
+Full tables, plus all 64 commands and the settings field order, live in
+[`gjcourt/toppingctl` → `vendor_commands.py`](https://github.com/gjcourt/toppingctl/blob/main/vendor_commands.py).
+
+### Still open
+
+| Area                     | Notes                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `outputOptionMask`       | Reads `0b111` against a seven-value output enum, so it is not a bitmask over them                                             |
+| Unmapped settings fields | `balance`, `sampleRate`, the three `*Memory` fields, `dcDetectSensitivity` have no enum table                                 |
+| Records 45–47            | `569, 569, 257`. Absent from the vendor parser; look like a version pair                                                      |
+| Preset naming            | The device stores _named_ presets under Local PEQ. Names never appeared in any capture and may live only in the app's storage |
+| Filter types 2, 3        | Unclaimed PEQ filter type values, probably the pass filters                                                                   |
 
 ### Unmapped settings surface (inventoried 2026-08-08)
 
