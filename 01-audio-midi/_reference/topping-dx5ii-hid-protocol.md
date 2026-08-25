@@ -1,17 +1,25 @@
 # Topping DX5 II — USB HID control protocol
 
-Reverse-engineered 2026-08-07 by observing Topping's own web app (`home.toppingaudio.com`) drive the
-device over WebHID, plus passive HID capture from macOS. Clean-room: no vendor code was decompiled:
-every field below was derived from watching traffic and correlating it against values displayed in
-the vendor UI.
+Originally reverse-engineered 2026-08-07 by observing Topping's own web app
+(`home.toppingaudio.com`) drive the device over WebHID, plus passive HID capture from macOS. That
+pass was clean-room — no vendor code was read, and every field was derived from traffic correlated
+against the vendor UI.
 
-**Status:** decoded and **confirmed on hardware**. A third-party client
-([`toppingctl`](https://github.com/gjcourt/toppingctl)) drove the device on 2026-08-07: volume and
-gain changes were observed on the front-panel display, including a −45.5 dB half-step. Writes are
-accepted with no checksum on every register except power.
+**That is no longer true of this document.** On 2026-08-24 it was corrected against the constant
+tables and settings parser inside Topping's own web bundle (web v1.10.0). Content marked
+_vendor-sourced_ comes from their code, not from observation.
 
-Remaining gaps are minor: the input enum, the `0x2b`/`0x2d` output model, and the scene-slot
-mechanism. None affect PEQ, volume, gain or power.
+**Status:** decoded and **confirmed on hardware**, then **corrected against Topping's own web
+bundle** (home.toppingaudio.com, web v1.10.0) in August 2026. Everything below marked
+_vendor-sourced_ comes from their constant tables and settings parser, not from observation. Four
+conclusions reached by observation alone turned out to be wrong; they are marked where they appear.
+A third-party client ([`toppingctl`](https://github.com/gjcourt/toppingctl)) drove the device on
+2026-08-07: volume and gain changes were observed on the front-panel display, including a −45.5 dB
+half-step. Writes are accepted with no checksum on every register except power.
+
+The gaps this document once listed — the input enum, the `0x2b`/`0x2d` model, and the scene-slot
+mechanism — are all resolved in §5, and the `0x2b`/`0x2d` guess turned out to be wrong rather than
+merely incomplete.
 
 ---
 
@@ -238,9 +246,10 @@ predicted `0x01009B9D` for −6.0 dB, a third-party client wrote it, and the ven
 >
 > **Band-count discrepancy.** Eleven registers (`0x91`–`0x9b`) accept band writes and the vendor app
 > writes all of them on commit, but its UI reports capacity as **"BANDS n / 10"**. Either `0x9b` is
-> not a usable band or the app caps below the hardware limit. `toppingctl` writes 11 to match the
-> app's own commit traffic; if a preset ever needs the 11th band, verify it is audible before
-> trusting it.
+> not a usable band or the app caps below the hardware limit. **Settled 2026-08-24: `0x9b` is
+> inert.** A `PK 1 kHz -15 dB Q 0.7` cut on band 10 was plainly audible, the identical filter on
+> band 11 was not, and re-applying band 10 brought it back. `toppingctl` now offers 10 bands while
+> still writing all 11 registers, so a stale band 11 is cleared.
 
 ### Sub-index map (per band register)
 
@@ -316,18 +325,18 @@ driving each control in the vendor UI and correlating against the displayed stat
 | Sub        | Value(s) seen | Meaning                                                                                                                                                       | Confidence    |
 | ---------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | **`0x02`** | 52–59         | **VOLUME — attenuation in half-dB steps.** `dB = −value / 2`                                                                                                  | **Confirmed** |
-| `0x34`     | 1             | **Commit / apply.** Brackets every transaction                                                                                                                | Confirmed     |
-| `0x35`     | 1             | **Scene save.** Value = slot number. Emitted once when C1 was saved; expect 2 for C2                                                                          | High          |
+| `0x34`     | 1             | ~~Commit / apply~~ → **Heartbeat** (§5). Brackets every transaction                                                                                           | Confirmed     |
+| `0x35`     | 1             | **SaveC1** (§5). ~~expect 2 for C2~~ — C2 is its own register `71 36`                                                                                         | High          |
 | `0x05`     | 6, 4          | **Output select.** Six UI options; 6 displayed as LINE BAL. Probable order HP ALL / HP SE / HP BAL / LINE ALL / LINE SE / LINE BAL = 1–6, making 4 = LINE ALL | High          |
 | `0x04`     | 3, then 2     | **Input select.** Ended on COAX with value 2. Full enum unmapped — capture each of USB / OPT / COAX / BT individually                                         | Medium        |
 | **`0x17`** | 0, 1          | **GAIN — headphone amp gain, binary.** Isolated capture: toggling gain alone produced only this register, bracketed by `0x34` commits                         | **Confirmed** |
-| `0x2b`     | 1, 2          | **Output family** — tentative: 1 = line, 2 = headphone                                                                                                        | Low           |
-| `0x2d`     | 0, 1          | **Balanced flag** — tentative: 1 = BAL, 0 = SE                                                                                                                | Low           |
+| `0x2b`     | 1, 2          | ~~Output family~~ → **CrossfeedType** (§5). The guess was wrong                                                                                               | Low           |
+| `0x2d`     | 0, 1          | ~~Balanced flag~~ → **CrossfeedSimpleOption** (§5). The guess was wrong                                                                                       | Low           |
 | **`0x01`** | 0, 1          | **POWER — 0 = sleep, 1 = wake.** The one register that carries a real checksum (see below)                                                                    | **Confirmed** |
-| `0x0c`     | 0 (read)      | Unknown. Issued as a **read** (`byte2 = 0x10`)                                                                                                                | Unknown       |
-| `0x0f`     | 0             | Unknown. Appears constantly, interleaved with control writes — likely a refresh / state-poll trigger                                                          | Unknown       |
-| `0x33`     | 0 (read)      | Unknown. Issued as a **read**                                                                                                                                 | Unknown       |
-| `0x37`     | 0 (read)      | Unknown. Issued as a **read**                                                                                                                                 | Unknown       |
+| `0x0c`     | 0 (read)      | **GetSettings** (§5) — full state dump. Issued as a **read**                                                                                                  | Unknown       |
+| `0x0f`     | 0             | **GetSampling** (§5)                                                                                                                                          | Unknown       |
+| `0x33`     | 0 (read)      | **UsbSerial** (§5) — returns the serial as ASCII. Sensitive                                                                                                   | Unknown       |
+| `0x37`     | 0 (read)      | **PeqPreviewState** (§5)                                                                                                                                      | Unknown       |
 
 ### Volume — worked example
 
@@ -392,18 +401,81 @@ The front-panel **GAIN** control is a **headphone-amp** gain stage. When the out
 LINE mode the vendor app **disables** the control, so it emits no frames. To capture it, first set
 output to HP BAL or HP SE.
 
-## 5. Not yet decoded
+## 5. Resolved against the vendor bundle (2026-08-24)
 
-| Area               | Notes                                                                                                                                                                                                 |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Read responses** | Reads (`byte2 = 0x10`) are issued against `71 0c`, `71 33`, `71 37`. Where the _response_ arrives has not been determined — the 11-record status stream never varied. Worth probing from a client     |
-| Gain enum          | Blocked earlier because GAIN greys out unless output is a HP mode. Set output to HP BAL first, then toggle                                                                                            |
-| Input enum         | `71 04` is the register; only values 2 and 3 seen. Click each of USB / OPT / COAX / BT once                                                                                                           |
-| Scene **recall**   | Save to C1 is `71 35`. Recall, and the C2 variants, are unmapped                                                                                                                                      |
-| Filter mode        | The DAC's digital filter selector                                                                                                                                                                     |
-| Display settings   | Brightness, theme, VU 0 dB level                                                                                                                                                                      |
-| Preset naming      | The device stores _named_ presets ("Bass 1", "Airy" …) under Local PEQ. Names never appeared in any capture — they may live only in the app's local storage, or be written through an uncaptured path |
-| Filter types 2, 3  | Unclaimed values, probably the pass filters                                                                                                                                                           |
+_Vendor-sourced._ Everything this section previously listed as undecoded is answered by Topping's
+own constant table and settings parser. What remains open is listed at the end.
+
+### Reads work, and always did
+
+`byte2` is a **protocolType**: `0x10 readNack`, `0x11 readAck`, `0x20 writeNack`, `0x21 writeAck`.
+This spec only ever recorded `0x20` being sent, and sending `0x10` is what makes the device answer.
+
+Measured on hardware: the DX5 II tags its **replies** `0x20` as well — 61 reply frames to one
+`GetSettings` request, none of them `0x11`. `readAck` is in the vendor's table but this device does
+not emit it.
+
+Send `readNack` for `GetSettings` and the device replies with its **entire configuration** as a
+numbered array of 32-bit records — byte 4 of each frame is the record index. The earlier conclusion
+that "reads return an echo, not state" was wrong. The device streams **all-zero input reports while
+idle**, so listening without asking a question looks exactly like a device that never answers, which
+is what "the 11-record status stream never varied" was describing.
+
+### The unknown reads, identified
+
+| Register | Actually                                                                      |
+| -------- | ----------------------------------------------------------------------------- |
+| `71 0c`  | **GetSettings** — full state dump                                             |
+| `71 0f`  | **GetSampling**                                                               |
+| `71 33`  | **UsbSerial** — returns the serial as little-endian ASCII. Treat as sensitive |
+| `71 37`  | **PeqPreviewState**                                                           |
+
+### Corrections to entries reached by observation
+
+| This spec said                                                                  | Actually                                     | How it went wrong                                                      |
+| ------------------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
+| `0x34` = "Commit / apply"                                                       | **Heartbeat**                                | It brackets transactions, which reads like a commit                    |
+| `0x2b` = output family, `0x2d` = balanced flag                                  | **CrossfeedType**, **CrossfeedSimpleOption** | Both tentative, both wrong                                             |
+| Output select: 6 options, `HP ALL/HP SE/HP BAL/LINE ALL/LINE SE/LINE BAL = 1–6` | **7 options** (below)                        | Built on one observation — `6 = LINE BAL` — which happened to be right |
+| Band 11 (`0x9b`) may be usable                                                  | **Inert.** Confirmed by hardware A/B/A test  | Vendor app writes all 11 registers, so traffic implied 11 bands        |
+
+### Scene save and recall
+
+| Register | Function                                                            |
+| -------- | ------------------------------------------------------------------- |
+| `71 11`  | **CallC1** — recall, previously "unmapped"                          |
+| `71 12`  | **CallC2**                                                          |
+| `71 35`  | SaveC1                                                              |
+| `71 36`  | **SaveC2** — a separate register, not value 2 on `71 35` as guessed |
+
+### Enums
+
+_Vendor-sourced, device value → vendor identifier._
+
+```text
+input        0=usb  1=fiber  2=coax  3=bt
+output       0=all  1=hp_all  2=line_all  3=hp_single  4=hp_balanced
+             5=line_single  6=line_balanced
+pcm_filter   0=f1 … 7=f8                      line_mode     0=preamp 1=dac
+crossfeed    0=convolution 1=simple 2=off      input_mode    0=auto 1=manual
+polarity     0=normal 1=reverse                uac_mode      0=uac1 1=uac2
+volume_step  0=half_db 1=one_db                brightness    0=low 1=medium 2=high
+home_page    0=normal 1=vu 2=fft               spdif_mode    0=mode1 1=mode2
+vu_bar_mode  0=all_on 1=normal 2=fft 3=all_off power_trigger 0=signal 1=trigger12v 2=off
+```
+
+Full tables, plus all 64 commands and the settings field order, live in
+[`gjcourt/toppingctl` → `vendor_commands.py`](https://github.com/gjcourt/toppingctl/blob/main/vendor_commands.py).
+
+### Still open
+
+| Area                     | Notes                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `outputOptionMask`       | Reads `0b111` against a seven-value output enum, so it is not a bitmask over them                                             |
+| Unmapped settings fields | `balance`, `sampleRate` and `dcDetectSensitivity` have no enum table. The three `*Memory` fields read through `memory_mode`   |
+| Records 45–47            | `569, 569, 257`. Absent from the vendor parser; look like a version pair                                                      |
+| Preset naming            | The device stores _named_ presets under Local PEQ. Names never appeared in any capture and may live only in the app's storage |
+| Filter types 2, 3        | Unclaimed PEQ filter type values, probably the pass filters                                                                   |
 
 ### Unmapped settings surface (inventoried 2026-08-08)
 
