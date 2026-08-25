@@ -6,13 +6,13 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 
 ## Ordering
 
-Printed by **Forge Labs (Canada)**, recalled as glass-filled nylon — the owner's recollection, not
-a retained order. Confirm the material and the trade name at order time.
+Printed by **Forge Labs (Canada)**, recalled as glass-filled nylon — the owner's recollection, not a
+retained order. Confirm the material and the trade name at order time.
 
-> ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches
-> the `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the
-> full measured-input table but has not been in the machine. v1 was printed, found too long, and
-> v2 shortened the ears -- **the clearance that defeated v1 was never recorded**, so 60 mm is a
+> ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches the
+> `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the full
+> measured-input table but has not been in the machine. v1 was printed, found too long, and v2
+> shortened the ears -- **the clearance that defeated v1 was never recorded**, so 60 mm is a
 > reduction from the part, not a fit to the space. If v1 overhung by more than 9 mm, v2 will not fit
 > either.
 >
@@ -36,8 +36,8 @@ The settings below are for the **FDM** fallback and do not apply to a powder pro
 
 `M5_CLEAR` and `BASE_HOLE_D` are **5.5 mm -- nominal M5 clearance with no process allowance**, so
 0.25 mm a side. Powder processes commonly sinter holes slightly undersize as surrounding powder
-part-fuses, and `HEAD_BORE_D` is Ø9.0 for an 8.5 mm socket head — the same 0.25 mm a side, on a larger
-diameter.
+part-fuses, and `HEAD_BORE_D` is Ø9.0 for an 8.5 mm socket head — the same 0.25 mm a side, on a
+larger diameter.
 
 **This is unresolved, not settled.** What is known is that v1 was printed and failed on length.
 Whether its bolts fitted was never recorded, so there is no evidence either way on hole fit in this
