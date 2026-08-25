@@ -27,6 +27,9 @@ jobs:
       - name: Check repo invariants (frontmatter, Exit Criteria, counts)
         run: make check-invariants
 
+      - name: Check printed-bracket geometry against measured inputs
+        run: make check-brackets
+
       - name: Run YAML linting
         uses: ibiqlik/action-yamllint@v3
         with:

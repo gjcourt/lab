@@ -9,7 +9,10 @@ format-check:
 lint:
 	docker run --rm -v "$$(pwd):/workdir" -w /workdir node:20 npx --yes markdownlint-cli2@0.13.0 "**/*.md" "#node_modules"
 
+check-brackets:
+	python3 scripts/check_brackets.py
+
 check-invariants:
 	python3 scripts/check_invariants.py
 
-test: format-check lint check-invariants
+test: format-check lint check-invariants check-brackets
