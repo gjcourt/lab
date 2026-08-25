@@ -23,31 +23,44 @@ BRACKETS = Path("06-coffee-espresso/_reference/brackets")
 
 SPECS = {
     "mini-v2-solenoid-riser": {
-        "bbox": (60.0, 30.0, 26.0),          # v2: Y shortened 69 -> 60
+        "bbox": (30.0, 60.0, 26.0),          # X, Y, Z. v2: Y shortened 69 -> 60
         "z_planes": [0.0, 7.0, 26.0],        # bottom, flange thickness, top
-        # (x, y, diameter, z_face, what it is)
+        # (x, y, diameter, z_entry, z_exit, what it is)
         #
-        # Only OUTER faces are listed. Where the Ø9 bore meets the Ø5.5 hole
-        # inside the solid there is no tessellated ring -- the cylinder walls
-        # are continuous vertical facets -- so an internal transition cannot be
-        # checked this way. The through path is established by the pair: Ø9 up
-        # from the bottom face and Ø5.5 down from the top, coaxial.
+        # BOTH faces of each segment, so a blind pocket fails. An earlier
+        # version listed only outer faces on the belief that the bore shoulder
+        # carried no ring; it does -- z=19 holds both the Ø5.5 and Ø9 rings, 96
+        # points each -- and the belief came from a detector that could not see
+        # concentric rings rather than from the mesh.
         "holes": [
-            (0.0, -11.5, 5.5, 26.0, "valve bolt, M5 clearance"),
-            (0.0, 11.5, 5.5, 26.0, "valve bolt, M5 clearance"),
-            (0.0, -11.5, 9.0, 0.0, "socket-head access bore"),
-            (0.0, 11.5, 9.0, 0.0, "socket-head access bore"),
-            (0.0, -24.25, 5.5, 0.0, "base bolt, M5 clearance"),
-            (0.0, 24.25, 5.5, 0.0, "base bolt, M5 clearance"),
+            (0.0, -11.5, 5.5, 26.0, 19.0, "valve bolt through the flange"),
+            (0.0, 11.5, 5.5, 26.0, 19.0, "valve bolt through the flange"),
+            (0.0, -11.5, 9.0, 0.0, 19.0, "socket-head access bore to the shoulder"),
+            (0.0, 11.5, 9.0, 0.0, 19.0, "socket-head access bore to the shoulder"),
+            (0.0, -24.25, 5.5, 0.0, 7.0, "base bolt through the foot"),
+            (0.0, 24.25, 5.5, 0.0, 7.0, "base bolt through the foot"),
         ],
-        # Coaxial pairs that together form one through path.
-        "coaxial": [((0.0, -11.5), 26.0, 0.0), ((0.0, 11.5), 26.0, 0.0)],
+        # The Ø5.5 and Ø9 segments must share an axis to pass a bolt.
+        "coaxial": [((0.0, -11.5), 26.0, 5.5, 0.0, 9.0),
+                    ((0.0, 11.5), 26.0, 5.5, 0.0, 9.0)],
         # Measured FROM THE MESH, not restated from the hole list above.
         "bolt_ctc": (23.0, 26.0, "valve base holes, centre-to-centre"),
         # The valve ghost is ~42 mm of coil on top of the 26 mm stand-off. If it
         # is in the mesh the export forgot -D SHOW_VALVE=false and the part is
         # not printable.
         "max_z": 30.0,
+    },
+    # BBOX ONLY. The clamp is a split ring with curved surfaces and dozens of
+    # z planes; its features have not been characterised the way the riser's
+    # have. This catches a stale export or the wrong file, which is most of the
+    # value, and claims nothing more.
+    "mini-v2-regulator-clamp": {
+        "bbox": (39.9, 75.9, 24.0),
+        "max_z": 26.0,
+        "z_planes": [],
+        "holes": [],
+        "coaxial": [],
+        "bolt_ctc": None,
     },
 }
 
@@ -76,11 +89,17 @@ def ring_at(verts, z, cx, cy, d_hint, tol=0.05):
     # Deduplicate: a vertex appears once per facet that shares it, so a raw
     # list weights the centroid by facet count and drifts it off centre. That
     # read a true 23.000 mm bolt spacing as 22.713.
+    # Deduplicate: a vertex appears once per facet that shares it, so a raw
+    # list weights the centroid by facet count and drifts it off centre. That
+    # read a true 23.000 mm bolt spacing as 22.713.
     pts = list({(round(x, 4), round(y, 4)) for x, y, zz in verts if abs(zz - z) < tol})
-    # Capture window scales with the hole. A fixed radius reaches the core edge
-    # (y = +/-18.5 on the top face) and drags face vertices into the centroid,
-    # which shifted a measured 23.000 mm bolt spacing to 22.713.
-    near = [p for p in pts if math.dist(p, (cx, cy)) < d_hint * 0.9]
+    # Select by expected RADIUS, not by distance from centre. A distance window
+    # cannot separate concentric rings -- at the bore shoulder (z=19) the Ø5.5
+    # and Ø9 rings are 2.75 and 4.5 from the same axis, and any window holding
+    # one holds part of the other, blowing the roundness gate and reporting
+    # "no hole" where there are in fact two.
+    want_r = d_hint / 2.0
+    near = [p for p in pts if abs(math.dist(p, (cx, cy)) - want_r) < 0.35]
     if len(near) < 12:
         return None
     mx = sum(p[0] for p in near) / len(near)
@@ -98,13 +117,14 @@ def check(name, spec) -> list[str]:
     v = load(stl)
     fail = []
 
+    # Per axis, not sorted: the part is specified to print in the delivered
+    # orientation, so a 90-degree rotation about Z is a defect, not a detail.
     dims = [max(a[i] for a in v) - min(a[i] for a in v) for i in range(3)]
-    for got, want, ax in zip(sorted(dims, reverse=True),
-                             sorted(spec["bbox"], reverse=True), "XYZ"):
+    for got, want, ax in zip(dims, spec["bbox"], "XYZ"):
         if abs(got - want) > TOL:
-            fail.append(f"{name}: bbox {got:.3f} != {want} mm")
+            fail.append(f"{name}: {ax} span {got:.3f} mm, want {want}")
 
-    zmax = max(a[2] for a in v)
+    zmax = max(a[2] for a in v) - min(a[2] for a in v)
     if zmax > spec["max_z"]:
         fail.append(
             f"{name}: Z reaches {zmax:.1f} mm (limit {spec['max_z']}). The valve "
@@ -116,10 +136,14 @@ def check(name, spec) -> list[str]:
         if not any(abs(z - p) < 0.05 for p in planes):
             fail.append(f"{name}: no geometry on the z={z} plane")
 
-    for x, y, d, z, what in spec["holes"]:
+    for x, y, d, z_in, z_out, what in spec["holes"]:
+      for z in (z_in, z_out):
         got = ring_at(v, z, x, y, d)
         if got is None:
-            fail.append(f"{name}: no opening at ({x}, {y}) on z={z} -- {what}")
+            fail.append(
+                f"{name}: no Ø{d} opening at ({x}, {y}) on z={z} -- {what}. "
+                f"Both faces must be open or it is a blind pocket."
+            )
             continue
         if abs(got[0] - d) > TOL:
             fail.append(
@@ -137,9 +161,9 @@ def check(name, spec) -> list[str]:
             )
 
     # A bolt only passes if the two openings are coaxial.
-    for (x, y), z_top, z_bot in spec.get("coaxial", []):
-        a = ring_at(v, z_top, x, y, 5.5)
-        b = ring_at(v, z_bot, x, y, 9.0)
+    for (x, y), z_top, d_top, z_bot, d_bot in spec.get("coaxial", []):
+        a = ring_at(v, z_top, x, y, d_top)
+        b = ring_at(v, z_bot, x, y, d_bot)
         if a is None or b is None:
             # Not measurable is a failure, not a pass. Skipping here would let a
             # missing opening slip through as silence.
@@ -153,9 +177,11 @@ def check(name, spec) -> list[str]:
                 f"{math.dist(a[1], b[1]):.3f} mm -- not a straight through path"
             )
 
+    if spec["bolt_ctc"] is None:
+        return fail
     ctc, z_ctc, label = spec["bolt_ctc"]
     centres = []
-    for x, y, d, z, what in spec["holes"]:
+    for x, y, d, z_in, z_out, what in spec["holes"]:
         if "valve bolt" not in what:
             continue
         r = ring_at(v, z_ctc, x, y, d)
@@ -174,7 +200,10 @@ def main() -> int:
     if not BRACKETS.is_dir():
         print(f"no {BRACKETS} -- run from the repo root", file=sys.stderr)
         return 2
-    bad = []
+    stls = {p.stem for p in BRACKETS.glob("*.stl")}
+    unspecced = stls - set(SPECS)
+    bad = [f"{n}: an STL with no SPEC -- add one or it is checked by nothing"
+           for n in sorted(unspecced)]
     for name, spec in SPECS.items():
         f = check(name, spec)
         print(f"  {'FAIL' if f else 'ok  '}  {name}")

@@ -535,7 +535,7 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 
 ## Mounting hardware (3D-printed brackets)
 
-Two parametric PETG brackets mount the regulation stack — measured inputs, print settings, and
+Two parametric printed brackets mount the regulation stack — measured inputs, print settings, and
 OpenSCAD/STL files are in [`_reference/brackets/`](_reference/brackets/).
 
 - **Regulator clamp** ([`.stl`](_reference/brackets/mini-v2-regulator-clamp.stl),

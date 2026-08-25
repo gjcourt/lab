@@ -4,7 +4,8 @@
 //   Orientation when mounted:  knob UP (+Z), gauge faces OUT (+Y),
 //   push-fit ports run left/right (X).  Clamp grips the black barrel
 //   just under the knob — the only non-rotating cylinder on the valve.
-// Print: PETG, >=4 perimeters, >=40% infill.  One M3 pinch bolt clamps
+// Print: see brackets/README.md. FDM fallback: PETG, >=4 perimeters,
+// >=40% infill.  One M3 pinch bolt clamps
 //   the valve; two M5 screws fix the plate to the machine frame.
 // Units: mm.  All CAPS vars up top are the ones to verify with calipers.
 // =====================================================================

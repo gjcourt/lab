@@ -1,4 +1,4 @@
-.PHONY: format format-check lint check-invariants test
+.PHONY: format format-check lint check-invariants check-brackets test
 
 format:
 	docker run --rm -v "$$(pwd):/workdir" -w /workdir node:20 npx --yes prettier@3.2.5 --write "**/*.{md,yml,yaml}"

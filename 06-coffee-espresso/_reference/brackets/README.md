@@ -6,11 +6,12 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 
 ## Ordering
 
-Printed by **Forge Labs (Canada)** in glass-filled nylon. Confirm their current material naming at
-order time; the requirement is a glass-filled PA12-class powder, not the exact trade name.
+Printed by **Forge Labs (Canada)**, recalled as glass-filled nylon — the owner's recollection, not
+a retained order. Confirm the material and the trade name at order time.
 
-> ⚠️ **v2 has never been fitted.** It is verified against the measured inputs (see
-> `scripts/check_brackets.py`) but has not been in the machine. v1 was printed, found too long, and
+> ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches
+> the `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the
+> full measured-input table but has not been in the machine. v1 was printed, found too long, and
 > v2 shortened the ears -- **the clearance that defeated v1 was never recorded**, so 60 mm is a
 > reduction from the part, not a fit to the space. If v1 overhung by more than 9 mm, v2 will not fit
 > either.
@@ -35,11 +36,17 @@ The settings below are for the **FDM** fallback and do not apply to a powder pro
 
 `M5_CLEAR` and `BASE_HOLE_D` are **5.5 mm -- nominal M5 clearance with no process allowance**, so
 0.25 mm a side. Powder processes commonly sinter holes slightly undersize as surrounding powder
-part-fuses, and `HEAD_BORE_D` is tighter still at Ø9.0 for an 8.5 mm socket head.
+part-fuses, and `HEAD_BORE_D` is Ø9.0 for an 8.5 mm socket head — the same 0.25 mm a side, on a larger
+diameter.
 
-**Empirically this is fine:** the v1 print was glass-filled and its bolts fitted -- v1 failed on
-length, not on hole fit. So do not widen the holes on theory. If a future order does come back
-tight, ream to 5.5 rather than changing the model, and record it here.
+**This is unresolved, not settled.** What is known is that v1 was printed and failed on length.
+Whether its bolts fitted was never recorded, so there is no evidence either way on hole fit in this
+process — and the note cannot claim there is while also saying, above, that v1's clearance went
+unrecorded.
+
+So: do not widen the holes pre-emptively, because a change with no measurement behind it is a guess
+in the other direction. **Check bolt fit on this print and record it here.** If the holes come back
+tight, ream to 5.5 rather than editing the model.
 
 ## Regulator clamp — `mini-v2-regulator-clamp`
 

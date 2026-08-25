@@ -14,7 +14,8 @@
 // (hex key reaches the head down the Ø9 access bore). Flip upright, set on
 // the base plate, drive the two base M5x12 down through the feet.
 //
-// Print: PETG, >=4 perimeters, >=40% infill. Prints as-is, no support.
+// Print: glass-filled nylon from a print service (SLS/MJF). FDM fallback:
+// PETG, >=4 perimeters, >=40% infill, as-is, no support. See brackets/README.md.
 // Units: mm.
 // =====================================================================
 
