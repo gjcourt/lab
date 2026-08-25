@@ -4,8 +4,49 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 [06-011](../../06-011-mini-v2-direct-plumb-in.md)) inside the machine. Both are OpenSCAD source
 (`.scad`, edit the CAPS variables at the top) plus a ready-to-slice `.stl` and a preview `.png`.
 
-Print both in **PETG, ≥4 perimeters, ≥40% infill**. Both print in the delivered orientation with
-**no support** (bores and fastener holes run vertical; counterbores land on the bed).
+## Ordering
+
+Printed by **Forge Labs (Canada)**, recalled as glass-filled nylon — the owner's recollection, not a
+retained order. Confirm the material and the trade name at order time.
+
+> ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches the
+> `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the full
+> measured-input table but has not been in the machine. v1 was printed, found too long, and v2
+> shortened the ears -- **the clearance that defeated v1 was never recorded**, so 60 mm is a
+> reduction from the part, not a fit to the space. If v1 overhung by more than 9 mm, v2 will not fit
+> either.
+>
+> **Measure the available Y run before ordering** and write it here. That is a caliper reading and a
+> line of markdown against the cost and lead time of a second print from Canada.
+
+## Material and process
+
+**Ordered as glass-filled nylon (PA12-GF) from a print service.** That is the right call for this
+location -- next to the vibratory pump inside a machine that runs warm -- because PA12-GF holds its
+shape well above PETG's ~70 °C softening point, and it is stiffer.
+
+The settings below are for the **FDM** fallback and do not apply to a powder process:
+
+| Process                                                      | Settings                                                                                                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| SLS / MJF, glass-filled nylon (**what is actually ordered**) | none -- the service controls it. No perimeters, no infill, no support.                                                                                 |
+| FDM fallback                                                 | **PETG**, ≥4 perimeters, ≥40% infill, no support, delivered orientation (bores vertical, counterbores on the bed). Not PLA: it softens near this pump. |
+
+### Hole fit on a powder process
+
+`M5_CLEAR` and `BASE_HOLE_D` are **5.5 mm -- nominal M5 clearance with no process allowance**, so
+0.25 mm a side. Powder processes commonly sinter holes slightly undersize as surrounding powder
+part-fuses, and `HEAD_BORE_D` is Ø9.0 for an 8.5 mm socket head — the same 0.25 mm a side, on a
+larger diameter.
+
+**This is unresolved, not settled.** What is known is that v1 was printed and failed on length.
+Whether its bolts fitted was never recorded, so there is no evidence either way on hole fit in this
+process — and the note cannot claim there is while also saying, above, that v1's clearance went
+unrecorded.
+
+So: do not widen the holes pre-emptively, because a change with no measurement behind it is a guess
+in the other direction. **Check bolt fit on this print and record it here.** If the holes come back
+tight, ream to 5.5 rather than editing the model.
 
 ## Regulator clamp — `mini-v2-regulator-clamp`
 
