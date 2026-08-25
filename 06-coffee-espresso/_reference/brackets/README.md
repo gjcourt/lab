@@ -4,8 +4,28 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 [06-011](../../06-011-mini-v2-direct-plumb-in.md)) inside the machine. Both are OpenSCAD source
 (`.scad`, edit the CAPS variables at the top) plus a ready-to-slice `.stl` and a preview `.png`.
 
-Print both in **PETG, ≥4 perimeters, ≥40% infill**. Both print in the delivered orientation with
-**no support** (bores and fastener holes run vertical; counterbores land on the bed).
+## Material and process
+
+**Ordered as glass-filled nylon (PA12-GF) from a print service.** That is the right call for this
+location -- next to the vibratory pump inside a machine that runs warm -- because PA12-GF holds its
+shape well above PETG's ~70 °C softening point, and it is stiffer.
+
+The settings below are for the **FDM** fallback and do not apply to a powder process:
+
+| Process                                                      | Settings                                                                                                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| SLS / MJF, glass-filled nylon (**what is actually ordered**) | none -- the service controls it. No perimeters, no infill, no support.                                                                                 |
+| FDM fallback                                                 | **PETG**, ≥4 perimeters, ≥40% infill, no support, delivered orientation (bores vertical, counterbores on the bed). Not PLA: it softens near this pump. |
+
+### Hole fit on a powder process
+
+`M5_CLEAR` and `BASE_HOLE_D` are **5.5 mm -- nominal M5 clearance with no process allowance**, so
+0.25 mm a side. Powder processes commonly sinter holes slightly undersize as surrounding powder
+part-fuses, and `HEAD_BORE_D` is tighter still at Ø9.0 for an 8.5 mm socket head.
+
+**Empirically this is fine:** the v1 print was glass-filled and its bolts fitted -- v1 failed on
+length, not on hole fit. So do not widen the holes on theory. If a future order does come back
+tight, ream to 5.5 rather than changing the model, and record it here.
 
 ## Regulator clamp — `mini-v2-regulator-clamp`
 
