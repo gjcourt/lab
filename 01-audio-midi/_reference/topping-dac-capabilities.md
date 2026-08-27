@@ -20,13 +20,34 @@ below is inferred from a manual's silence.
 | **D30 Pro**          | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
 | **D90 III Discrete** | ✅ **YES**                | **2032, ~1/16 dB** (−127…0) | measured on-device |
 | **DX5 II**           | ✅ yes (USB HID)          | raw step + dB               | live device read   |
-| **D50s**             | ✅ likely                 | —                           | inferred only      |
+| **D50s**             | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
+
+**All four are measured. Nothing in this table is inferred.**
+
+`--mixer hardware:` is not theoretical: `kitchen` has run `snapclient --mixer "hardware:D50s "`
+continuously since 2026-07-26, sitting at 118/127. The "exposed but non-functional" failure mode
+seen on the sibling E30 does **not** apply to that unit — it is load-bearing in daily use.
+
+⚠️ **The D50s control name carries a trailing space** — `'D50s '`. The working config is
+`--mixer "hardware:D50s "`. Retyping it without the space silently mismatches.
+
+### HID presence tracks Topping's _Tune_ support list
+
+| Device           | On Tune list | `/dev/hidraw` |
+| ---------------- | ------------ | ------------- |
+| D90 III Discrete | ✅           | ✅ present    |
+| DX5 II           | ✅           | ✅ present    |
+| D50s             | ❌           | ❌ absent     |
+| D30 Pro          | ❌           | ❌ absent     |
+
+The list reliably predicts whether a unit exposes a host control channel — while saying nothing
+about register-map compatibility between the units that have one.
 
 ### ⚠️ Every Topping here shares USB product ID `152a:8750`
 
-Measured: the **D30 Pro** and the **D90 III Discrete** both enumerate as `152a:8750` — the same ID
-as the DX5 II, which `toppingctl` already documents as shared with the DX1 II and E50 II. That is
-**five known models on one PID**, whose register maps _collide with different meanings_.
+Measured: the **D30 Pro**, the **D90 III Discrete** and the **D50s** all enumerate as `152a:8750` —
+the same ID as the DX5 II, which `toppingctl` already documents as shared with the DX1 II and E50
+II. That is **six known models on one PID**, whose register maps _collide with different meanings_.
 
 **PID is therefore useless for identification.** The USB product string is the only discriminator,
 which is what the vendor's own app relies on and what `toppingctl._check_model()` implements. Never
