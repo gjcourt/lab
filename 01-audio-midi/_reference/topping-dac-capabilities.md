@@ -35,6 +35,17 @@ The front panel never tracked the host control. These are **two attenuators in s
 attenuation is their sum — about −125 dB in the state above, which presents as a DAC that appears
 completely dead.
 
+**Both attenuators are real — confirmed audibly** (DX5 II, office, headphones, music playing):
+
+| host (UAC2) | device (panel) | total    | result        |
+| ----------- | -------------- | -------- | ------------- |
+| −63.50 dB   | −30 dB         | −93.5 dB | **inaudible** |
+| 0.00 dB     | −30 dB         | −30 dB   | **audible**   |
+
+So this is not the E30 failure mode: the UAC2 control genuinely attenuates. And the panel held −30
+dB across every write, with the DAC awake and a stream running — so the two are independent, and
+their attenuation sums.
+
 **Design rule that follows: a controller must own exactly one of them and pin the other at unity.**
 Otherwise Snapcast drives the UAC2 control while a HID client drives the device volume, the two
 compound, and the same knob position sounds different depending on hidden state.
