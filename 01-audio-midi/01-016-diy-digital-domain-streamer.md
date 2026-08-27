@@ -327,9 +327,12 @@ Result: two sliders per room — `<Room> Volume` (Snapcast/software) and `<Room>
 — confirm with `amixer -c <card> scontrols`:
 
 - USB DAC with UAC volume, or a HiFiBerry DAC+ chip → both sliders.
-- **D90 III (likely no host volume) or a Digi/S-PDIF output** → no ALSA control to bridge; that room
-  gets the **software slider only**, and its true analog volume lives on the DAC's knob/remote
-  (bring that into HASS via an IR blaster if wanted).
+- **D90 III Discrete** → ✅ **has one.** Measured 2026-08-27: a UAC2 control with 2032 steps over
+  −127…0 dB. An earlier version of this line read "likely no host volume", which was wrong — see
+  [`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md).
+- **A Digi/S-PDIF output** → no ALSA control to bridge; that room gets the **software slider only**,
+  and its true analog volume lives on the DAC's knob/remote (bring that into HASS via an IR blaster
+  if wanted).
 
 So "expose both" is really _software everywhere, hardware where the device exposes a mixer_.
 

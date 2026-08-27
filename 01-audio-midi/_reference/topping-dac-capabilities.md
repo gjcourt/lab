@@ -230,12 +230,11 @@ are observed values, not manual claims:
 
 ---
 
-## Not verified — do not assume
+## Per-device notes and remaining unknowns
 
-- **D50s** — the as-built multi-room deployment drives its volume via
-  `snapclient --mixer "hardware:D50s"`, i.e. an **ALSA UAC2 mixer control over USB**, which is
-  strong evidence it exposes host-side volume. Recorded as _likely_, not verified, because it is
-  inferred from a working configuration rather than read from the manual.
+- **D50s** — **volume: measured, host-controllable** (128 steps, −127…0 dB). No HID interface, so
+  the UAC2 control is its only host-reachable one. In continuous production use via
+  `snapclient --mixer "hardware:D50s "` since 2026-07-26.
 - **D90 III Discrete** — **volume: measured, host-controllable** (2032 steps). It also presents
   **two USB HID interfaces** (`/dev/hidraw0`, `HID_NAME=Topping D90 III Discrete`), the same shape
   as the DX5 II, and it appears on Topping's official _Tune_ supported-models list. So `toppingctl`

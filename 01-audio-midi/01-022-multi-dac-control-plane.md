@@ -81,6 +81,10 @@ ship the _same_ PID, and their register maps **collide** — the same register a
 things on different models. Writing one model's map to another is exactly how you set an unrelated
 setting, or worse.
 
+Measured capabilities for every house DAC — volume ranges, HID presence, shared product IDs — are in
+[`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md). **Check it
+before assuming what any unit can do.**
+
 So identity is layered:
 
 | Field              | Distinguishes    | Notes                                |
