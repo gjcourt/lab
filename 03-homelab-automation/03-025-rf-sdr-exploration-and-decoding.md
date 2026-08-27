@@ -36,6 +36,49 @@ pulling 433 MHz sensors into Home Assistant.
   last V4 only if you want its built-in HF upconverter (see shopping list). Buy genuine —
   counterfeits are rampant.
 
+## ⚠️ Step 0 — the V4 needs a newer driver, and fails SILENTLY without it
+
+**Do this before anything else.** The V4 uses an **R828D** tuner, not the R820T2 of earlier dongles,
+and old `librtlsdr` builds do not drive it correctly. The failure mode is the dangerous kind — per
+the official V4 guide, the dongle enumerates perfectly and then produces _"no signals, or signals
+may appear at the wrong frequency, or appear corrupted."_ Nothing errors. It reads as a dead band, a
+bad antenna, or bad luck.
+
+Most Linux distributions still package `librtlsdr` **0.6.0** (tagged 2018), which predates V4
+support entirely.
+
+|           |                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| Required  | `rtlsdrblog/rtl-sdr-blog` fork, **or** upstream `librtlsdr` **≥ 2.0.0**                             |
+| Why 2.0.0 | R828D support merged upstream 2023-08-23; v2.0.0 (Nov 2023) is the first tag containing it          |
+| macOS     | `brew install librtlsdr` — formula stable is **2.0.3**, verified 2026-08, so Homebrew is sufficient |
+| Linux     | purge existing librtlsdr first, then build the fork with `-DINSTALL_UDEV_RULES=ON`                  |
+
+**`rtl_433` is a conditional case and worth its own warning.** It links against whatever `librtlsdr`
+was present at build time. Built against the old library it compiles, runs, detects the V4, and
+**receives nothing** — same silent shape as above. If `rtl_433` sees the device but decodes no
+sensors, suspect the link before suspecting the antenna.
+
+**Other V4-specific traps:**
+
+- **Do not modify the EEPROM manufacturer/product strings.** The driver identifies a V4 by reading
+  `RTLSDRBlog` / `Blog V4` from EEPROM and selecting R828D codepaths accordingly. Overwriting them
+  silently disables V4 handling.
+- **Blacklist the DVB-T kernel modules** (`dvb_usb_rtl28xxu`, `rtl2832`, `rtl2830`). They auto-claim
+  the device _and_ default-enable the bias tee.
+- **Installing GQRX / SDR++ / `gr-osmosdr` from a package manager can overwrite your good
+  `librtlsdr`** with a distro-packaged one. Re-check the version after any such install.
+- **Counterfeits are rampant on the V4 specifically.** Genuine units have `R828D` laser-etched on
+  the tuner can, diagonal-offset side screws, and a brass SMA connector.
+
+### The upside of having drawn the V4
+
+The note originally advised skipping the V4 unless HF mattered. Now that it is the unit in hand, one
+property is a genuine improvement rather than dead weight: **HF is transparent.** Unlike the V3,
+there is no direct-sampling mode to activate — tune to an HF frequency and it works, because the
+upconverter is built in. Shortwave and ham monitoring become available at no extra setup cost, even
+though nothing in the RX progression below (ADS-B, NOAA, 433 MHz) requires it.
+
 ## How RF capture works (the detailed process)
 
 **Software radio vs purpose-built receiver.** Unlike an IR TSOP (which demodulates in hardware and
@@ -114,7 +157,8 @@ cellular/aviation/public-safety/licensed bands, never jam, never replay others' 
 
 ## Exit Criteria
 
-- [ ] Genuine RTL-SDR (Blog V3 / Nooelec v5 / last-batch V4) + a decent antenna set in hand
+- [x] Genuine RTL-SDR — **Blog V4 in hand (delivered 2026-08)**. Antenna set: verify what shipped
+      with it.
 - [ ] At least 3 RX wins decoded (e.g. ADS-B, NOAA APT, rtl_433 sensors)
 - [ ] 433 MHz sensors flowing into Home Assistant via rtl_433 → MQTT
 - [ ] One protocol reverse-engineered in URH (or one GNU Radio flowgraph built)

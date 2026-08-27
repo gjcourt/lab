@@ -197,6 +197,100 @@ output latency — `Pi → USB → D90 III` vs. `Pi → USB → DSPi (up to 85 m
 vs. a HAT room — so rooms will drift out of sync unless each client's Snapcast **`latency` offset**
 is tuned to a common target. "In sync" across mixed topologies is a calibration step, not automatic.
 
+## Retiring the living-room HAT: what the USB optical capture has to replace
+
+A **USB audio interface with optical input** (delivered 2026-08) lets the living-room TV feed the Pi
+directly, which is the missing piece for finally retiring that room's HiFiBerry HAT:
+
+```text
+TV ──optical──▶ USB capture ──▶┐
+                               ├──▶ DietPi (mix + volume) ──USB──▶ DAC
+Snapcast / go-librespot ──────▶┘
+```
+
+Per [As-built](#as-built-deployed-2026-07), the HAT is currently doing **two** jobs for that room —
+it is the TV's S/PDIF input _and_ the room's volume stage (SigmaDSP master, driven by
+`snap-dsp-volume-bridge`). The capture device replaces the first. **The second still needs an
+answer**, and it is the harder one.
+
+Not because the D30 Pro lacks a volume control — it has one, adjustable, on by default (see
+[`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md)). The open
+question is whether the **host** can reach it.
+
+**⚠️ Test this before designing around it.** The kitchen routes its one knob to the D50s' UAC2 mixer
+over USB (`--mixer "hardware:D50s"`). Whether the D30 Pro advertises an equivalent control is
+**untested** — it has never been connected over USB in this house, and the belief that it does not
+came from the manual's silence rather than a measurement. The test is two commands, and it is only
+valid with the unit in `m-p` Pre-Amp mode:
+
+```bash
+aplay -l && amixer -c <card> scontrols
+```
+
+**The result changes the design:**
+
+- **If a UAC2 control appears** — the room needs no digital-domain volume at all. It becomes
+  `--mixer "hardware:<D30Pro>"`, identical to the kitchen, and everything below about float
+  pipelines is unnecessary.
+- **If it does not** — IR is the only remote path, and IR volume is relative up/down with no state
+  readback, so it cannot back an absolute slider. Only then does digital-domain volume become the
+  sane default, and the section below applies.
+
+### The alternative the D30 Pro's own optical input allows
+
+The D30 Pro has a **Toslink input of its own**. The TV can feed it directly — no capture device, no
+computer in the audio path, no resampling, no lip-sync exposure. The cost is that the DAC _switches_
+inputs rather than _mixing_ them: TV and Snapcast become mutually exclusive, selected over IR,
+instead of playing together. That is a real trade and worth deciding deliberately rather than
+discovering after the mix is built.
+
+### Doing digital volume without paying for it
+
+The usual objection is bit loss: attenuating a 16-bit stream by −30 dB discards ~5 bits (6.02 dB per
+bit), leaving ~11 effective — audible on quiet dialogue, which is most of what TV audio is.
+
+**That cost is avoidable, and the avoidance is the whole design requirement.** It applies to 16-bit
+_integer_ attenuation. If the mix and volume stage run in **32-bit float** (PipeWire does natively)
+and the result is sent to the DAC as **24-bit** over USB, the attenuation happens with enormous
+headroom and the only quantisation is the final one. Sources here are 44.1/16 and 48/16 while USB
+into these DACs carries up to 32/768 — there is room to spend and no reason not to.
+
+**Requirement, therefore: float mix → 24-bit USB out. Never attenuate in 16-bit integer.** A
+`softvol` plugin operating at source bit depth is the wrong implementation of the right idea.
+
+### Ordering constraint the one-knob UX imposes
+
+The knob must sit **after** the mix. `snapclient --mixer software` attenuates only the Snapcast
+stream — the as-built already records that it "doesn't touch the p2p go-librespot path", and TV
+capture is a third source it likewise never sees. Whatever combines the three owns the volume.
+
+### TV-path gotchas
+
+- **Set the TV's optical output to PCM, not Dolby/bitstream.** A TV defaulting to Dolby Digital
+  sends encoded AC-3 down Toslink and the capture yields undecodable data. First thing to check when
+  the capture "works" but sounds like noise or silence. (The existing HAT path already required
+  this, so it may already be set on that TV.)
+- **Do not route TV audio through Snapserver.** Snapcast deliberately buffers for multi-room sync,
+  and that buffer destroys lip sync. TV audio must take the local mix path straight out. The
+  consequence — TV audio is living-room only — is a design decision, not a defect to fix later.
+- **Sample-rate agreement.** TV optical is typically 48 kHz; go-librespot and Navidrome are 44.1
+  kHz. The mixer must resample one of them. Decide where, rather than letting whichever component
+  cares first make the choice.
+
+### Does `toppingctl` change this?
+
+Only for rooms whose DAC has a volume the host can reach. `toppingctl` reads and writes device-side
+volume over USB HID — a connected DX5 II reports `volume 60 = -30.0 dB` live — which offers a third
+option beyond "UAC2 mixer" and "software attenuation" for the **Office / D90 III** row still marked
+TBD above. It helps only where the DAC both has a volume and exposes it to the host — see
+[`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md) before assuming
+either.
+
+⚠️ The D90 III is not a confirmed model in `toppingctl`'s device table and its register map must not
+be assumed to match the DX5 II's. See [`01-022`](01-022-multi-dac-control-plane.md): the agent that
+would own such a USB connection is the one that design describes, and its rule is that unconfirmed
+models stay read-only until driven.
+
 ## Volume control (Home Assistant)
 
 > **As-built note:** the deployment chose a _single merged knob_ per room (see
@@ -233,9 +327,12 @@ Result: two sliders per room — `<Room> Volume` (Snapcast/software) and `<Room>
 — confirm with `amixer -c <card> scontrols`:
 
 - USB DAC with UAC volume, or a HiFiBerry DAC+ chip → both sliders.
-- **D90 III (likely no host volume) or a Digi/S-PDIF output** → no ALSA control to bridge; that room
-  gets the **software slider only**, and its true analog volume lives on the DAC's knob/remote
-  (bring that into HASS via an IR blaster if wanted).
+- **D90 III Discrete** → ✅ **has one.** Measured 2026-08-27: a UAC2 control with 2032 steps over
+  −127…0 dB. An earlier version of this line read "likely no host volume", which was wrong — see
+  [`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md).
+- **A Digi/S-PDIF output** → no ALSA control to bridge; that room gets the **software slider only**,
+  and its true analog volume lives on the DAC's knob/remote (bring that into HASS via an IR blaster
+  if wanted).
 
 So "expose both" is really _software everywhere, hardware where the device exposes a mixer_.
 
@@ -259,9 +356,22 @@ needs:
 
 1. **Living-room keeps its HiFiBerry DAC+ DSP** (the plan was to retire all HATs). That room's TV
    (Samsung S95C) feeds **optical S/PDIF into the HiFiBerry**, and the downstream DAC (Topping **D30
-   Pro**) is a fixed-output DAC with no volume. The HiFiBerry DSP is therefore the room's volume
-   stage _and_ its TV-input path — the two things a bare digital transport can't do — so the DSP
-   stays on the HAT, feeding the D30 Pro over S/PDIF.
+   Pro**) has no _host-controllable_ volume. The HiFiBerry DSP is therefore the room's volume stage
+   _and_ its TV-input path — the two things a bare digital transport can't do — so the DSP stays on
+   the HAT, feeding the D30 Pro over S/PDIF.
+
+   > **Correction (2026-08-27).** This entry previously said the D30 Pro "is a fixed-output DAC with
+   > no volume." **That is wrong.** Per its manual the D30 Pro has two output modes — `m-p` Pre-Amp
+   > (volume adjustable, **the factory default**) and `m-d` DAC (fixed at maximum) — and its volume
+   > is adjustable by front knob or IR remote. Its house IR codes are already deployed
+   > (`homelab/firmware/esphome/ir-blaster.yaml`, "D30 Pro / D50s Volume Up"/"Down").
+   >
+   > The real constraint is narrower and it is about **addressability, not capability**: the D30 Pro
+   > exposes no host-side volume, and IR volume is **relative up/down with no state readback**, so
+   > an absolute "set to 40%" slider cannot be built on it. That — not an absent volume control — is
+   > why the DSP became the room's volume stage. Capabilities recorded in
+   > [`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md).
+
 2. **Volume became one merged knob per room, not two independent layers.** The plan kept
    `--mixer software` plus a separate MQTT ALSA-hardware slider. In practice the wanted UX was a
    _single_ Snapcast/HASS volume controlling **everything in the room — Snapcast + p2p Spotify
@@ -274,7 +384,7 @@ needs:
 | --------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- | -------------- |
 | **Kitchen**     | USB → Topping **D50s**                                                        | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)                                                                                       | wired **10.42.2.38** | ✅ done        |
 | **Living-room** | HiFiBerry **DAC+ DSP** HAT → S/PDIF → **D30 Pro**; TV optical → HAT S/PDIF-in | Snapcast→**DSP master** bridge (`snap-dsp-volume-bridge`): subscribes to snapserver `Client.OnVolumeChanged`, sets the SigmaDSP master via `dsptoolkit` → covers stream + Spotify + **TV** | wired **10.42.2.39** | ✅ done        |
-| **Office**      | USB → Topping **D90 III Discrete** (reference room)                           | TBD — `--mixer hardware` if the D90 III exposes a UAC volume, else **softvol** (D90 III likely fixed-output)                                                                               | pending              | 🔧 in progress |
+| **Office**      | USB → Topping **D90 III Discrete** (reference room)                           | TBD — `--mixer hardware` if the D90 III exposes a UAC volume, else **softvol**. ⚠️ D90 III volume support is **unverified** — do not infer it from a sibling model                         | pending              | 🔧 in progress |
 
 Implementation notes captured for reuse:
 
