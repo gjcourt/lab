@@ -1,4 +1,4 @@
-# Audio & MIDI Projects (21)
+# Audio & MIDI Projects (22)
 
 This category focuses on digital signal processing (DSP), custom MIDI controllers, and audio
 hardware.
@@ -28,3 +28,4 @@ hardware.
 | 01-019 | [Curved Aluminium Elsinore Enclosure (Offshore-Manufactured)](01-019-aluminium-curved-elsinore-enclosure.md)       | Not Started | Hard       | Months          |
 | 01-020 | [Laminated Curved Elsinore Cabinet (Bent Lamination, GamuT-style)](01-020-laminated-curved-elsinore-cabinet.md)    | Not Started | Hard       | Months          |
 | 01-021 | [Rolled Aluminium Elsinore Cabinet (5052 Shell)](01-021-rolled-aluminium-elsinore-cabinet.md)                      | Not Started | Hard       | Months          |
+| 01-022 | [Multi-DAC Control Plane (Agent at the Metal, Hub in Kubernetes)](01-022-multi-dac-control-plane.md)               | Not Started | Medium     | 1-4 weeks       |
