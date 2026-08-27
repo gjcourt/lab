@@ -70,18 +70,36 @@ file whose entire purpose is preventing exactly that.
 maximum, so a host control would plausibly be absent or inert. A test run in DAC mode would produce
 a false negative — and may well be how the "no host volume" belief started.
 
+**What research found (2026-08-27): nobody has ever tested this.** No `amixer` output, no
+`alsamixer` screenshot, no Windows/macOS slider report exists anywhere for a D30 Pro specifically.
+Two things did turn up, and both sharpen the test:
+
+- **A control appearing is NOT the answer.** On the sibling **E30** — same DAC/Pre-amp mode scheme —
+  the device does enumerate an ALSA control named after itself, and a user reported being **unable
+  to actually control volume in pre-amp mode**. A Roon developer states the general case plainly:
+  _"it is exposed, but non functional… This happens quite often."_ So the test must confirm an
+  **audible level change**, not merely the presence of a control.
+- **Chipset is an XMOS XU-208**, which is UAC2-capable. That makes a volume feature unit _possible_
+  and proves nothing about whether Topping's firmware wires it to the attenuator.
+
+**Confirmed: no app/HID control path.** Topping's own Tune software lists its supported models as
+D50 III, D90 III Discrete, Centaurus, D900, DX9 Discrete, E50 II and DX1 II. **The D30 Pro is not on
+that list** — it predates the app-control generation. Front panel and IR remote are its only
+confirmed control paths.
+
 **How to settle it.** The D30 Pro must be connected over **USB** (in the current living-room chain
 it is fed S/PDIF from the HAT, so this cannot be tested as-wired):
 
 ```bash
 # put the unit in m-p Pre-Amp mode FIRST, then:
-aplay -l                       # find the card number
-amixer -c <card> scontrols     # does a volume control appear?
-alsamixer -c <card>            # visual confirmation
-
-# and check for a HID control interface like the DX5 II's:
-python3 -c "import hid; print(hid.enumerate(0x152a, 0))"
+aplay -l                              # find the card number
+amixer -c <card> scontrols            # step 1: does a control appear?
+amixer -c <card> set '<name>' 50%     # step 2: does it AUDIBLY change level?
 ```
+
+**Step 2 is the real test.** Step 1 passing on its own means nothing — see the E30 above. Then
+repeat in `m-d` DAC mode and compare: if the control vanishes or goes inert there, that confirms the
+behaviour is mode-dependent, and explains any earlier false negative.
 
 **Why the answer matters:** if a UAC2 control appears, the living room needs **no digital-domain
 volume at all** — it becomes `--mixer "hardware:<D30Pro>"`, identical to the kitchen's as-built
@@ -139,11 +157,15 @@ are observed values, not manual claims:
   `snapclient --mixer "hardware:D50s"`, i.e. an **ALSA UAC2 mixer control over USB**, which is
   strong evidence it exposes host-side volume. Recorded as _likely_, not verified, because it is
   inferred from a working configuration rather than read from the manual.
-- **D90 III Discrete** — volume support, host-side control, and register map are **all unknown**. It
-  is _not_ a confirmed model in `toppingctl`'s device table, and per that project's rules its
-  register map must not be assumed to match the DX5 II's. Three models in this vendor's range share
-  a USB product ID with _colliding_ register meanings, so sibling inference is actively dangerous
-  here.
+- **D90 III Discrete** — volume support and register map **unknown**, but **host control is now
+  plausible**: it appears on Topping's official _Tune_ supported-models list (alongside D50 III,
+  Centaurus, D900, DX9 Discrete, E50 II, DX1 II), so it speaks some app-control protocol. ⚠️ **That
+  is not permission to assume its registers match the DX5 II's** — the E50 II and DX1 II are on that
+  same list _and_ share the DX5 II's USB product ID with colliding register meanings. Being
+  app-controllable and being register-compatible are different claims. It is _not_ a confirmed model
+  in `toppingctl`'s device table, and per that project's rules its register map must not be assumed
+  to match the DX5 II's. Three models in this vendor's range share a USB product ID with _colliding_
+  register meanings, so sibling inference is actively dangerous here.
 
 ---
 
