@@ -197,6 +197,72 @@ output latency — `Pi → USB → D90 III` vs. `Pi → USB → DSPi (up to 85 m
 vs. a HAT room — so rooms will drift out of sync unless each client's Snapcast **`latency` offset**
 is tuned to a common target. "In sync" across mixed topologies is a calibration step, not automatic.
 
+## Retiring the living-room HAT: what the USB optical capture has to replace
+
+A **USB audio interface with optical input** (delivered 2026-08) lets the living-room TV feed the Pi
+directly, which is the missing piece for finally retiring that room's HiFiBerry HAT:
+
+```text
+TV ──optical──▶ USB capture ──▶┐
+                               ├──▶ DietPi (mix + volume) ──USB──▶ DAC
+Snapcast / go-librespot ──────▶┘
+```
+
+Per [As-built](#as-built-deployed-2026-07), the HAT is currently doing **two** jobs for that room —
+it is the TV's S/PDIF input _and_ the room's volume stage (SigmaDSP master, driven by
+`snap-dsp-volume-bridge`). The capture device replaces the first. **The second still needs an
+answer**, and it is the harder one, because the downstream D30 Pro is fixed-output with no volume of
+its own.
+
+So unlike the kitchen — which routes its one knob to the D50s' UAC2 volume via
+`--mixer "hardware:D50s"` — this room has no hardware stage to delegate to once the HAT is gone.
+**Digital-domain volume is forced here, not chosen.**
+
+### Doing digital volume without paying for it
+
+The usual objection is bit loss: attenuating a 16-bit stream by −30 dB discards ~5 bits (6.02 dB per
+bit), leaving ~11 effective — audible on quiet dialogue, which is most of what TV audio is.
+
+**That cost is avoidable, and the avoidance is the whole design requirement.** It applies to 16-bit
+_integer_ attenuation. If the mix and volume stage run in **32-bit float** (PipeWire does natively)
+and the result is sent to the DAC as **24-bit** over USB, the attenuation happens with enormous
+headroom and the only quantisation is the final one. Sources here are 44.1/16 and 48/16 while USB
+into these DACs carries up to 32/768 — there is room to spend and no reason not to.
+
+**Requirement, therefore: float mix → 24-bit USB out. Never attenuate in 16-bit integer.** A
+`softvol` plugin operating at source bit depth is the wrong implementation of the right idea.
+
+### Ordering constraint the one-knob UX imposes
+
+The knob must sit **after** the mix. `snapclient --mixer software` attenuates only the Snapcast
+stream — the as-built already records that it "doesn't touch the p2p go-librespot path", and TV
+capture is a third source it likewise never sees. Whatever combines the three owns the volume.
+
+### TV-path gotchas
+
+- **Set the TV's optical output to PCM, not Dolby/bitstream.** A TV defaulting to Dolby Digital
+  sends encoded AC-3 down Toslink and the capture yields undecodable data. First thing to check when
+  the capture "works" but sounds like noise or silence. (The existing HAT path already required
+  this, so it may already be set on that TV.)
+- **Do not route TV audio through Snapserver.** Snapcast deliberately buffers for multi-room sync,
+  and that buffer destroys lip sync. TV audio must take the local mix path straight out. The
+  consequence — TV audio is living-room only — is a design decision, not a defect to fix later.
+- **Sample-rate agreement.** TV optical is typically 48 kHz; go-librespot and Navidrome are 44.1
+  kHz. The mixer must resample one of them. Decide where, rather than letting whichever component
+  cares first make the choice.
+
+### Does `toppingctl` change this?
+
+Only for rooms whose DAC has a volume the host can reach. `toppingctl` reads and writes device-side
+volume over USB HID — a connected DX5 II reports `volume 60 = -30.0 dB` live — which offers a third
+option beyond "UAC2 mixer" and "software attenuation" for the **Office / D90 III** row still marked
+TBD above. It does **not** help a fixed-output DAC, which has no volume to set.
+
+⚠️ The D90 III is not a confirmed model in `toppingctl`'s device table and its register map must not
+be assumed to match the DX5 II's. See [`01-022`](01-022-multi-dac-control-plane.md): the agent that
+would own such a USB connection is the one that design describes, and its rule is that unconfirmed
+models stay read-only until driven.
+
 ## Volume control (Home Assistant)
 
 > **As-built note:** the deployment chose a _single merged knob_ per room (see
