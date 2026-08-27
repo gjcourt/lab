@@ -10,6 +10,24 @@ Printed by **Forge Labs (Canada)** in glass-filled nylon. Owner-confirmed rather
 retained order, so check the exact trade name when ordering — the requirement is a glass-filled
 PA12-class powder.
 
+### Print log
+
+| Version    | Ordered    | Service         | Material           | Outcome                              |
+| ---------- | ---------- | --------------- | ------------------ | ------------------------------------ |
+| v1 (69 mm) | —          | Forge Labs (CA) | glass-filled nylon | **too long in Y.** Bolts fitted well |
+| v2 (60 mm) | 2026-08-26 | Forge Labs (CA) | glass-filled nylon | _awaiting delivery_                  |
+
+**When v2 arrives, check these and fill in the row above.** v1 had no record, which is why its hole
+fit had to be reconstructed from memory a year later.
+
+1. **Does it fit the Y gap?** This is the open question — 60 mm came from shortening the ears, not
+   from measuring the space. If it fits, measure the remaining clearance and write it here so a v3
+   never has to guess.
+2. **Do the four M5×12 seat?** Two up into the valve's tapped base, two down through the feet.
+3. **Does a hex key reach the valve bolts** down the Ø9 access bores with the valve attached?
+4. **Does it clear the vibratory pump?** `CORE_X = 30 mm` is commented "shrink if the gap is tight"
+   and is the one dimension never verified against the machine.
+
 > ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches the
 > `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the full
 > measured-input table but has not been in the machine. v1 was printed, found too long, and v2
