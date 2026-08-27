@@ -12,12 +12,12 @@ Manuals for house audio hardware are archived under the family documents share
 
 ## Verification status
 
-| Device               | Volume?    | Source of truth       | Verified        |
-| -------------------- | ---------- | --------------------- | --------------- |
-| **D30 Pro**          | ✅ **yes** | official manual (PDF) | 2026-08-27      |
-| **DX5 II**           | ✅ **yes** | live device read      | 2026-08-27      |
-| **D50s**             | ✅ likely  | inferred — see below  | ❌ NOT verified |
-| **D90 III Discrete** | ❓ unknown | —                     | ❌ NOT verified |
+| Device               | Volume?                                   | Source of truth       | Verified        |
+| -------------------- | ----------------------------------------- | --------------------- | --------------- |
+| **D30 Pro**          | ✅ **yes** — but **host control UNKNOWN** | official manual (PDF) | 2026-08-27      |
+| **DX5 II**           | ✅ **yes**                                | live device read      | 2026-08-27      |
+| **D50s**             | ✅ likely                                 | inferred — see below  | ❌ NOT verified |
+| **D90 III Discrete** | ❓ unknown                                | —                     | ❌ NOT verified |
 
 ---
 
@@ -45,17 +45,51 @@ the box it is a pre-amp with an adjustable level.
 
 ### Volume control paths
 
-- **Front knob** — rotate to adjust.
-- **IR remote** — dedicated volume up / volume down keys.
-- **⚠️ No host-side volume.** Its inputs are USB / coax / optical, and nothing in the manual exposes
-  a host-controllable volume. **Do not assume an ALSA UAC2 mixer control exists** the way it does on
-  a D50s; that is exactly the sibling-model inference this file exists to prevent.
+- **Front knob** — rotate to adjust. _Verified: manual._
+- **IR remote** — dedicated volume up / volume down keys. _Verified: manual, and the house IR codes
+  are deployed._
+- **USB (host-controllable) — ❓ UNKNOWN, NOT TESTED.** See below. Do **not** state either way.
 
-**Practical consequence:** the D30 Pro's volume is reachable from automation **only over IR**, and
-IR volume is **relative (up/down steps) with no state readback**. An absolute "set volume to 40%"
-slider cannot be built on IR alone — you can nudge, but you cannot know or command a level. Any
-design needing absolute control must either track state open-loop (fragile) or put the authoritative
-level somewhere else.
+### ⚠️ Whether USB volume works is an OPEN QUESTION, not a settled "no"
+
+An earlier version of this file asserted "no host-side volume." **That assertion was not evidence.**
+It came from the manual not mentioning USB volume — and a manual describes the front panel and
+remote, not USB descriptors. Absence of evidence got written down as evidence of absence, in the
+file whose entire purpose is preventing exactly that.
+
+**Why it is genuinely plausible the D30 Pro does expose USB volume:**
+
+- USB Audio Class 2 lets a device advertise a **feature unit** with volume. Whether one appears is a
+  property of the USB firmware, not of the product tier — so a D50s having one implies nothing about
+  the D30 Pro either way.
+- The D30 Pro accepts PCM to 384 kHz/32-bit and native DSD256 over USB, i.e. an XMOS-class interface
+  with a vendor driver — the kind that commonly does advertise a volume feature unit.
+- It demonstrably **has an attenuator to expose**, since Pre-Amp mode is real.
+
+**⚠️ The test is only valid in `m-p` (Pre-Amp) mode.** In `m-d` (DAC) mode volume is fixed at
+maximum, so a host control would plausibly be absent or inert. A test run in DAC mode would produce
+a false negative — and may well be how the "no host volume" belief started.
+
+**How to settle it.** The D30 Pro must be connected over **USB** (in the current living-room chain
+it is fed S/PDIF from the HAT, so this cannot be tested as-wired):
+
+```bash
+# put the unit in m-p Pre-Amp mode FIRST, then:
+aplay -l                       # find the card number
+amixer -c <card> scontrols     # does a volume control appear?
+alsamixer -c <card>            # visual confirmation
+
+# and check for a HID control interface like the DX5 II's:
+python3 -c "import hid; print(hid.enumerate(0x152a, 0))"
+```
+
+**Why the answer matters:** if a UAC2 control appears, the living room needs **no digital-domain
+volume at all** — it becomes `--mixer "hardware:<D30Pro>"`, identical to the kitchen's as-built
+pattern. That is a materially different design, so test before building.
+
+**If and only if USB volume turns out to be absent**, the fallback constraint applies: IR is the
+sole remote path, and IR volume is **relative up/down with no state readback**, so it cannot back an
+absolute "set to 40%" slider — you can nudge, but never know or command a level.
 
 ### Inputs / outputs
 

@@ -214,15 +214,27 @@ it is the TV's S/PDIF input _and_ the room's volume stage (SigmaDSP master, driv
 answer**, and it is the harder one.
 
 Not because the D30 Pro lacks a volume control — it has one, adjustable, on by default (see
-[`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md)) — but because
-that volume is **not addressable from the host**. The kitchen can route its one knob to the D50s'
-UAC2 mixer over USB (`--mixer "hardware:D50s"`); the D30 Pro offers no equivalent. Its only remote
-path is IR, which is **relative up/down with no state readback**, so it cannot back an absolute HA
-slider on its own.
+[`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md)). The open
+question is whether the **host** can reach it.
 
-So the choice is between a digital-domain volume on the Pi, or an open-loop IR scheme that tracks a
-level it cannot read back. **Digital volume is the sane default here** — chosen for addressability,
-not forced by missing hardware.
+**⚠️ Test this before designing around it.** The kitchen routes its one knob to the D50s' UAC2 mixer
+over USB (`--mixer "hardware:D50s"`). Whether the D30 Pro advertises an equivalent control is
+**untested** — it has never been connected over USB in this house, and the belief that it does not
+came from the manual's silence rather than a measurement. The test is two commands, and it is only
+valid with the unit in `m-p` Pre-Amp mode:
+
+```bash
+aplay -l && amixer -c <card> scontrols
+```
+
+**The result changes the design:**
+
+- **If a UAC2 control appears** — the room needs no digital-domain volume at all. It becomes
+  `--mixer "hardware:<D30Pro>"`, identical to the kitchen, and everything below about float
+  pipelines is unnecessary.
+- **If it does not** — IR is the only remote path, and IR volume is relative up/down with no state
+  readback, so it cannot back an absolute slider. Only then does digital-domain volume become the
+  sane default, and the section below applies.
 
 ### The alternative the D30 Pro's own optical input allows
 
