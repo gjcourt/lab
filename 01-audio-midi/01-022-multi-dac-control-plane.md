@@ -89,8 +89,15 @@ So identity is layered:
 | Serial number      | the **unit**     | two of the same model on one machine |
 | Agent ID           | the **location** | which machine it is plugged into     |
 
-Primary key is `(agent, serial)`. Display name is the product string. **PID is never used to select
-a register map.**
+⚠️ **Correction (2026-08-27, measured): serial is not usable.** Three of four house DACs report **no
+USB serial at all** — only one does, and its value begins `YYMM-`, which looks like an unsubstituted
+template rather than a per-unit serial. A `(agent, serial)` key fails on real hardware.
+
+**What replaces it is the deployment shape.** Each DAC gets its own paired single-board computer, so
+**the agent's identity names the device**: one agent, one DAC, and the host's name is already the
+room. Primary key is `(agent, product_string)`; serial is used only when present, as a tiebreaker
+for the case of two identical models on one host. Display name is the product string. **PID is never
+used to select a register map** — six models share one product ID.
 
 ## 4. The safety property: unverified devices are read-only
 

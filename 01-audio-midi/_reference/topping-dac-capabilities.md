@@ -19,8 +19,46 @@ below is inferred from a manual's silence.
 | -------------------- | ------------------------- | --------------------------- | ------------------ |
 | **D30 Pro**          | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
 | **D90 III Discrete** | ✅ **YES**                | **2032, ~1/16 dB** (−127…0) | measured on-device |
-| **DX5 II**           | ✅ yes (USB HID)          | raw step + dB               | live device read   |
+| **DX5 II**           | ✅ yes (USB HID)          | **unmeasured** — see below  | HID read, not ALSA |
 | **D50s**             | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
+
+⚠️ **The DX5 II row is not apples-to-apples.** The other three were read from ALSA on a Pi, where
+`amixer contents` reports `min`/`max` and `dBminmax` straight from the UAC2 descriptor. The DX5 II
+was read over **USB HID from a Mac**, which returns a value and no range. Its step count is
+genuinely unknown. To make it comparable, plug it into a Pi and run `amixer -c <n> contents`.
+
+⚠️ **And its dB figure is computed, not reported.** `toppingctl`'s `readsettings.py` renders volume
+as `-raw/2`, hardcoding 0.5 dB per step. But `volumeStep` is a _device setting_
+(`{0: 'half_db', 1: 'one_db'}`) that nothing in the code reads before dividing. Set the device to
+`one_db` from the panel, remote or vendor app and every dB number the tool prints is wrong by 2x,
+silently.
+
+## USB descriptor facts (measured 2026-08-27)
+
+| Device           | `bcdDevice` | Serial reported |
+| ---------------- | ----------- | --------------- |
+| D30 Pro          | `0x0244`    | **none**        |
+| D50s             | `0x0103`    | **none**        |
+| D90 III Discrete | `0x0052`    | **none**        |
+| DX5 II           | —           | `YYMM-017XG-…`  |
+
+### ⚠️ Serial numbers are NOT a usable identity key
+
+**Three of four DACs report no USB serial at all.** Only the DX5 II does, and its value begins
+`YYMM-`, which reads like an unsubstituted template rather than a per-unit serial — so it may not be
+unique across DX5 II units either.
+
+Any design keyed on `(host, serial)` fails on this hardware. What rescues it is the deployment
+shape: **one Pi per DAC**, so the agent's own identity names the device, with the product string as
+display name. See [`01-022`](../01-022-multi-dac-control-plane.md).
+
+### `bcdDevice` is not confirmed to be the firmware version
+
+`bcdDevice` is the USB _device release number_. Vendors commonly set it to the firmware revision,
+and the D30 Pro's `2.44` is plausible against Topping's 2.x scheme (the DX5 II gates features on
+"firmware ≥ 2.40"). **But the fleet reads 2.44 / 1.03 / 0.52**, which looks more like per-model
+device revisions than one firmware scheme. **Unconfirmed** — check the unit's own setup menu and
+compare before treating `bcdDevice` as the firmware version.
 
 **All four are measured. Nothing in this table is inferred.**
 
