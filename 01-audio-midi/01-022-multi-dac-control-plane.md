@@ -38,6 +38,14 @@ can only reach a USB HID device if:
 
 Satisfy all four and the reward is a DAC in a rack, connected to nothing worth listening to.
 
+**The obvious objection is USB/IP** (`usbip` + `vhci-hcd`), which exports a USB device across a
+network so a remote host can claim it. It is a real technology and it would technically work. It is
+rejected here for the same reason the agent registers outbound: it needs a privileged kernel module
+on the receiving side, and it assumes a stable LAN. The machines these DACs plug into are laptops
+that sleep, roam between networks, and sit behind NAT. USB/IP moves the _device_ across an
+unreliable boundary; the design below moves _messages_ across it instead, which is the thing that
+tolerates the boundary being unreliable.
+
 So the controller cannot be the thing in Kubernetes. Only the **coordination** can be.
 
 ## 2. Architecture: agent at the metal, hub in the cluster
