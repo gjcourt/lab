@@ -19,8 +19,40 @@ below is inferred from a manual's silence.
 | -------------------- | ------------------------- | --------------------------- | ------------------ |
 | **D30 Pro**          | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
 | **D90 III Discrete** | ✅ **YES**                | **2032, ~1/16 dB** (−127…0) | measured on-device |
-| **DX5 II**           | ✅ yes (USB HID)          | **unmeasured** — see below  | HID read, not ALSA |
+| **DX5 II**           | ✅ **YES**                | **2032, ~1/16 dB** (−127…0) | measured on-device |
 | **D50s**             | ✅ **YES**                | 128, 1 dB (−127…0 dB)       | measured on-device |
+
+## ⚠️ The UAC2 volume and the device's own volume are SEPARATE, and they compound
+
+Measured on a DX5 II (office, 2026-08-27). Two ALSA writes, one of them with the DAC awake:
+
+```text
+panel:  -30 dB       # device's own volume — did not move
+ALSA:   -95.25 dB    # UAC2 stream volume — set twice by the host
+```
+
+The front panel never tracked the host control. These are **two attenuators in series**, so total
+attenuation is their sum — about −125 dB in the state above, which presents as a DAC that appears
+completely dead.
+
+**Design rule that follows: a controller must own exactly one of them and pin the other at unity.**
+Otherwise Snapcast drives the UAC2 control while a HID client drives the device volume, the two
+compound, and the same knob position sounds different depending on hidden state.
+
+Resting state for a host-controlled node should therefore be **UAC2 at 0 dB (max)**, with the
+device's own attenuator carrying the volume — or the exact inverse, chosen deliberately and
+documented per room. Never both.
+
+⚠️ **Unknown for the D50s and D30 Pro.** Neither exposes HID, so the UAC2 control is the only
+host-reachable one and the question does not bite today. But whether their UAC2 control drives the
+same attenuator as their front panel is **untested** — do not assume it matches the DX5 II's
+behaviour either way.
+
+### Auto-standby confounds these measurements
+
+The DX5 II drops to standby after ~1 minute with no valid input signal. The first attempt at this
+test silently wrote to a powered-off device. **Confirm the unit is awake before and after any
+measurement**, or hold a stream open while testing.
 
 ⚠️ **The DX5 II row is not apples-to-apples.** The other three were read from ALSA on a Pi, where
 `amixer contents` reports `min`/`max` and `dBminmax` straight from the UAC2 descriptor. The DX5 II
