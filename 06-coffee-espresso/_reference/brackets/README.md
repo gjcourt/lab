@@ -6,8 +6,27 @@ Two parametric brackets that mount the plumb-in regulation stack (see
 
 ## Ordering
 
-Printed by **Forge Labs (Canada)**, recalled as glass-filled nylon — the owner's recollection, not a
-retained order. Confirm the material and the trade name at order time.
+Printed by **Forge Labs (Canada)** in glass-filled nylon. Owner-confirmed rather than taken from a
+retained order, so check the exact trade name when ordering — the requirement is a glass-filled
+PA12-class powder.
+
+### Print log
+
+| Version    | Ordered    | Service         | Material           | Outcome                              |
+| ---------- | ---------- | --------------- | ------------------ | ------------------------------------ |
+| v1 (69 mm) | —          | Forge Labs (CA) | glass-filled nylon | **too long in Y.** Bolts fitted well |
+| v2 (60 mm) | 2026-08-26 | Forge Labs (CA) | glass-filled nylon | _awaiting delivery_                  |
+
+**When v2 arrives, check these and fill in the row above.** v1 had no record, which is why its hole
+fit had to be reconstructed from memory a year later.
+
+1. **Does it fit the Y gap?** This is the open question — 60 mm came from shortening the ears, not
+   from measuring the space. If it fits, measure the remaining clearance and write it here so a v3
+   never has to guess.
+2. **Do the four M5×12 seat?** Two up into the valve's tapped base, two down through the feet.
+3. **Does a hex key reach the valve bolts** down the Ø9 access bores with the valve attached?
+4. **Does it clear the vibratory pump?** `CORE_X = 30 mm` is commented "shrink if the gap is tight"
+   and is the one dimension never verified against the machine.
 
 > ⚠️ **v2 has never been fitted.** `scripts/check_brackets.py` proves the exported STL matches the
 > `.scad` and the two dimensioned inputs it encodes — stand-off and bolt spacing — not the full
@@ -39,14 +58,12 @@ The settings below are for the **FDM** fallback and do not apply to a powder pro
 part-fuses, and `HEAD_BORE_D` is Ø9.0 for an 8.5 mm socket head — the same 0.25 mm a side, on a
 larger diameter.
 
-**This is unresolved, not settled.** What is known is that v1 was printed and failed on length.
-Whether its bolts fitted was never recorded, so there is no evidence either way on hole fit in this
-process — and the note cannot claim there is while also saying, above, that v1's clearance went
-unrecorded.
+**Resolved: leave the holes as drawn.** Owner-confirmed 2026-08 — the bolts fitted well on the v1
+print, which came from the same service in the same material. v1 failed on length alone.
 
-So: do not widen the holes pre-emptively, because a change with no measurement behind it is a guess
-in the other direction. **Check bolt fit on this print and record it here.** If the holes come back
-tight, ream to 5.5 rather than editing the model.
+So 5.5 mm is proven in this process, and widening it would be a guess in the other direction. If a
+future order does come back tight, ream rather than editing the model, and record the date and
+service here.
 
 ## Regulator clamp — `mini-v2-regulator-clamp`
 
