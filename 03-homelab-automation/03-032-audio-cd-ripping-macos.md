@@ -77,10 +77,16 @@ not grab or eject the disc mid-rip.
 - **Canonical path:** `/mnt/main/family/media/music/<artist>/<album>/` on hestia
   (`ssh truenas_admin@10.42.2.10`). This is the modern FLAC library the 03-029 owned-dedup reads
   (~1,200 FLACs).
-- **Convention (confirmed by inspecting real albums):** **lowercase-kebab** artist and album
-  directory names; track files `NN Title.flac` (2-digit zero-padded, single space, Title-Case title,
-  **no dash** — e.g. `01 Fig Tree Bay.flac`). Tags and art are **embedded**; **no** sidecar
-  `.cue`/`.log`/`cover.jpg` in album dirs.
+- **Convention:** **Title Case** artist and album directory names, derived **from the tags**
+  (`album_artist` / `album`), e.g. `Cécile McLorin Salvant/Ghost Song`; track files `NN Title.flac`
+  (2-digit zero-padded, single space, Title-Case title, **no dash** — e.g. `01 Fig Tree Bay.flac`).
+  Tags and art are **embedded**; **no** sidecar `.cue`/`.log`/`cover.jpg` in album dirs.
+  - ⚠️ **This was lowercase-kebab until 2026-07-22**, when every folder was re-derived from tags in
+    a one-off rename. Deriving from tags rather than un-kebabbing is what restores diacritics and
+    real punctuation (`arne-domnerus` → `Arne Domnérus`). Anything still describing kebab dirs is
+    describing the pre-2026-07-22 library.
+  - Navidrome is **tag-driven**, so directory naming is cosmetic to the player — it matters for
+    human browsing and for the 03-029 owned-dedup, which keys on `Artist/Album` paths.
 - **Do not** target the legacy `/mnt/main/media/music/` (Synology-era Title-Case + `@Syno*`
   sidecars).
 
@@ -91,14 +97,18 @@ not grab or eject the disc mid-rip.
 2. Confirm/fix metadata (artist, album, year, disc-of-set) and cover art.
 3. **Extract** to a local staging dir, e.g. `~/src/music-library/rips/`.
 4. XLD writes `NN Title.flac` (embedded tags + art) plus an album `.log` and `.cue`.
-5. Normalize the `Artist/Album` dir names to lowercase-kebab, then move over SMB (same path the
-   video pipeline uses), dropping the `.log`/`.cue` the on-hestia library doesn't carry:
+5. Build the `Artist/Album` tree **from the tags** (Title Case, not kebab), then transfer with
+   **rsync over SSH** — not the SMB mount — dropping the `.log`/`.cue` the library doesn't carry.
+   SMB was tried and rejected: it silently mangles ownership and needs the share mounted, whereas
+   SSH stages into a scratch dir and does one `sudo rsync --chown` into the owner-only library.
 
    ```bash
-   kebab() { echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g'; }
+   # stage to the scratch dir, then land it with correct ownership
    rsync -rtv --exclude='*.log' --exclude='*.cue' \
-     ~/src/music-library/rips/<artist>/<album>/ \
-     /Volumes/family/media/music/<artist>/<album>/
+     ~/src/music-library/rips/<Artist>/<Album>/ \
+     <host>:<scratch>/<Artist>/<Album>/
+   ssh <host> "sudo rsync -a --ignore-existing --chown=<uid>:users \
+     --chmod=D755,F644 <scratch>/ <library>/"
    ```
 
 6. **Refresh the SFPL owned-dedup list** (03-029) so future holds don't re-borrow what you now own —
@@ -123,9 +133,8 @@ in the log.**
       expected) against an AccurateRip-pressed disc.
 - [ ] **First CD ripped + verified** — a disc ripped to FLAC with AccurateRip "Accurately ripped" on
       all tracks and `flac -t` all `ok`.
-- [ ] **Landed in the library correctly** — files at
-      `/mnt/main/family/media/music/<artist>/<album>/`, lowercase-kebab dirs, `NN Title.flac`,
-      embedded tags + art, no sidecars; visible in Navidrome.
+- [ ] **Landed in the library correctly** — files at `<library>/<Artist>/<Album>/`, Title Case dirs
+      derived from tags, `NN Title.flac`, embedded tags + art, no sidecars; visible in Navidrome.
 - [ ] **Owned-dedup refreshed** — `owned_albums.txt` (03-029) re-generated so the borrow queue stops
       re-borrowing the now-owned album.
 
