@@ -68,6 +68,23 @@ becomes a rolling window rather than a hard batch limit.
 - **Fallback = semi-auto:** if full-auto breaks, generate the next **30 one-click hold deep-links**
   (pickup branch pre-set) that the owner clicks through manually. Same queue, degraded automation.
 
+## Wave mix — 70% CDs / 30% DVDs
+
+Each wave targets **70% music CDs / 30% DVDs-Blu-rays** across the media holds. At the 30-hold
+ceiling that is **21 CDs : 9 discs**.
+
+This is a _separate axis_ from the ~20% exploration reserve below — that one splits canon against
+discovery **within** music; this one splits music against video.
+
+**Books share the same 30-hold ceiling** and sit in neither category. Apply 70:30 to the CD+DVD
+portion and treat books as an exogenous claim on the ceiling, not as part of the denominator.
+
+> Recorded here 2026-08-30 after the target was requested but never written down. The tooling had
+> drifted to a 15/10 default (60:40) with nothing to contradict it. It is now stated here, in the
+> operational `AGENTS.md`, and encoded as the script's own defaults — three places, because the
+> working directory that holds the tooling is not version controlled, and a preference that exists
+> only in one person's memory is a preference that gets silently lost.
+
 ## Taste ranking
 
 Lead lanes: **Jazz / Swing** and **Funk-Soul** first, then **Classic Rock / Blues**. Hip-hop is
