@@ -101,8 +101,20 @@ Lives in `~/src/utility/` alongside `valet` and `portfolio`.
    albums (taste lanes + the ~20% exploration allotment).
 2. **Hold placer** — BiblioCommons authenticated session + place-hold POST (pickup = Sacramento St),
    or the one-click deep-link generator in the semi-auto fallback.
-3. **State tracker** — sqlite or CSV persisting each album through
-   `queued → held → ready → checked-out → ripped → returned`.
+3. **State tracker** — ✅ **built 2026-08-30** (`scripts/track.py` → `state.csv`), persisting each
+   item through `held → ready → checked_out → returned`; `ripped` is set by hand. `--report` prints
+   the current CD:DVD mix against the target and runs offline.
+
+   **It classifies on the bib's `format` field, not by matching titles against the queues** — and
+   that distinction is the whole reason it works. `list_holds()` returns no format, and SFPL's
+   resolved titles do not match the queue titles: it stores _Spider-Man: Into the Spider-Verse_ as
+   title `Spider-man` with subtitle `Into the Spider-verse`, and resolves _Ella and Louis_ to
+   `Ella`. Title matching left 11 of 30 holds unclassifiable. Formats are fetched once per bibId and
+   cached, so a re-sync costs zero lookups.
+
+   Without this the wave mix was **unmeasurable**, which is exactly how the 70:30 target above
+   drifted to 60:40 with nobody able to notice.
+
 4. **Ready/renewal surfacer** — flags items ready for pickup (→ refill a hold slot) and items
    nearing their due date that still need renewing.
 
