@@ -68,6 +68,23 @@ becomes a rolling window rather than a hard batch limit.
 - **Fallback = semi-auto:** if full-auto breaks, generate the next **30 one-click hold deep-links**
   (pickup branch pre-set) that the owner clicks through manually. Same queue, degraded automation.
 
+## Wave mix — 70% CDs / 30% DVDs
+
+Each wave targets **70% music CDs / 30% DVDs-Blu-rays** across the media holds. At the 30-hold
+ceiling that is **21 CDs : 9 discs**.
+
+This is a _separate axis_ from the ~20% exploration reserve below — that one splits canon against
+discovery **within** music; this one splits music against video.
+
+**Books share the same 30-hold ceiling** and sit in neither category. Apply 70:30 to the CD+DVD
+portion and treat books as an exogenous claim on the ceiling, not as part of the denominator.
+
+> Recorded here 2026-08-30 after the target was requested but never written down. The tooling had
+> drifted to a 15/10 default (60:40) with nothing to contradict it. It is now stated here, in the
+> operational `AGENTS.md`, and encoded as the script's own defaults — three places, because the
+> working directory that holds the tooling is not version controlled, and a preference that exists
+> only in one person's memory is a preference that gets silently lost.
+
 ## Taste ranking
 
 Lead lanes: **Jazz / Swing** and **Funk-Soul** first, then **Classic Rock / Blues**. Hip-hop is
@@ -84,8 +101,20 @@ Lives in `~/src/utility/` alongside `valet` and `portfolio`.
    albums (taste lanes + the ~20% exploration allotment).
 2. **Hold placer** — BiblioCommons authenticated session + place-hold POST (pickup = Sacramento St),
    or the one-click deep-link generator in the semi-auto fallback.
-3. **State tracker** — sqlite or CSV persisting each album through
-   `queued → held → ready → checked-out → ripped → returned`.
+3. **State tracker** — ✅ **built 2026-08-30** (`scripts/track.py` → `state.csv`), persisting each
+   item through `held → ready → checked_out → returned`; `ripped` is set by hand. `--report` prints
+   the current CD:DVD mix against the target and runs offline.
+
+   **It classifies on the bib's `format` field, not by matching titles against the queues** — and
+   that distinction is the whole reason it works. `list_holds()` returns no format, and SFPL's
+   resolved titles do not match the queue titles: it stores _Spider-Man: Into the Spider-Verse_ as
+   title `Spider-man` with subtitle `Into the Spider-verse`, and resolves _Ella and Louis_ to
+   `Ella`. Title matching left 11 of 30 holds unclassifiable. Formats are fetched once per bibId and
+   cached, so a re-sync costs zero lookups.
+
+   Without this the wave mix was **unmeasurable**, which is exactly how the 70:30 target above
+   drifted to 60:40 with nobody able to notice.
+
 4. **Ready/renewal surfacer** — flags items ready for pickup (→ refill a hold slot) and items
    nearing their due date that still need renewing.
 
