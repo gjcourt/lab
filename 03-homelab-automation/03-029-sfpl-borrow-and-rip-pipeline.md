@@ -85,6 +85,18 @@ portion and treat books as an exogenous claim on the ceiling, not as part of the
 > working directory that holds the tooling is not version controlled, and a preference that exists
 > only in one person's memory is a preference that gets silently lost.
 
+### Franchise cap — ~10% of the DVD portion, max 25%
+
+The six tracked franchises (Bond, Pixar, Marvel, Star Wars, Lord of the Rings, Indiana Jones) supply
+**85 of the 440 DVD candidates**. They are deliberately excluded from the `curation/movies-*.md`
+genre lists and live in the franchise appendix of [`03-028`](03-028-media-library-buildout.md)
+instead, so a queue built only from the genre lists misses them entirely — and a queue built naively
+from both lets them dominate, because they sit together rather than spread across lanes.
+
+Target **~10%** of the DVD portion, hard cap **25%**; the remaining **>=75%** stays open to curated
+picks. Enforced against _total_ DVD holds rather than per-wave — a per-wave cap drifts for the same
+reason the 70:30 target did.
+
 ## Taste ranking
 
 Lead lanes: **Jazz / Swing** and **Funk-Soul** first, then **Classic Rock / Blues**. Hip-hop is
