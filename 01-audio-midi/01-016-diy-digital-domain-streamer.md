@@ -281,8 +281,8 @@ capture is a third source it likewise never sees. Whatever combines the three ow
 
 Only for rooms whose DAC has a volume the host can reach. `toppingctl` reads and writes device-side
 volume over USB HID — a connected DX5 II reports `volume 60 = -30.0 dB` live — which offers a third
-option beyond "UAC2 mixer" and "software attenuation" for the **Office / D90 III** row still marked
-TBD above. It helps only where the DAC both has a volume and exposes it to the host — see
+option beyond "UAC2 mixer" and "software attenuation" for the **Office** row still marked TBD above.
+It helps only where the DAC both has a volume and exposes it to the host — see
 [`_reference/topping-dac-capabilities.md`](_reference/topping-dac-capabilities.md) before assuming
 either.
 
@@ -393,19 +393,23 @@ needs:
 >
 > **Knock-on effects, not yet resolved here:**
 >
-> - The **Office** row assumed the D90 III would land there. It did not. What serves the office is
->   an open question again.
+> - The **Office** row assumed the D90 III would land there. It did not — the office gets a **DX5
+>   II** instead. Better fit than it looks: the DX5 II is a DAC _and_ headphone amp, so headphones
+>   and the Snapcast streamer share one device, which the office needs and the living room does not.
+>   It also settles the office's long-`TBD` volume question, because the DX5 II is the one model
+>   `toppingctl` has verified live over USB HID. The **desktop** stays on the Adam Audio **D3V**
+>   active monitor (no ALSA control — software/Snapcast volume plus the analog knob).
 > - The living-room volume mechanism needs re-documenting. The `snap-dsp-volume-bridge` /
 >   SigmaDSP-master approach described below belongs to the superseded HiFiBerry chain and does not
 >   describe the current one.
 > - ⚠️ **`UR27` is recorded as given and has not been verified against a manufacturer part number.**
 >   Confirm the exact model before anyone cites this file for a build.
 
-| Room            | DAC / DSP                                                                                     | One-knob volume mechanism                                                                                        | Network              | Status                            |
-| --------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
-| **Kitchen**     | USB → Topping **D50s**                                                                        | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)             | wired **10.42.2.38** | ✅ done                           |
-| **Living-room** | DietPi streamer → **D90 III Discrete**; TV audio in via **UR27**                              | Volume mechanism to be re-documented — the SigmaDSP-master bridge below described the superseded HiFiBerry chain | wired **10.42.2.39** | ✅ done (rebuilt, see correction) |
-| **Office**      | ⚠️ **Reassign.** The D90 III moved to the living-room; what serves the office is not recorded | TBD                                                                                                              | pending              | 🔧 needs re-plan                  |
+| Room            | DAC / DSP                                                                                         | One-knob volume mechanism                                                                                                                     | Network              | Status                            |
+| --------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
+| **Kitchen**     | USB → Topping **D50s**                                                                            | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)                                          | wired **10.42.2.38** | ✅ done                           |
+| **Living-room** | DietPi streamer → **D90 III Discrete**; TV audio in via **UR27**                                  | Volume mechanism to be re-documented — the SigmaDSP-master bridge below described the superseded HiFiBerry chain                              | wired **10.42.2.39** | ✅ done (rebuilt, see correction) |
+| **Office**      | USB → Topping **DX5 II** (DAC **+ headphone amp** — headphones and the streamer share one device) | `toppingctl` device-side volume over USB HID — the DX5 II is the **one model verified live** (`volume 60 = -30.0 dB`), so no softvol fallback | pending              | 🔧 awaiting DAC hookup            |
 
 Implementation notes captured for reuse:
 
@@ -433,8 +437,8 @@ Implementation notes captured for reuse:
       present) — kitchen ✅, living-room ✅, office ⬜ (`--mixer hardware` vs softvol TBD).
 - [ ] **Wired ethernet + static IP + WiFi disabled** per room — kitchen ✅ (.38), living-room ✅
       (.39), office ⬜ (verify wired drop).
-- [ ] **Office / D90 III**: snapclient joins on USB, volume wired, **PEQ configured** (Topping
-      Tune) + confirmed on the USB input.
+- [ ] **Office / DX5 II**: snapclient joins on USB, volume wired via `toppingctl`, **PEQ
+      configured** (Topping Tune) + confirmed on the USB input.
 - [ ] **Per-client Snapcast `latency` offset calibrated** across all rooms (chains differ → they
       drift otherwise).
 - [ ] **Migration runbook in `homelab`** — the reusable bundle exists at
