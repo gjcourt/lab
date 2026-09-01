@@ -287,9 +287,11 @@ TBD above. It helps only where the DAC both has a volume and exposes it to the h
 either.
 
 ⚠️ The D90 III is not a confirmed model in `toppingctl`'s device table and its register map must not
-be assumed to match the DX5 II's. See [`01-022`](01-022-multi-dac-control-plane.md): the agent that
-would own such a USB connection is the one that design describes, and its rule is that unconfirmed
-models stay read-only until driven.
+be assumed to match the DX5 II's. **A WebHID decoding attempt against the D90 III was made
+2026-08-30/31; the outcome is not recorded here.** Until a result is written down, the model stays
+unconfirmed and read-only per the rule below. See [`01-022`](01-022-multi-dac-control-plane.md): the
+agent that would own such a USB connection is the one that design describes, and its rule is that
+unconfirmed models stay read-only until driven.
 
 ## Volume control (Home Assistant)
 
@@ -380,11 +382,30 @@ needs:
 
 **Per-room as-built:**
 
-| Room            | DAC / DSP                                                                     | One-knob volume mechanism                                                                                                                                                                  | Network              | Status         |
-| --------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------- | -------------- |
-| **Kitchen**     | USB → Topping **D50s**                                                        | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)                                                                                       | wired **10.42.2.38** | ✅ done        |
-| **Living-room** | HiFiBerry **DAC+ DSP** HAT → S/PDIF → **D30 Pro**; TV optical → HAT S/PDIF-in | Snapcast→**DSP master** bridge (`snap-dsp-volume-bridge`): subscribes to snapserver `Client.OnVolumeChanged`, sets the SigmaDSP master via `dsptoolkit` → covers stream + Spotify + **TV** | wired **10.42.2.39** | ✅ done        |
-| **Office**      | USB → Topping **D90 III Discrete** (reference room)                           | TBD — `--mixer hardware` if the D90 III exposes a UAC volume, else **softvol**. ⚠️ D90 III volume support is **unverified** — do not infer it from a sibling model                         | pending              | 🔧 in progress |
+> **Correction (2026-08-31).** The living-room chain in the table below was rebuilt and the previous
+> entry had gone stale. It formerly read _"HiFiBerry DAC+ DSP HAT → S/PDIF → D30 Pro; TV optical →
+> HAT S/PDIF-in"_ and was marked ✅ done, which made a decommissioned DAC look like it was still
+> carrying the room.
+>
+> **As rebuilt:** the living room runs a **DietPi streamer into the D90 III Discrete**, with TV
+> audio arriving via a **UR27** interface rather than the HAT's S/PDIF input. The **D30 Pro is out
+> of service** and the HiFiBerry DAC+ DSP HAT is no longer in the living-room path.
+>
+> **Knock-on effects, not yet resolved here:**
+>
+> - The **Office** row assumed the D90 III would land there. It did not. What serves the office is
+>   an open question again.
+> - The living-room volume mechanism needs re-documenting. The `snap-dsp-volume-bridge` /
+>   SigmaDSP-master approach described below belongs to the superseded HiFiBerry chain and does not
+>   describe the current one.
+> - ⚠️ **`UR27` is recorded as given and has not been verified against a manufacturer part number.**
+>   Confirm the exact model before anyone cites this file for a build.
+
+| Room            | DAC / DSP                                                                                     | One-knob volume mechanism                                                                                        | Network              | Status                            |
+| --------------- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------- | --------------------------------- |
+| **Kitchen**     | USB → Topping **D50s**                                                                        | `snapclient --mixer "hardware:D50s "` → the DAC's UAC2 volume (sits under snapclient + go-librespot)             | wired **10.42.2.38** | ✅ done                           |
+| **Living-room** | DietPi streamer → **D90 III Discrete**; TV audio in via **UR27**                              | Volume mechanism to be re-documented — the SigmaDSP-master bridge below described the superseded HiFiBerry chain | wired **10.42.2.39** | ✅ done (rebuilt, see correction) |
+| **Office**      | ⚠️ **Reassign.** The D90 III moved to the living-room; what serves the office is not recorded | TBD                                                                                                              | pending              | 🔧 needs re-plan                  |
 
 Implementation notes captured for reuse:
 
@@ -423,11 +444,12 @@ Implementation notes captured for reuse:
 ## Progress
 
 - [x] Meta-analysis of the digital-output HAT universe + interface/OS layers
-- [x] DAC identified (D90 III Discrete) + per-room DACs deployed (D50s kitchen; D30 Pro + HiFiBerry
-      DSP living-room)
+- [x] DAC identified (D90 III Discrete) + per-room DACs deployed (D50s kitchen; **D90 III**
+      living-room — the D30 Pro + HiFiBerry DSP chain it replaced is retired, see the 2026-08-31
+      correction)
 - [x] Kitchen + living-room fully migrated (DietPi, wired, one-knob volume; Spotify + Snapcast [+ TV
       living-room] verified)
-- [ ] Office / D90 III node (last endpoint) — USB DAC + volume + PEQ
+- [ ] Office node (last endpoint) — ⚠️ needs a DAC assigned; the D90 III went to the living-room
 - [ ] Per-client latency-offset calibration across rooms
 - [ ] homelab migration runbook (supersedes patched `snapcast-hifiberry` image)
 
