@@ -142,13 +142,13 @@ An earlier version of this file asserted the D30 Pro had no host-controllable vo
 its manual not mentioning one. **Measured, it does** — and so does the D90 III:
 
 ```text
-# D30 Pro, living-room Pi
+# D30 Pro (retired from the living room 2026-08-31; measured while in service)
 numid=3  'D30 Pro Playback Volume'
   type=INTEGER, access=rw---R--, min=0, max=127
   dBminmax-min=-127.00dB, max=0.00dB
 FEATURE_UNIT  bmaControls(0) 0x0000000f     # mute + volume, master, R/W
 
-# D90 III Discrete, office Pi
+# D90 III Discrete (now the LIVING-ROOM DAC as of 2026-08-31; measured on the office Pi)
 numid=4  'D90 III Discrete Playback Volume'
   type=INTEGER, access=rw---R--, values=2, min=0, max=2032
   dBminmax-min=-127.00dB, max=0.00dB
