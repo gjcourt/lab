@@ -287,11 +287,12 @@ It helps only where the DAC both has a volume and exposes it to the host — see
 either.
 
 ⚠️ The D90 III is not a confirmed model in `toppingctl`'s device table and its register map must not
-be assumed to match the DX5 II's. **A WebHID decoding attempt against the D90 III was made
-2026-08-30/31; the outcome is not recorded here.** Until a result is written down, the model stays
-unconfirmed and read-only per the rule below. See [`01-022`](01-022-multi-dac-control-plane.md): the
-agent that would own such a USB connection is the one that design describes, and its rule is that
-unconfirmed models stay read-only until driven.
+be assumed to match the DX5 II's. **The D90 III has no vendor JS to decode.** `toppingctl`'s DX5 II
+register map came from the `home.toppingaudio.com` web app's JavaScript bundle; that app drives DX1
+II and DX5 II only, while the D90 III is _Topping Tune_ desktop-only. There is no equivalent source.
+The model stays unconfirmed and read-only per the rule below. See
+[`01-022`](01-022-multi-dac-control-plane.md): the agent that would own such a USB connection is the
+one that design describes, and its rule is that unconfirmed models stay read-only until driven.
 
 ## Volume control (Home Assistant)
 
@@ -353,14 +354,25 @@ So "expose both" is really _software everywhere, hardware where the device expos
 
 ## As-built (deployed 2026-07)
 
+> ⚠️ **§1 below is SUPERSEDED as of 2026-08-31.** The living room no longer keeps the HiFiBerry DAC+
+> DSP and no longer uses the D30 Pro; it runs a DietPi streamer into the **D90 III Discrete** with
+> TV audio arriving via a **UR27**. Everything in §1 describes the chain that replaced — retained
+> because the reasoning explains _why_ the rebuild happened, not because it is current. **The
+> current topology is the per-room table and the 2026-08-31 correction further down.**
+>
+> Note also that §1's own premise — the D30 Pro having no host-controllable volume — was already
+> narrowed by the 2026-08-27 correction inside it, and is contradicted outright by `toppingctl`,
+> which measured the D30 Pro's UAC2 mixer working over USB in production
+> (`amixer -c <n> sset 'D30 Pro' -16dB`, firmware 2.46).
+
 The rollout diverged from the original plan in two deliberate ways, both driven by real per-room
 needs:
 
-1. **Living-room keeps its HiFiBerry DAC+ DSP** (the plan was to retire all HATs). That room's TV
-   (Samsung S95C) feeds **optical S/PDIF into the HiFiBerry**, and the downstream DAC (Topping **D30
-   Pro**) has no _host-controllable_ volume. The HiFiBerry DSP is therefore the room's volume stage
-   _and_ its TV-input path — the two things a bare digital transport can't do — so the DSP stays on
-   the HAT, feeding the D30 Pro over S/PDIF.
+1. **[SUPERSEDED 2026-08-31] Living-room keeps its HiFiBerry DAC+ DSP** (the plan was to retire all
+   HATs). That room's TV (Samsung S95C) feeds **optical S/PDIF into the HiFiBerry**, and the
+   downstream DAC (Topping **D30 Pro**) has no _host-controllable_ volume. The HiFiBerry DSP is
+   therefore the room's volume stage _and_ its TV-input path — the two things a bare digital
+   transport can't do — so the DSP stays on the HAT, feeding the D30 Pro over S/PDIF.
 
    > **Correction (2026-08-27).** This entry previously said the D30 Pro "is a fixed-output DAC with
    > no volume." **That is wrong.** Per its manual the D30 Pro has two output modes — `m-p` Pre-Amp
@@ -431,10 +443,13 @@ Implementation notes captured for reuse:
 
 - [ ] All endpoints on **DietPi + `snapclient`** (retires HiFiBerryOS + the patched
       `snapcast-hifiberry` image) — kitchen ✅, living-room ✅, **office ⬜ (last node)**.
-- [x] **Per-room DAC/DSP topology decided** — kitchen USB→D50s, living-room keeps HiFiBerry DAC+ DSP
-      (TV + D30 Pro), office USB→D90 III (implementation: office pending).
+- [x] **Per-room DAC/DSP topology decided** — kitchen USB→D50s, living-room DietPi→**D90 III** (TV
+      in via UR27), office USB→**DX5 II**, desktop = Adam **D3V**. The HiFiBerry DAC+ DSP and D30
+      Pro chain this row previously described is **retired** — see the 2026-08-31 correction.
 - [ ] **One Snapcast/HASS volume per room controls all sources** (Snapcast + p2p Spotify + TV where
-      present) — kitchen ✅, living-room ✅, office ⬜ (`--mixer hardware` vs softvol TBD).
+      present) — kitchen ✅, living-room ⬜ (the `snap-dsp-volume-bridge` that earned this ✅ went
+      with the HiFiBerry; the D90 III path is not yet documented), office ⬜ (`toppingctl` HID per
+      the DX5 II row).
 - [ ] **Wired ethernet + static IP + WiFi disabled** per room — kitchen ✅ (.38), living-room ✅
       (.39), office ⬜ (verify wired drop).
 - [ ] **Office / DX5 II**: snapclient joins on USB, volume wired via `toppingctl`, **PEQ
@@ -453,7 +468,7 @@ Implementation notes captured for reuse:
       correction)
 - [x] Kitchen + living-room fully migrated (DietPi, wired, one-knob volume; Spotify + Snapcast [+ TV
       living-room] verified)
-- [ ] Office node (last endpoint) — ⚠️ needs a DAC assigned; the D90 III went to the living-room
+- [ ] Office node (last endpoint) — **DX5 II assigned**; USB hookup + volume + PEQ outstanding
 - [ ] Per-client latency-offset calibration across rooms
 - [ ] homelab migration runbook (supersedes patched `snapcast-hifiberry` image)
 
