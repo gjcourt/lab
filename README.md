@@ -28,7 +28,7 @@ of the one real espresso build).
 
 ## Difficulty scale
 
-- **Easy (1-2 days):** leverages existing skills — Go, basic K8s, simple ESPHome/Home Assistant
+- **Easy (1-2 days):** builds on existing skills — Go, basic K8s, simple ESPHome/Home Assistant
   integrations, basic woodworking.
 - **Medium (1-4 weeks):** combines multiple disciplines and introduces new concepts — basic PCB
   design, intermediate woodworking, custom sensors, intermediate finance.
