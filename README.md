@@ -11,8 +11,8 @@ skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than conve
 personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
 **Status:** active — 132 briefs (1 done, 15 in progress), last content update 2026-09-01; the
-espresso build is hardware-confirmed and running in the homelab (see
-[`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
+espresso profiling build is installed on the machine and its controller app, Vibrato, runs in the
+homelab (see [`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 
 ## Layout
 
@@ -35,6 +35,7 @@ Each project is one file, `NN-NNN-slug.md`, inside its category directory, where
 directory prefix. Every file starts with YAML frontmatter:
 
 ```yaml
+---
 title: 'ESP32 I2S DAC Streamer'
 number: '01-001'
 category: 'audio-midi'
@@ -44,6 +45,7 @@ target_skills: 'C++, ESP-IDF, I2S, Audio Streaming'
 status: 'Not Started'
 depends_on: # optional
   - hardware/esp32
+---
 ```
 
 `difficulty` is `Easy` (1-2 days, builds on existing skills), `Medium` (1-4 weeks, combines
