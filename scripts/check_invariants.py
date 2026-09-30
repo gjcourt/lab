@@ -12,7 +12,8 @@ Checks:
    - An `## Exit Criteria` section is present
 2. Per-category counts in each `<cat>/projects.md` heading match the actual
    file count in that directory.
-3. README total ("103 ... projects") matches the sum of per-category counts.
+3. The README tagline total ("A curated list of 132 ... projects") matches
+   the sum of per-category counts.
 
 Exits non-zero on any violation; prints all violations.
 
@@ -44,7 +45,9 @@ ALLOWED_STATUS = {"Not Started", "In Progress", "Done"}
 
 PROJECT_FILE_RE = re.compile(r"^(\d{2})-(\d{3})-.+\.md$")
 CATEGORY_DIR_RE = re.compile(r"^\d{2}-[a-z0-9-]+$")
-README_TOTAL_RE = re.compile(r"^# (\d+) Multidisciplinary", re.MULTILINE)
+# The README standard (gjcourt/.github) makes the H1 the bare repo name, so
+# the total lives in the tagline line below it.
+README_TOTAL_RE = re.compile(r"^A curated list of (\d+) multidisciplinary", re.MULTILINE)
 PROJECTS_MD_COUNT_RE = re.compile(r"^# .+ \((\d+)\)\s*$", re.MULTILINE)
 
 
@@ -147,8 +150,8 @@ def check_readme_total(total: int, errors: list[str]) -> None:
     m = README_TOTAL_RE.search(text)
     if not m:
         errors.append(
-            "README.md: top heading does not match "
-            "'# <N> Multidisciplinary ...'"
+            "README.md: tagline does not match "
+            "'A curated list of <N> multidisciplinary ...'"
         )
         return
     declared = int(m.group(1))
