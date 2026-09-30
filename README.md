@@ -1,40 +1,64 @@
-# 132 Multidisciplinary Engineering & Skill-Building Projects
+<!-- readme-type: content -->
 
-Welcome to `lab` (formerly `brainstorm`) — a curated portfolio of 132 engineering and skill-building
-projects tracked across their whole lifecycle: from idea (`Not Started`) through active build
-(`In Progress`) to `Done`. They span software engineering, hardware, woodworking, finance, and
-music.
+# lab
 
-## Difficulty Scale
+A curated list of 132 multidisciplinary engineering and skill-building projects
 
-The difficulty of these projects is calibrated to your existing strong software skills (Go,
-Kubernetes, Docker, etc.):
+Picking a next project to learn on tends to default to whatever's easiest, not to whatever actually
+builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 132 project briefs spanning
+software, hardware, woodworking, finance, and music, each one scoped and leveled against existing
+skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than convenient. It's a
+personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
-- **Easy (1-2 days):** Leverages your existing skills (Go, basic K8s, simple ESPHome/Home Assistant
-  integrations, basic woodworking).
-- **Medium (1-4 weeks):** Combines multiple disciplines, introduces new concepts (basic PCB design,
-  intermediate woodworking, custom sensors, intermediate finance).
-- **Hard (Months):** Ambitious, stretches your skillset into low-level domains (C/C++, RTOS,
-  kernel-level programming, complex DSP, advanced furniture fabrication, advanced financial
-  modeling, complex jazz theory).
+**Status:** active — 132 briefs (1 done, 15 in progress), last content update 2026-09-01; the
+espresso profiling build is installed on the machine and its controller app, Vibrato, runs in the
+homelab (see [`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 
-## Categories
+## Layout
 
-The 132 projects are divided into the following categories:
+Each directory holds one Markdown file per project plus a `projects.md` index; three also carry a
+`_reference/` directory with as-built notes for the work that's actually underway.
 
-1. **[Audio & MIDI](01-audio-midi/projects.md)** (22 Projects) - DSP, custom controllers, and audio
-   hardware.
-2. **[Woodworking](02-woodworking/projects.md)** (15 Projects) - Functional furniture, speaker
-   cabinets, and homelab enclosures.
-3. **[Homelab & Automation](03-homelab-automation/projects.md)** (35 Projects) - eBPF, K8s
-   operators, ESP32 sensors, and infrastructure.
-4. **[Finance & Analysis](04-finance-analysis/projects.md)** (16 Projects) - EDGAR parsing, DCF
-   modeling, and personal finance tracking.
-5. **[Piano](05-piano/projects.md)** (15 Projects) - Advanced classical repertoire tools, jazz
-   theory, and improvisation.
-6. **[Coffee & Espresso](06-coffee-espresso/projects.md)** (19 Projects) - Lucca A53 profiling,
-   `leva!` firmware, and sensor integration.
-7. **[Cross-Disciplinary](07-cross-disciplinary/projects.md)** (10 Projects) - Projects that blend
-   multiple categories (e.g., wooden ESP32 audio receivers, mechanical keyboards).
+```text
+01-audio-midi/          22 projects — DSP, custom controllers, and audio hardware
+02-woodworking/         15 projects — functional furniture, speaker cabinets, homelab enclosures
+03-homelab-automation/  35 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
+04-finance-analysis/    16 projects — EDGAR parsing, DCF modeling, personal finance tracking
+05-piano/               15 projects — classical repertoire tools, jazz theory, improvisation
+06-coffee-espresso/     19 projects — Lucca A53 profiling, leva! firmware, sensor integration
+07-cross-disciplinary/  10 projects — projects blending multiple categories
+```
 
-Explore the folders above to find your next project!
+## Conventions
+
+Each project is one file, `NN-NNN-slug.md`, inside its category directory, where `NN` matches the
+directory prefix. Every file starts with YAML frontmatter:
+
+```yaml
+---
+title: 'ESP32 I2S DAC Streamer'
+number: '01-001'
+category: 'audio-midi'
+difficulty: 'Medium'
+time_commitment: '1-4 weeks'
+target_skills: 'C++, ESP-IDF, I2S, Audio Streaming'
+status: 'Not Started'
+depends_on: # optional
+  - hardware/esp32
+---
+```
+
+`difficulty` is `Easy` (1-2 days, builds on existing skills), `Medium` (1-4 weeks, combines
+disciplines or introduces new concepts), or `Hard` (months, stretches into low-level domains such as
+C/C++, RTOS, or advanced finance/music theory). `status` moves from `Not Started` through
+`In Progress` to `Done`. `depends_on` points at a prerequisite — another project's `NN-NNN`, or a
+resource reference like `hardware/esp32`. Every file also needs an `## Exit Criteria` section.
+
+To add a project, create the file with this frontmatter in the right category directory and update
+that category's `projects.md` count. To renumber prefixes after reordering, run
+`python update_prefixes.py`. See [`AGENTS.md`](AGENTS.md) for the validation commands CI runs on
+every change.
+
+## License
+
+No licence file yet.
