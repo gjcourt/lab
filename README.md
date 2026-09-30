@@ -1,42 +1,35 @@
-# 132 Multidisciplinary Engineering & Skill-Building Projects
+<!-- readme-type: content -->
 
-`lab` (formerly `brainstorm`) is a personal catalog of project ideas spanning software, hardware,
-woodworking, finance, and music. Each idea is a self-contained Markdown brief, tracked from
-`Not Started` through `In Progress` to `Done`. Difficulty is calibrated to existing software skills
-(Go, Kubernetes, Docker).
+# lab
 
-## Categories
+A curated list of 132 multidisciplinary engineering and skill-building projects
 
-1. **[Audio & MIDI](01-audio-midi/projects.md)** (22 projects) — DSP, custom controllers, and audio
-   hardware.
-2. **[Woodworking](02-woodworking/projects.md)** (15 projects) — functional furniture, speaker
-   cabinets, and homelab enclosures.
-3. **[Homelab & Automation](03-homelab-automation/projects.md)** (35 projects) — eBPF, K8s
-   operators, ESP32 sensors, and infrastructure.
-4. **[Finance & Analysis](04-finance-analysis/projects.md)** (16 projects) — EDGAR parsing, DCF
-   modeling, and personal finance tracking.
-5. **[Piano](05-piano/projects.md)** (15 projects) — advanced classical repertoire tools, jazz
-   theory, and improvisation.
-6. **[Coffee & Espresso](06-coffee-espresso/projects.md)** (19 projects) — Lucca A53 profiling,
-   `leva!` firmware, and sensor integration.
-7. **[Cross-Disciplinary](07-cross-disciplinary/projects.md)** (10 projects) — projects that blend
-   multiple categories (e.g. wooden ESP32 audio receivers, mechanical keyboards).
+Picking a next project to learn on tends to default to whatever's easiest, not to whatever actually
+builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 132 project briefs spanning
+software, hardware, woodworking, finance, and music, each one scoped and leveled against existing
+skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than convenient. It's a
+personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
-Some categories also carry a `_reference/` directory with build notes, teardowns, or as-built state
-for the projects that are actually underway (see `06-coffee-espresso/AGENTS.md` for the live state
-of the one real espresso build).
+**Status:** active — 132 briefs (1 done, 15 in progress), last content update 2026-09-01; the
+espresso build is hardware-confirmed and running in the homelab (see
+[`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 
-## Difficulty scale
+## Layout
 
-- **Easy (1-2 days):** builds on existing skills — Go, basic K8s, simple ESPHome/Home Assistant
-  integrations, basic woodworking.
-- **Medium (1-4 weeks):** combines multiple disciplines and introduces new concepts — basic PCB
-  design, intermediate woodworking, custom sensors, intermediate finance.
-- **Hard (months):** ambitious, stretches into low-level domains — C/C++, RTOS, kernel-level
-  programming, complex DSP, advanced furniture fabrication, advanced financial modeling, complex
-  jazz theory.
+Each directory holds one Markdown file per project plus a `projects.md` index; three also carry a
+`_reference/` directory with as-built notes for the work that's actually underway.
 
-## Project file convention
+```text
+01-audio-midi/          22 projects — DSP, custom controllers, and audio hardware
+02-woodworking/         15 projects — functional furniture, speaker cabinets, homelab enclosures
+03-homelab-automation/  35 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
+04-finance-analysis/    16 projects — EDGAR parsing, DCF modeling, personal finance tracking
+05-piano/               15 projects — classical repertoire tools, jazz theory, improvisation
+06-coffee-espresso/     19 projects — Lucca A53 profiling, leva! firmware, sensor integration
+07-cross-disciplinary/  10 projects — projects blending multiple categories
+```
+
+## Conventions
 
 Each project is one file, `NN-NNN-slug.md`, inside its category directory, where `NN` matches the
 directory prefix. Every file starts with YAML frontmatter:
@@ -53,21 +46,17 @@ depends_on: # optional
   - hardware/esp32
 ```
 
-`depends_on` points at a prerequisite — another project's `NN-NNN`, or a resource reference like
-`hardware/esp32`. Every file also needs an `## Exit Criteria` section.
+`difficulty` is `Easy` (1-2 days, builds on existing skills), `Medium` (1-4 weeks, combines
+disciplines or introduces new concepts), or `Hard` (months, stretches into low-level domains such as
+C/C++, RTOS, or advanced finance/music theory). `status` moves from `Not Started` through
+`In Progress` to `Done`. `depends_on` points at a prerequisite — another project's `NN-NNN`, or a
+resource reference like `hardware/esp32`. Every file also needs an `## Exit Criteria` section.
 
-To add a project, create the file with this frontmatter in the right category directory. To renumber
-prefixes after reordering, run `python update_prefixes.py`.
+To add a project, create the file with this frontmatter in the right category directory and update
+that category's `projects.md` count. To renumber prefixes after reordering, run
+`python update_prefixes.py`. See [`AGENTS.md`](AGENTS.md) for the validation commands CI runs on
+every change.
 
-## Checks
+## License
 
-```text
-make format-check     # prettier --check on *.md and *.yml/*.yaml
-make lint              # markdownlint-cli2
-make check-invariants  # frontmatter, Exit Criteria, per-category and README project counts
-make check-brackets    # printed-bracket STL geometry vs. measured inputs
-make test              # all of the above
-```
-
-`make format` applies prettier's fixes in place. CI (`.github/workflows/ci.yml`) runs the same
-targets, plus a YAML lint pass, on every push and PR to `main`.
+No licence file yet.
