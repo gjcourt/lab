@@ -93,8 +93,10 @@ Inference needs none of these: Piper on the existing CPUs is the point.
 ## Risks
 
 **A model of my voice is a credential.** It can make "me" say anything. Keep the ONNX file and the
-dataset private — on hestia, never on Hugging Face or a public repo. The TTS endpoint is LAN-only
-behind auth, like the rest of the intranet. If a bank uses voice verification, turn it off.
+dataset private — on hestia, never on Hugging Face or a public repo. The TTS endpoint stays
+LAN-only, and anything reachable from a browser (the read-aloud page) needs auth — decide what that
+is in Phase 5 rather than assuming the intranet already has it. If a bank uses voice verification,
+turn it off.
 
 **Licences differ between engine and weights.** piper1-gpl is GPL-3.0 (fine for personal use; the
 voice model itself is mine). Several high-quality cloners have non-commercial weights — XTTS-v2
@@ -128,19 +130,89 @@ just by Whisper confidence.
       voice, or the project records that it didn't.
 - [ ] The TTS endpoint is not reachable from outside the LAN — verified, not assumed.
 
-## Tasks
+## Plan
+
+Six phases, each ending in something that can be checked. Every phase is a PR (homelab, lab, or the
+new private repo) or a recorded measurement; nothing is merged by an agent.
+
+**Where things live.** Code goes in a new **private** repo (working name `gjcourt/voice`): the
+dataset pipeline, training configs and the read-aloud service. Audio, datasets, checkpoints and the
+ONNX voice live on **hestia only**, in a private dataset George creates (e.g.
+`/mnt/main/voice/{raw,dataset,checkpoints,models}`) — never in git, never in an image. The cluster
+reads the finished voice the same way Jellyfin reads media: a static NFS PV, read-only. Agents can't
+read that dataset (their hestia access is `agent-inbox` and media only), so audio work runs on
+George's machine.
+
+### Phase 0 — Decide and inventory (George, ~1 hour)
 
 - [ ] Record the winpc-5600x GPU model and VRAM in `hosts/winpc-5600x`.
-- [ ] Inventory my published audio and locate the originals; estimate me-only hours.
-- [ ] Deploy `wyoming-piper` with a stock voice and wire it into Home Assistant.
-- [ ] Build the cleaning pipeline (Demucs → pyannote → segment → Whisper → normalize) and run it on
-      one episode end to end before batching.
-- [ ] Listen to a random 5 % of the clips; fix what the filters missed.
-- [ ] Set up the training environment where the GPU decision lands (WSL2 + CUDA, or a rented box).
-- [ ] Fine-tune from Piper's medium checkpoint; export ONNX.
-- [ ] Swap the voice into `wyoming-piper`; measure CPU synthesis speed.
-- [ ] Build the read-aloud service and its golink.
-- [ ] Blind A/B listening test.
+- [ ] Inventory published audio; locate the originals; estimate me-only hours.
+- [ ] Create the private hestia dataset and its NFS export, readable from the cluster nodes only.
+
+**Gate:** training path chosen — **A** WSL2 + CUDA on winpc (NVIDIA, ≥ 8 GB), **B** WSL2 + ROCm (RX
+7800 XT class or newer), or **C** rented GPU. Data path chosen — real recordings if ≥ 1 h of me-only
+audio is likely, otherwise plan B (record with `piper-recording-studio`, or synthesize with
+Chatterbox).
+
+### Phase 1 — Plumbing with a stock voice (homelab PR, agent can do)
+
+Proves everything except the voice itself, and gives Home Assistant local TTS immediately.
+
+- [ ] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
+      HTTPRoute), NetworkPolicy admitting only the `homeassistant` namespace, the best stock English
+      medium voice.
+- [ ] George adds the Wyoming integration in Home Assistant's UI (it's a config-flow integration,
+      not YAML) and picks the voice as the default TTS.
+- [ ] Measure synthesis time for a fixed 30-second paragraph on a cluster node.
+
+**Gate:** HA speaks an automation's announcement; synthesis is faster than real time. This is also
+the baseline voice for Phase 3's A/B.
+
+### Phase 2 — Dataset (private repo + George's machine)
+
+- [ ] Pipeline in `gjcourt/voice`: Demucs → pyannote → silence segmentation → Whisper → filter →
+      22.05 kHz mono → `metadata.csv`. Pinned dependencies; one command per stage; every stage
+      idempotent and resumable.
+- [ ] Run one episode end to end and listen to the output before batching.
+- [ ] Run the full set; listen to a random 5 % of clips; tighten filters and re-run.
+- [ ] Write a dataset card: source list, total minutes kept, rejection counts per filter.
+
+**Gate:** ≥ 1 h of clean me-only clips that survive the listening check. If not, fall back to plan B
+and re-enter this phase.
+
+### Phase 3 — Training (winpc or rented GPU)
+
+- [ ] Environment per Phase 0's choice; record versions in the repo.
+- [ ] Fine-tune piper1-gpl from the medium English checkpoint, saving checkpoints regularly. Render
+      the same fixed test sentences at each checkpoint to hear progress.
+- [ ] Export the best checkpoint to ONNX plus its JSON config; copy to `hestia:…/models/`.
+- [ ] Blind A/B against the Phase 1 stock voice with someone who knows my voice.
+
+**Gate:** the custom voice wins the A/B. If it doesn't, stop here and record why — the stock voice
+already works.
+
+### Phase 4 — Ship the voice (homelab PR)
+
+- [ ] Static NFS PV/PVC (read-only) for the models path; mount it into `wyoming-piper`; select the
+      custom voice.
+- [ ] Re-measure synthesis speed on the cluster CPU.
+- [ ] Verify the endpoint is unreachable from outside the LAN and from namespaces other than Home
+      Assistant's.
+
+**Gate:** HA announces in my voice; speed and reachability checks recorded.
+
+### Phase 5 — Read-aloud (private repo + homelab PR)
+
+- [ ] Small HTTP service: URL → readable text → Piper → audio, streamed where piper1-gpl's streaming
+      has shipped in a release. Uses the same voice volume.
+- [ ] Intranet-only route and a golink `go/read`. Decide its auth first: an endpoint that speaks in
+      my voice must not be open to everything on the LAN.
+
+### Phase 6 — Spoken assistant (separate brief)
+
+Speech-to-text (faster-whisper over Wyoming) + Home Assistant's Assist pipeline + a hosted LLM +
+this voice. It shares the LLM decision with `03-034`, so it gets its own brief once Phases 1–4 are
+done rather than being designed now.
 
 ## Related
 
