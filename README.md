@@ -2,15 +2,15 @@
 
 # lab
 
-A curated list of 132 multidisciplinary engineering and skill-building projects
+A curated list of 133 multidisciplinary engineering and skill-building projects
 
 Picking a next project to learn on tends to default to whatever's easiest, not to whatever actually
-builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 132 project briefs spanning
+builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 133 project briefs spanning
 software, hardware, woodworking, finance, and music, each one scoped and leveled against existing
 skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than convenient. It's a
 personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
-**Status:** active — 132 briefs (1 done, 15 in progress), last content update 2026-09-01; the
+**Status:** active — 133 briefs (1 done, 15 in progress), last content update 2026-09-01; the
 espresso profiling build is installed on the machine and its controller app, Vibrato, runs in the
 homelab (see [`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 
@@ -22,7 +22,7 @@ Each directory holds one Markdown file per project plus a `projects.md` index; t
 ```text
 01-audio-midi/          22 projects — DSP, custom controllers, and audio hardware
 02-woodworking/         15 projects — functional furniture, speaker cabinets, homelab enclosures
-03-homelab-automation/  35 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
+03-homelab-automation/  36 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
 04-finance-analysis/    16 projects — EDGAR parsing, DCF modeling, personal finance tracking
 05-piano/               15 projects — classical repertoire tools, jazz theory, improvisation
 06-coffee-espresso/     19 projects — Lucca A53 profiling, leva! firmware, sensor integration
