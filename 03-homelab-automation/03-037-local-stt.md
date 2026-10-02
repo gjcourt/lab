@@ -29,11 +29,11 @@ that. The work is choosing models by measurement and wiring them into Home Assis
 
 ## Two jobs, two kinds of model
 
-| Job                    | Candidate                                          | Why                                                                                                                                                    |
-| ---------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **HA commands**        | **Speech-to-Phrase** (Open Home Foundation)        | Recognizes only phrases built from my actual entities and areas, so it's fast and accurate on a modest CPU — but it can't transcribe arbitrary speech. |
-| **Open dictation**     | **faster-whisper** via `wyoming-faster-whisper`    | Whisper on CTranslate2, int8 on CPU. Small/base for snappy turns; large-v3-turbo if accuracy matters more than latency.                                |
-| Benchmark alternatives | **NVIDIA Parakeet** via sherpa-onnx; **Moonshine** | Both pitched as fast on CPU — Parakeet is English-focused, Moonshine targets short edge utterances. In the benchmark, not assumed.                     |
+| Job                    | Candidate                                          | Why                                                                                                                                                                        |
+| ---------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HA commands**        | **Speech-to-Phrase** (Open Home Foundation)        | Recognizes only phrases built from my actual entities and areas, so it's fast and accurate on a modest CPU — but it can't transcribe arbitrary speech.                     |
+| **Open dictation**     | **faster-whisper** via `wyoming-faster-whisper`    | Whisper on CTranslate2, int8 on CPU. Small/base for snappy turns; large-v3-turbo if accuracy matters more than latency.                                                    |
+| Benchmark alternatives | **NVIDIA Parakeet** via sherpa-onnx; **Moonshine** | Both pitched as fast on CPU — Parakeet TDT v2 is English-only and v3 covers 25 European languages; Moonshine targets short edge utterances. In the benchmark, not assumed. |
 
 An Assist pipeline has one STT engine; Home Assistant has no built-in "try Speech-to-Phrase, fall
 back to Whisper" (as of a March 2026 community thread). Community workarounds exist — a Wyoming
