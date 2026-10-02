@@ -1,5 +1,5 @@
 ---
-title: 'Local Text-to-Speech (stock voice first, custom voice optional)'
+title: 'Local Text-to-Speech (stock voice first, trained voices later)'
 number: '03-036'
 category: 'homelab-automation'
 difficulty: 'Medium'
@@ -15,7 +15,7 @@ depends_on:
   - homelab/talos
 ---
 
-# Local Text-to-Speech (stock voice first, custom voice optional)
+# Local Text-to-Speech (stock voice first, trained voices later)
 
 ## Description
 
@@ -34,9 +34,10 @@ Raspberry Pi 5 (not stated in Piper's own docs; Phase 1 measures it here) — an
 speaks natively through the Wyoming protocol. Piper moved to
 [`OHF-Voice/piper1-gpl`](https://github.com/OHF-Voice/piper1-gpl) (GPL-3.0) in October 2025.
 
-**Start with a voice that already exists.** A custom voice means a dataset, a rented GPU and days of
-work; a good stock voice may be enough. The custom track below runs only if the audition says it's
-worth it.
+**Start with a voice that already exists, then make voices pluggable.** Phase 1 ships a stock,
+pre-trained voice chosen by audition. A later phase builds a training pipeline that can fine-tune
+_different_ voices and swap them in — each one a dataset, a rented GPU and days of work, so the
+stock voice carries everything until a trained voice beats it.
 
 ## Choosing the voice
 
@@ -44,25 +45,37 @@ worth it.
 | --------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Piper stock voices**                        | Cluster CPU, Wyoming                | Many English voices at low/medium/high quality. Each voice carries its own licence in its model card, separate from the engine's — check before settling on one.                                                                                                                          |
 | **Kokoro presets** (`Kokoro-82M`, Apache-2.0) | Cluster CPU                         | Preset voices only; often described as more natural than Piper, but slower on CPU (published figures conflict) — both unmeasured here. No native Wyoming server confirmed; an OpenAI-compatible server (`Kokoro-FastAPI`) exists, and the Home Assistant integration path needs checking. |
-| **A custom voice** (track below)              | Rented GPU to train, Piper to serve | My own voice, or someone else's **with their explicit, written consent**. Never a public figure or anyone who hasn't agreed.                                                                                                                                                              |
+| **Trained voices** (later phase)              | Rented GPU to train, Piper to serve | Each needs a documented right to use it — see _Whose voices_. Never a public figure or anyone who hasn't agreed.                                                                                                                                                                          |
 
 Cloud "voice design" services (generate a voice from a description) are out of scope — not local —
 but are a fair reference point in the audition.
 
 **The audition:** a fixed script (three announcements and one 30-second paragraph), every candidate
 rendered from it, ranked blind, and synthesis time measured on a cluster node. The winner becomes
-the default; the custom track starts only if no candidate is good enough.
+the default until a trained voice wins its own blind A/B against it.
 
-## Optional: a custom voice
+## Later: pluggable trained voices
 
-### Whose voice
+### Whose voices — not decided
 
-- **My own.** If my published YouTube and Spotify audio holds enough me-only speech, that is the
-  head start — Phase 3 inventories it before anything depends on it.
-- **Someone else's, with consent.** A family member or friend who agrees in writing to how the voice
-  will be used. They record with
-  [`piper-recording-studio`](https://github.com/rhasspy/piper-recording-studio), which records
-  against per-language prompt lists.
+**Every training voice needs a documented right to use it**, recorded next to its dataset before
+training starts:
+
+- an **openly licensed speech dataset** whose licence permits fine-tuning — and redistribution of
+  the resulting model, if it's ever shared; or
+- the speaker's **explicit, written consent** to how the voice will be used.
+
+Never a public figure, and never anyone who hasn't agreed. Which voices, and on what terms, is an
+open question for George. My own voice is one possibility: if my published YouTube and Spotify audio
+holds enough me-only speech, that's a head start, inventoried before anything depends on it. A
+consenting person would record with
+[`piper-recording-studio`](https://github.com/rhasspy/piper-recording-studio), which records against
+per-language prompt lists.
+
+**Pluggable means:** one config per voice (source, right-to-use record, base checkpoint, training
+settings), the same pipeline for every voice, and one output directory per voice that
+`wyoming-piper` can load alongside the others. Adding a voice is a config and a training run, not
+new code.
 
 ### Source material
 
@@ -117,7 +130,7 @@ Inference needs none of these: Piper on the existing CPUs is the point.
 ## Serving it
 
 - **Home Assistant:** a `wyoming-piper` Deployment in the homelab; HA's TTS points at it on
-  port 10200. A custom voice later is a file swap, not a redesign.
+  port 10200. Trained voices later are files added to its voice directory, not a redesign.
 - **Read-aloud:** a small HTTP service on the same voice. Low-latency streaming synthesis is
   proposed in an open piper1-gpl PR ([#302](https://github.com/OHF-Voice/piper1-gpl/pull/302)) and
   was not in a release as of 2026-10; until it ships, synthesize sentence by sentence.
@@ -127,11 +140,11 @@ Inference needs none of these: Piper on the existing CPUs is the point.
 ## Risks
 
 **A model of a real person's voice is a credential.** It can make that person say anything. Keep any
-custom ONNX file and its dataset private — on hestia, never on Hugging Face or a public repo. The
+trained ONNX file and its dataset private — on hestia, never on Hugging Face or a public repo. The
 TTS endpoint stays LAN-only, and anything reachable from a browser (the read-aloud page) needs auth
-— decide what that is in Phase 2 rather than assuming the intranet already has it. If it's my voice
-and a bank uses voice verification, turn that off. None of this applies to a stock voice, which is
-one more reason to start there.
+— decide what that is in Phase 2 rather than assuming the intranet already has it. If a trained
+voice is mine and a bank uses voice verification, turn that off. None of this applies to a stock
+voice, which is one more reason to start there.
 
 **Licences differ between engine and voices.** piper1-gpl is GPL-3.0 (fine for personal use). Each
 stock voice, and any fine-tune, inherits the terms of its checkpoint's training data, so check the
@@ -139,18 +152,19 @@ model card before treating a voice as unencumbered. Several high-quality cloners
 weights — XTTS-v2 (CPML), F5-TTS (CC-BY-NC-4.0) — fine for a personal plan B, not for anything
 shared.
 
-**Garbage in, robot out** (custom track). Diarization errors that leak another voice into the
+**Garbage in, robot out** (trained voices). Diarization errors that leak another voice into the
 dataset, or transcripts that don't match the audio, degrade the voice silently. Spot-check by
 listening, not just by Whisper confidence.
 
 ## Open questions
 
-- **Is a stock voice good enough?** The audition decides whether the custom track runs at all.
+- **Whose voices, under what terms?** George hasn't decided. Each needs a documented right to use it
+  (open dataset licence permitting fine-tuning, or written consent) before training.
 - **Can Kokoro reach Home Assistant cleanly?** Through an OpenAI-compatible TTS integration or a
   Wyoming wrapper — needs checking before it's a fair audition candidate.
-- **Custom track only:** whose voice; how many hours of clean audio exist and whether the originals
-  are available; and rent, or buy a used NVIDIA card for winpc? Renting is the default; buying only
-  makes sense if more training runs are likely.
+- **Training phase:** how many hours of clean audio each voice has and whether originals exist; and
+  rent, or buy a used NVIDIA card for winpc? Renting is the default; buying only makes sense if more
+  training runs are likely — which pluggable voices make more plausible.
 
 ## Exit Criteria
 
@@ -158,8 +172,10 @@ listening, not just by Whisper confidence.
 - [ ] Synthesis on the cluster CPU is faster than real time for a 30-second paragraph, measured.
 - [ ] Read-aloud works end to end from `go/read`, with auth decided deliberately.
 - [ ] The TTS endpoint is not reachable from outside the LAN — verified, not assumed.
-- [ ] Either a custom voice wins a blind A/B against the chosen stock voice and replaces it, or the
-      project records why the custom track was skipped.
+- [ ] The training pipeline produces a voice from a per-voice config alone, and that voice's
+      right-to-use record exists before its training run.
+- [ ] At least one trained voice wins a blind A/B against the stock voice and is swapped in — or the
+      project records why none did.
 
 ## Plan
 
@@ -167,11 +183,11 @@ Every phase ends in a PR (homelab, lab, or a new private repo) or a recorded mea
 merged by an agent.
 
 **Where things live.** Code goes in a new **private** repo (working name `gjcourt/voice`): the
-audition script, the read-aloud service and — if the custom track runs — the dataset pipeline and
-training configs. Audio, datasets, checkpoints and custom models live on **hestia only**, in a
-private dataset George creates (e.g. `/mnt/main/voice/{raw,dataset,checkpoints,models}`) — never in
-git, never in an image. The cluster reads a custom voice the same way Jellyfin reads media: a static
-NFS PV, read-only. Agents can't read that dataset (under the bench-cloud agent design their hestia
+audition script, the read-aloud service, the dataset pipeline and per-voice training configs. Audio,
+datasets, right-to-use records, checkpoints and trained models live on **hestia only**, in a private
+dataset George creates (e.g. `/mnt/main/voice/{raw,dataset,checkpoints,models}`) — never in git,
+never in an image. The cluster reads trained voices the same way Jellyfin reads media: a static NFS
+PV, read-only. Agents can't read that dataset (under the bench-cloud agent design their hestia
 access is `agent-inbox` and media only), so audio work runs on George's machine.
 
 ### Phase 1 — Plumbing and audition (homelab PR + George)
@@ -184,8 +200,7 @@ access is `agent-inbox` and media only), so audio work runs on George's machine.
 - [ ] Render the audition script with every candidate; measure synthesis time for the 30-second
       paragraph on a cluster node; rank blind.
 
-**Gate:** a voice chosen and set as default; synthesis faster than real time. Decide whether the
-custom track runs.
+**Gate:** a stock voice chosen and set as default; synthesis faster than real time.
 
 ### Phase 2 — Read-aloud (private repo + homelab PR)
 
@@ -196,42 +211,44 @@ custom track runs.
       article URL is entered on the page, not passed through the golink. Decide its auth first: an
       endpoint that speaks in a chosen voice must not be open to everything on the LAN.
 
-### Custom track (only if Phase 1 says so)
+### Later phases — pluggable trained voices
 
-**Phase 3 — Decide and inventory (George, ~1 hour).**
+**Phase 3 — Decide voices and inventory (George).**
 
-- [ ] Choose the speaker: my voice, or a consenting person's (consent recorded).
+- [ ] Decide the first voice(s) to train, and record each one's right to use it (dataset licence
+      permitting fine-tuning, or written consent) next to its dataset.
 - [ ] Record the winpc-5600x GPU (Radeon RX 580, 8 GB) in `hosts/winpc-5600x` — homelab PR.
-- [ ] Inventory the source audio; locate the originals; estimate clean single-speaker hours.
+- [ ] Inventory each voice's source audio; locate originals; estimate clean single-speaker hours.
 - [ ] Create the private hestia dataset and its NFS export, readable from the cluster nodes only.
 
 **Gate:** rented-GPU provider chosen (winpc's RX 580 rules out local training). Data path chosen —
 real recordings if ≥ 1 h of clean audio is likely, otherwise plan B (record with
 `piper-recording-studio`, or synthesize with Chatterbox).
 
-**Phase 4 — Dataset (private repo + George's machine).**
+**Phase 4 — Pipeline and first dataset (private repo + George's machine).**
 
 - [ ] Pipeline in `gjcourt/voice`: Demucs → pyannote → silence segmentation → Whisper → filter →
       22.05 kHz mono → `metadata.csv`. Pinned dependencies; one command per stage; every stage
-      idempotent and resumable.
+      idempotent and resumable; driven by a per-voice config.
 - [ ] Run one episode end to end and listen to the output before batching.
 - [ ] Run the full set; listen to a random 5 % of clips; tighten filters and re-run.
-- [ ] Write a dataset card: source list, total minutes kept, rejection counts per filter.
+- [ ] Write a dataset card per voice: source list, right-to-use record, minutes kept, rejection
+      counts per filter.
 
 **Gate:** ≥ 1 h of clean single-speaker clips that survive the listening check. If not, fall back to
 plan B and re-enter this phase.
 
-**Phase 5 — Train and ship (rented GPU + homelab PR).**
+**Phase 5 — Train and ship, per voice (rented GPU + homelab PR).**
 
 - [ ] Environment on the provider chosen in Phase 3; record versions in the repo.
 - [ ] Fine-tune piper1-gpl from the medium English checkpoint, saving checkpoints regularly. Render
       the same fixed test sentences at each checkpoint to hear progress.
-- [ ] Export the best checkpoint to ONNX plus its JSON config; copy to `hestia:…/models/`.
+- [ ] Export the best checkpoint to ONNX plus its JSON config; copy to `hestia:…/models/<voice>/`.
 - [ ] Blind A/B against Phase 1's chosen voice with someone who knows the speaker. **Gate:** the
-      custom voice wins; if not, stop and record why — the stock voice already works.
-- [ ] Static NFS PV/PVC (read-only) for the models path, mounted into `wyoming-piper`; select the
-      custom voice; re-measure synthesis speed; verify the endpoint is unreachable from outside the
-      LAN and from namespaces other than Home Assistant's.
+      trained voice wins; if not, record why and keep the stock voice — it already works.
+- [ ] Static NFS PV/PVC (read-only) for the models path, mounted into `wyoming-piper` so every
+      trained voice is selectable; re-measure synthesis speed; verify the endpoint is unreachable
+      from outside the LAN and from namespaces other than Home Assistant's.
 
 ## Related
 
