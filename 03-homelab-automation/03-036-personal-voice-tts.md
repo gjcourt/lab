@@ -93,7 +93,8 @@ Inference needs none of these: Piper on the existing CPUs is the point.
   proposed in an open piper1-gpl PR ([#302](https://github.com/OHF-Voice/piper1-gpl/pull/302)) and
   was not in a release as of 2026-10; until it ships, synthesize sentence by sentence.
 - **Assistant:** latency is speech-to-text (faster-whisper on CPU) + the LLM + Piper. Piper is not
-  the slow part. The LLM has to be a hosted API — no on-prem inference without a GPU.
+  expected to be the slow part; Phase 1's measurement confirms it. The LLM has to be a hosted API —
+  no on-prem inference without a GPU.
 - **Long-form narration (optional):** Chatterbox on CPU, rendered in the background. Expected to be
   too slow for live use and fine for batch — unmeasured.
 
@@ -117,8 +118,8 @@ just by Whisper confidence.
 
 ## Open questions
 
-- **How many hours of me-only audio exist, and are the originals available?** Decides whether plan A
-  works or plan B is needed.
+- **How many hours of me-only audio exist, and are the originals available?** Decides whether real
+  recordings suffice or plan B is needed.
 - **Rent, or buy a used NVIDIA card for winpc?** Renting is the default; buying only makes sense if
   more training runs are likely.
 - **Does the custom voice need to be better than Piper's best stock voice?** Worth a blind listening
@@ -187,7 +188,7 @@ and re-enter this phase.
 
 ### Phase 3 — Training (rented GPU)
 
-- [ ] Environment per Phase 0's choice; record versions in the repo.
+- [ ] Environment on the provider chosen in Phase 0; record versions in the repo.
 - [ ] Fine-tune piper1-gpl from the medium English checkpoint, saving checkpoints regularly. Render
       the same fixed test sentences at each checkpoint to hear progress.
 - [ ] Export the best checkpoint to ONNX plus its JSON config; copy to `hestia:…/models/`.
@@ -223,5 +224,5 @@ done rather than being designed now.
 
 ## Related
 
-- `03-034` — the household chat service runs on a hosted LLM API; a spoken assistant would put this
-  voice in front of the same backend.
+- `03-034` — the household chat service plans a hosted LLM API backend; a spoken assistant would put
+  this voice in front of the same backend.
