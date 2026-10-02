@@ -6,8 +6,12 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills:
   'Speech dataset curation (source separation, diarization, forced transcription), Piper/VITS
-  fine-tuning, CUDA/ROCm on WSL2, Wyoming protocol, Home Assistant voice pipeline'
+  fine-tuning, rented-GPU training, Wyoming protocol, Home Assistant voice pipeline'
 status: 'Not Started'
+depends_on:
+  - homelab/home-assistant
+  - homelab/golinks
+  - homelab/talos
 ---
 
 # Personal Voice TTS (train on my own voice, serve on CPU)
@@ -18,63 +22,65 @@ Train a text-to-speech voice on my own recordings and run it locally, fast enoug
 use, for three jobs:
 
 - **Home Assistant announcements** — "the garage door has been open for 20 minutes".
-- **Reading things aloud** — articles and notes, behind a golink (`go/read?url=…`).
+- **Reading things aloud** — articles and notes, from a small page behind a golink (`go/read`).
 - **A spoken voice assistant** — speech in, LLM, speech out.
 
 The constraint that shapes everything: **the homelab has no discrete GPU** (the 2× RTX 4090 were
 sold 2026-05-16). Training has to happen somewhere with a GPU; inference has to be fast on CPU. That
-points at **Piper**, which is built for CPU — reported around 5× faster than real time on a desktop
-CPU and real time on a Raspberry Pi 5 — and which Home Assistant speaks natively through the Wyoming
-protocol. Piper moved to [`OHF-Voice/piper1-gpl`](https://github.com/OHF-Voice/piper1-gpl) (GPL-3.0)
-in October 2025; its
-[training guide](https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/TRAINING.md) fine-tunes from
-an existing **medium** checkpoint, which is far cheaper than training from scratch.
+points at **Piper**, which is built for CPU — secondary sources report roughly 5× faster than real
+time on a desktop CPU and real time on a Raspberry Pi 5 (not stated in Piper's own docs; Phase 1
+measures it here) — and which Home Assistant speaks natively through the Wyoming protocol. Piper
+moved to [`OHF-Voice/piper1-gpl`](https://github.com/OHF-Voice/piper1-gpl) (GPL-3.0) in October
+2025; its [training guide](https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/TRAINING.md)
+fine-tunes from an existing **medium** checkpoint, which is far cheaper than training from scratch.
 
-## The source material already exists
+## Source material
 
-Hours of my own speech are already published on YouTube and Spotify. That is the head start, with
-two rules:
+If my published YouTube and Spotify audio holds enough me-only speech, that is the head start —
+Phase 0 inventories it before anything depends on it. Two rules apply:
 
 - **Use the originals, not the published streams.** Project files, YouTube Studio's download of my
-  own uploads, or the podcast host's masters. Streamed copies are lossy-compressed, and pulling them
-  with a scraper can breach the platforms' terms even for my own content.
+  own uploads, or the podcast host's masters, where they exist. Streamed copies are
+  lossy-compressed, and pulling them with a scraper can breach the platforms' terms even for my own
+  content — so no downloaders against YouTube or Spotify.
+- **Only my voice.** Guests and co-hosts are diarized _out_, never trained on.
 - **Published audio is not training audio until it is cleaned.** It carries music beds, guests,
   crosstalk, and whatever room it was recorded in.
 
 The cleaning pipeline, all open-source:
 
 1. **Demucs** — strip music and intro stings.
-2. **pyannote** — diarize; keep only segments where I am the speaker.
+2. **pyannote** — diarize; keep only segments where I am the speaker. The library is MIT; its
+   pretrained pipelines on Hugging Face are gated behind a per-model user agreement.
 3. Segment on silence into 2–15 s clips.
 4. **Whisper** — transcribe each clip; drop low-confidence, overlapping, or laughing segments.
 5. Normalize to 22.05 kHz mono and write the LJSpeech-style `metadata.csv` (`clip.wav|text`) that
    Piper's trainer expects.
 
-**How much:** one to two hours of clean single-speaker audio is a solid fine-tune; a secondary
-source cites ~1,300 phrases as the recommended fine-tune size (not confirmed against Piper's own
-docs). If the cleaned set comes up short, record 30–60 minutes with
-[`piper-recording-studio`](https://github.com/rhasspy/piper-recording-studio), which prompts
-phonetically varied sentences. Consistent mic and room matter more than raw hours.
+**How much:** an estimate, not a sourced figure — aim for one to two hours of clean single-speaker
+audio; a secondary source cites ~1,300 phrases as the recommended fine-tune size (not confirmed
+against Piper's own docs). If the cleaned set comes up short, record 30–60 minutes with
+[`piper-recording-studio`](https://github.com/rhasspy/piper-recording-studio), which records against
+per-language prompt lists. Consistent mic and room matter more than raw hours.
 
 **Plan B for thin or noisy data:** a documented hobbyist workflow uses a slower, higher-quality
 cloning model (Chatterbox, MIT-licensed, a few seconds of reference audio) to synthesize ~1,300
 clean phrases in the target voice, then fine-tunes Piper on those
 ([Cal Bryant](https://calbryant.uk/blog/training-a-new-ai-voice-for-piper-tts-with-only-4-words/)).
-Real recordings beat synthetic ones; this is the fallback, not the plan.
+Real recordings are the preference; this is the fallback, not the plan.
 
 ## Where training can run
 
-Piper's training guide documents only NVIDIA hardware (A6000 / 3090), with community reports of 8 GB
-VRAM and one AMD RX 7600 on Linux. Training on Apple Silicon (MPS) is undocumented — assume CUDA or
-ROCm. One hobbyist fine-tune took about five days on an old Tesla P4; a modern 24 GB card should be
-much faster, but there is no confirmed figure.
+Piper's training guide names NVIDIA hardware (A6000 / 3090) and says users report success with as
+little as 8 GB of VRAM and alternative GPUs like the RX 7600. Training on Apple Silicon (MPS) is
+undocumented — assume CUDA or ROCm. One hobbyist fine-tune took about five days on an old Tesla P4;
+a modern 24 GB card should be much faster, but there is no confirmed figure.
 
-| Option                                                                                       | Verdict                                                  | Why                                                                                                                                                                                                                                                                                                                                                                                                      |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **winpc-5600x discrete GPU**                                                                 | **Best, if NVIDIA with ≥ 8 GB** — model not yet recorded | CUDA under WSL2 needs only the normal Windows driver ([NVIDIA](https://docs.nvidia.com/cuda/wsl-user-guide/index.html)). If it's a Radeon, ROCm on WSL2 supports only RX 7800 XT / 7900-series / 9060 / 9070-class cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)); anything older means booting Linux natively or renting.      |
-| **Talos nodes' integrated GPU** (HP EliteDesk 805 G6, Ryzen PRO 4000G, Radeon Vega `gfx90c`) | **No**                                                   | Not officially supported by ROCm ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)); the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports, and native support is preliminary. It runs on shared DDR4 (~30–40 GB/s) and already does Immich/Jellyfin transcoding on production nodes. Talos _can_ expose `/dev/kfd` and documents a ROCm GPU Operator, so it's possible — just not worth it. |
-| **A low-profile card in an 805 G6 SFF**                                                      | Maybe, later                                             | The SFF chassis has one PCIe x16 slot and a 180/250 W PSU, so only slot-powered (≤ 75 W) low-profile cards fit. The Mini has no slot. A purchase decision, and it would also put a GPU back into the cluster — out of scope here.                                                                                                                                                                        |
-| **Rented cloud GPU**                                                                         | Fallback                                                 | A few hours on a 24 GB card. My voice data then sits on someone else's box — delete it afterwards.                                                                                                                                                                                                                                                                                                       |
+| Option                                                                                                       | Verdict      | Why                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **winpc-5600x discrete GPU** — Radeon RX 580, 8 GB (read from the box 2026-10-02)                            | **No**       | CUDA is NVIDIA-only. ROCm on WSL2 supports only RX 7700 / 7800 XT / 7900-series / 9060 / 9070-class consumer cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)), and Polaris (`gfx803`) is not in current ROCm's supported list on native Linux either — community reports disagree on exactly when it was dropped.                            |
+| **Talos nodes' integrated GPU** (all four are HP EliteDesk 805 G6 Mini, Ryzen 5 PRO 4650GE, Radeon `gfx90c`) | **No**       | Not officially supported by ROCm; the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)). It shares system DDR4 and already does Immich/Jellyfin VAAPI transcoding on production nodes. Talos _can_ load AMD GPU extensions, so it's possible — just not worth it. The Mini chassis has no PCIe x16 slot, so adding a card to a node isn't an option. |
+| **Rented cloud GPU**                                                                                         | **The plan** | A 24 GB NVIDIA card for the length of the fine-tune; duration unknown until measured. My voice data then sits on someone else's box — delete it afterwards.                                                                                                                                                                                                                                                         |
 
 Inference needs none of these: Piper on the existing CPUs is the point.
 
@@ -83,12 +89,13 @@ Inference needs none of these: Piper on the existing CPUs is the point.
 - **Home Assistant:** a `wyoming-piper` Deployment in the homelab loading my ONNX voice; HA's TTS
   points at it on port 10200. Start with a stock Piper voice so the plumbing is proven before the
   custom voice exists — then swapping voices is replacing a file.
-- **Read-aloud:** a small HTTP service on the same voice. piper1-gpl documents waveform streaming
-  (audio starts before the sentence finishes); confirm it has shipped in a release.
+- **Read-aloud:** a small HTTP service on the same voice. Low-latency streaming synthesis is
+  proposed in an open piper1-gpl PR ([#302](https://github.com/OHF-Voice/piper1-gpl/pull/302)) and
+  was not in a release as of 2026-10; until it ships, synthesize sentence by sentence.
 - **Assistant:** latency is speech-to-text (faster-whisper on CPU) + the LLM + Piper. Piper is not
   the slow part. The LLM has to be a hosted API — no on-prem inference without a GPU.
-- **Long-form narration (optional):** Chatterbox on CPU, rendered in the background. Too slow for
-  live use, fine for batch.
+- **Long-form narration (optional):** Chatterbox on CPU, rendered in the background. Expected to be
+  too slow for live use and fine for batch — unmeasured.
 
 ## Risks
 
@@ -98,9 +105,11 @@ LAN-only, and anything reachable from a browser (the read-aloud page) needs auth
 is in Phase 5 rather than assuming the intranet already has it. If a bank uses voice verification,
 turn it off.
 
-**Licences differ between engine and weights.** piper1-gpl is GPL-3.0 (fine for personal use; the
-voice model itself is mine). Several high-quality cloners have non-commercial weights — XTTS-v2
-(CPML), F5-TTS (CC-BY-NC-4.0) — fine for a personal plan B, not for anything shared.
+**Licences differ between engine and weights.** piper1-gpl is GPL-3.0 (fine for personal use). A
+fine-tune inherits the terms of the base checkpoint's training data, so check the chosen
+checkpoint's model card before treating the result as unencumbered. Several high-quality cloners
+have non-commercial weights — XTTS-v2 (CPML), F5-TTS (CC-BY-NC-4.0) — fine for a personal plan B,
+not for anything shared.
 
 **Garbage in, robot out.** Diarization errors that leak a guest's voice into the dataset, or
 transcripts that don't match the audio, degrade the voice silently. Spot-check by listening, not
@@ -108,13 +117,10 @@ just by Whisper confidence.
 
 ## Open questions
 
-- **What GPU is in winpc-5600x?** Model and VRAM decide whether training is local. The Ryzen 5 5600X
-  has no integrated graphics, so a discrete card is there — it just isn't recorded in
-  `hosts/winpc-5600x`.
 - **How many hours of me-only audio exist, and are the originals available?** Decides whether plan A
   works or plan B is needed.
-- **Are the cluster nodes 805 G6 Mini or SFF?** Only matters if a low-profile GPU ever becomes a
-  question.
+- **Rent, or buy a used NVIDIA card for winpc?** Renting is the default; buying only makes sense if
+  more training runs are likely.
 - **Does the custom voice need to be better than Piper's best stock voice?** Worth a blind listening
   test before spending days on training.
 
@@ -125,7 +131,7 @@ just by Whisper confidence.
 - [ ] A fine-tuned Piper voice exported to ONNX, stored privately on hestia.
 - [ ] Home Assistant announces through `wyoming-piper` using that voice.
 - [ ] Synthesis on the cluster CPU is faster than real time for a 30-second paragraph, measured.
-- [ ] Read-aloud works end to end from a golink.
+- [ ] Read-aloud works end to end from `go/read`.
 - [ ] A blind A/B with someone who knows my voice prefers the custom voice over the best stock Piper
       voice, or the project records that it didn't.
 - [ ] The TTS endpoint is not reachable from outside the LAN — verified, not assumed.
@@ -140,27 +146,26 @@ dataset pipeline, training configs and the read-aloud service. Audio, datasets, 
 ONNX voice live on **hestia only**, in a private dataset George creates (e.g.
 `/mnt/main/voice/{raw,dataset,checkpoints,models}`) — never in git, never in an image. The cluster
 reads the finished voice the same way Jellyfin reads media: a static NFS PV, read-only. Agents can't
-read that dataset (their hestia access is `agent-inbox` and media only), so audio work runs on
-George's machine.
+read that dataset (under the bench-cloud agent design their hestia access is `agent-inbox` and media
+only), so audio work runs on George's machine.
 
 ### Phase 0 — Decide and inventory (George, ~1 hour)
 
-- [ ] Record the winpc-5600x GPU model and VRAM in `hosts/winpc-5600x`.
+- [ ] Record the winpc-5600x GPU (Radeon RX 580, 8 GB) in `hosts/winpc-5600x` — homelab PR.
 - [ ] Inventory published audio; locate the originals; estimate me-only hours.
 - [ ] Create the private hestia dataset and its NFS export, readable from the cluster nodes only.
 
-**Gate:** training path chosen — **A** WSL2 + CUDA on winpc (NVIDIA, ≥ 8 GB), **B** WSL2 + ROCm (RX
-7800 XT class or newer), or **C** rented GPU. Data path chosen — real recordings if ≥ 1 h of me-only
-audio is likely, otherwise plan B (record with `piper-recording-studio`, or synthesize with
-Chatterbox).
+**Gate:** rented-GPU provider chosen (winpc's RX 580 rules out local training). Data path chosen —
+real recordings if ≥ 1 h of me-only audio is likely, otherwise plan B (record with
+`piper-recording-studio`, or synthesize with Chatterbox).
 
 ### Phase 1 — Plumbing with a stock voice (homelab PR, agent can do)
 
 Proves everything except the voice itself, and gives Home Assistant local TTS immediately.
 
 - [ ] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
-      HTTPRoute), NetworkPolicy admitting only the `homeassistant` namespace, the best stock English
-      medium voice.
+      HTTPRoute), NetworkPolicy admitting only the Home Assistant namespace (`homeassistant-prod`,
+      or `homeassistant-stage` in the staging overlay), the best stock English medium voice.
 - [ ] George adds the Wyoming integration in Home Assistant's UI (it's a config-flow integration,
       not YAML) and picks the voice as the default TTS.
 - [ ] Measure synthesis time for a fixed 30-second paragraph on a cluster node.
@@ -180,7 +185,7 @@ the baseline voice for Phase 3's A/B.
 **Gate:** ≥ 1 h of clean me-only clips that survive the listening check. If not, fall back to plan B
 and re-enter this phase.
 
-### Phase 3 — Training (winpc or rented GPU)
+### Phase 3 — Training (rented GPU)
 
 - [ ] Environment per Phase 0's choice; record versions in the repo.
 - [ ] Fine-tune piper1-gpl from the medium English checkpoint, saving checkpoints regularly. Render
@@ -205,8 +210,10 @@ already works.
 
 - [ ] Small HTTP service: URL → readable text → Piper → audio, streamed where piper1-gpl's streaming
       has shipped in a release. Uses the same voice volume.
-- [ ] Intranet-only route and a golink `go/read`. Decide its auth first: an endpoint that speaks in
-      my voice must not be open to everything on the LAN.
+- [ ] Intranet-only route and a golink `go/read` pointing at the page. golinks does not forward
+      query strings and its wildcard only captures one `A–Z a–z 0–9 . _ -` path segment, so the
+      article URL is entered on the page, not passed through the golink. Decide its auth first: an
+      endpoint that speaks in my voice must not be open to everything on the LAN.
 
 ### Phase 6 — Spoken assistant (separate brief)
 
