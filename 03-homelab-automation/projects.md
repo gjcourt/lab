@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (36)
+# Homelab & Automation Projects (37)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -41,4 +41,5 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-033 | [Renovate Dependency Review Agent (LLM second reader)](03-033-renovate-dependency-review-agent.md)                             | In Progress | Medium     | 1-2 weeks       |
 | 03-034 | [Household Chat Service (open-webui on a hosted API backend)](03-034-household-chat-service.md)                                | Not Started | Medium     | 1-2 weeks       |
 | 03-035 | [Scan the Physical Photo Archive into the Family Library](03-035-scan-physical-photo-archive.md)                               | Not Started | Medium     | 1-2 weeks       |
-| 03-036 | [Personal Voice TTS (train on my own voice, serve on CPU)](03-036-personal-voice-tts.md)                                       | Not Started | Medium     | 1-4 weeks       |
+| 03-036 | [Local Text-to-Speech (stock voice first, custom voice optional)](03-036-local-tts.md)                                         | Not Started | Medium     | 1-4 weeks       |
+| 03-037 | [Local Speech-to-Text (Home Assistant commands and dictation on CPU)](03-037-local-stt.md)                                     | Not Started | Medium     | 1-2 weeks       |
