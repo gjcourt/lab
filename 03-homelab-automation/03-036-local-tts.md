@@ -26,7 +26,7 @@ Run text-to-speech locally, fast enough for interactive use, for two jobs:
 A spoken assistant also needs speech-to-text; that is `03-037`, and the assistant gets its own brief
 once both exist.
 
-The constraint that shapes everything: **the homelab has no discrete GPU** (the 2× RTX 4090 were
+The constraint that shapes everything: **the cluster has no discrete GPU** (the 2× RTX 4090 were
 sold 2026-05-16), so inference has to be fast on CPU. That points at **Piper**, which is built for
 CPU — secondary sources report roughly 5× faster than real time on a desktop CPU and real time on a
 Raspberry Pi 5 (not stated in Piper's own docs; Phase 1 measures it here) — and which Home Assistant
@@ -91,11 +91,11 @@ on Apple Silicon (MPS) is undocumented — assume CUDA or ROCm. One hobbyist fin
 days on an old Tesla P4; a modern 24 GB card should be much faster, but there is no confirmed
 figure.
 
-| Option                                                                                                       | Verdict      | Why                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **winpc-5600x discrete GPU** — Radeon RX 580, 8 GB (read from the box 2026-10-02)                            | **No**       | CUDA is NVIDIA-only. ROCm on WSL2 supports only RX 7700 / 7800 XT / 7900-series / 9060 / 9070-class consumer cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)), and Polaris (`gfx803`) is not in current ROCm's supported list on native Linux either — community reports disagree on exactly when it was dropped.                            |
-| **Talos nodes' integrated GPU** (all four are HP EliteDesk 805 G6 Mini, Ryzen 5 PRO 4650GE, Radeon `gfx90c`) | **No**       | Not officially supported by ROCm; the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)). It shares system DDR4 and already does Immich/Jellyfin VAAPI transcoding on production nodes. Talos _can_ load AMD GPU extensions, so it's possible — just not worth it. The Mini chassis has no PCIe x16 slot, so adding a card to a node isn't an option. |
-| **Rented cloud GPU**                                                                                         | **The plan** | A 24 GB NVIDIA card for the length of the fine-tune; duration unknown until measured. My recordings then sit on someone else's box — delete them afterwards.                                                                                                                                                                                                                                                        |
+| Option                                                                                                       | Verdict     | Why                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **winpc-5600x discrete GPU** — Radeon RX 580, 8 GB (read from the box 2026-10-02)                            | **No**      | CUDA is NVIDIA-only. ROCm on WSL2 supports only RX 7700 / 7800 XT / 7900-series / 9060 / 9070-class consumer cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)), and Polaris (`gfx803`) is not in current ROCm's supported list on native Linux either — community reports disagree on exactly when it was dropped.                            |
+| **Talos nodes' integrated GPU** (all four are HP EliteDesk 805 G6 Mini, Ryzen 5 PRO 4650GE, Radeon `gfx90c`) | **No**      | Not officially supported by ROCm; the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)). It shares system DDR4 and already does Immich/Jellyfin VAAPI transcoding on production nodes. Talos _can_ load AMD GPU extensions, so it's possible — just not worth it. The Mini chassis has no PCIe x16 slot, so adding a card to a node isn't an option. |
+| **Rented cloud GPU**                                                                                         | **Default** | A 24 GB NVIDIA card for the length of the fine-tune; duration unknown until measured. My recordings then sit on someone else's box — delete them afterwards.                                                                                                                                                                                                                                                        |
 
 Inference needs none of these: Piper on the existing CPUs is the point.
 
@@ -184,10 +184,11 @@ only), so audio work runs on George's machine.
 - [ ] Record with `piper-recording-studio` in sessions, same setup each time; listen to a few takes
       from each session before the next.
 
-**Gate:** ≥ 1 h of clean recordings (or top up from published originals / plan B); rented-GPU
-provider chosen — winpc's RX 580 rules out local training.
+**Gate:** ≥ 1 h of clean recordings (or top up from published originals / plan B); training hardware
+chosen — a rented GPU by default, or an NVIDIA card bought for winpc (its RX 580 rules out training
+on it as-is).
 
-**Phase 4 — Train and ship (rented GPU + homelab PR).**
+**Phase 4 — Train and ship (NVIDIA GPU, rented or bought + homelab PR).**
 
 - [ ] Training setup in `gjcourt/voice`: pinned environment, a small per-run config (recordings
       folder, base checkpoint, output name); record versions.
