@@ -52,6 +52,30 @@ but are a fair reference point in the audition.
 rendered from it, ranked blind, and synthesis time measured on a cluster node. The winner is the
 default until my own voice wins a blind A/B against it.
 
+## Audition result (2026-10-02)
+
+Thirteen stock voices (9 Piper, 4 Kokoro) rendered the same script, blinded and level-matched, and
+were ranked on a listening page. Kokoro took the top three places. Raw outputs are in
+`hestia:/mnt/main/agent-inbox/tts-audition/2026-10-02/`; the harness is in `gjcourt/voice`.
+
+| Rank | Voice               | Engine | 26 s paragraph on a cluster node\* | Licence                                             |
+| ---- | ------------------- | ------ | ---------------------------------- | --------------------------------------------------- |
+| 1    | `af_heart`          | Kokoro | 15.4 s                             | Apache-2.0                                          |
+| 2    | `am_michael`        | Kokoro | 13.4 s                             | Apache-2.0                                          |
+| 3    | `af_bella`          | Kokoro | 13.1 s                             | Apache-2.0                                          |
+| 4    | `en_GB-alan-medium` | Piper  | 2.3 s                              | Unclear — source folder reads "All Rights Reserved" |
+| 5    | `en_GB-cori-high`   | Piper  | 10.5 s                             | Public domain                                       |
+
+\*Under a throttled 4-CPU quota; Kokoro measured with `kokoro-onnx`.
+
+**Decision:** `af_heart` is the default voice, served by Kokoro-FastAPI on CPU
+([homelab#1532](https://github.com/gjcourt/homelab/pull/1532)). Home Assistant's core OpenAI
+integration only talks to `api.openai.com`, so it goes through the HACS **OpenAI TTS** integration.
+The `wyoming_openai` bridge (MIT) is the alternative if Wyoming streaming is needed later for the
+assistant. Alan was the favourite voice character; improving it is an experiment below. Kokoro has
+preset voices only, so any trained voice — alan or mine — is a Piper voice and has to beat
+`af_heart` in a blind A/B to replace it.
+
 ## Later: my own voice
 
 ### Recording
@@ -125,8 +149,6 @@ leaking past diarization degrade the voice silently. Spot-check by listening.
 
 ## Open questions
 
-- **Can Kokoro reach Home Assistant cleanly?** Through an OpenAI-compatible TTS integration or a
-  Wyoming wrapper — needs checking before it's a fair audition candidate.
 - **How much to record, and does published audio add anything?** Recording time is the main cost of
   the later phase.
 - **Rent, or buy a used NVIDIA card for winpc?** Renting is the default; buying only makes sense if
@@ -158,11 +180,16 @@ only), so audio work runs on George's machine.
 
 - [ ] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
       HTTPRoute), NetworkPolicy admitting only the Home Assistant namespace (`homeassistant-prod`,
-      or `homeassistant-stage` in the staging overlay), a default English medium voice.
+      or `homeassistant-stage` in the staging overlay), a default English medium voice —
+      [homelab#1529](https://github.com/gjcourt/homelab/pull/1529). Now the home for trained Piper
+      voices rather than the default.
+- [ ] `apps/base/kokoro/`: Kokoro-FastAPI with `af_heart`, same isolation, no internet egress —
+      [homelab#1532](https://github.com/gjcourt/homelab/pull/1532). George installs the HACS OpenAI
+      TTS integration and points it at the service.
 - [ ] George adds the Wyoming integration in Home Assistant's UI (it's a config-flow integration,
       not YAML) and makes it the default TTS.
-- [ ] Render the audition script with every candidate; measure synthesis time for the 30-second
-      paragraph on a cluster node; rank blind.
+- [x] Render the audition script with every candidate; measure synthesis time for the 30-second
+      paragraph on a cluster node; rank blind. Done 2026-10-02 — see _Audition result_.
 
 **Gate:** a stock voice chosen and set as default; synthesis faster than real time.
 
@@ -200,6 +227,42 @@ on it as-is).
 - [ ] Static NFS PV/PVC (read-only) for the models path, mounted into `wyoming-piper` so trained
       voices are selectable; re-measure synthesis speed; verify the endpoint is unreachable from
       outside the LAN and from namespaces other than Home Assistant's.
+
+### Experiment — improve alan (V08)
+
+Alan ranked fourth but was the favourite voice character. The question is whether fine-tuning can
+make it sound more natural while keeping its character. Nothing here runs until this plan is agreed.
+
+**What exists to start from:** `rhasspy/piper-checkpoints` has an alan **medium** training
+checkpoint (`en/en_GB/alan/medium`, fine-tuned from lessac medium). Its folder includes
+`dataset.jsonl.gz`, which is phonemized text with no audio. The original recordings (Mycroft's
+`apope` voice) are not public anywhere found, and the source folder's licence reads "All Rights
+Reserved". The only en_GB **high** checkpoint is `cori/high`.
+
+**Arm A — re-voice with a stronger model, then fine-tune alan.** Use alan's own renders as reference
+audio for Chatterbox (MIT; GPU for the Turbo model, a smaller CPU-capable Nano exists) to synthesize
+~1,300–2,000 phrases with more natural prosody in alan's timbre. Whisper-check every clip, then
+fine-tune from the alan medium checkpoint. This is the documented hobbyist pattern
+([Cal Bryant](https://calbryant.uk/blog/training-a-new-ai-voice-for-piper-tts-with-only-4-words/));
+its author reports a less robotic but not identical result.
+
+**Arm B — the same dataset, fine-tuned from `cori/high`** for the high-quality architecture. Expect
+more natural audio and a larger timbre drift; slower on CPU (cori-high ran at RTF ~0.43).
+
+**Not doing:** training a high model on alan's own output alone. No evidence was found that it
+improves anything; it would mostly reproduce alan's artifacts.
+
+**How it's judged:** the audition harness renders the original alan, both arms and `af_heart` blind.
+Success is beating the original alan on naturalness while still sounding like alan; replacing
+`af_heart` as the default is a separate bar.
+
+**Cost and where:** a rented 24 GB NVIDIA GPU for generation and fine-tuning — community reports
+suggest about a day for a fine-tune; a few dollars at current rental rates (an estimate, not a
+measured total). Delete the data from the rented box afterwards.
+
+**Use:** private household use only, like every voice here. Alan's licence is unclear and it is a
+real person's voice that was released as a TTS model, so the results stay on hestia and are not
+published.
 
 ## Related
 
