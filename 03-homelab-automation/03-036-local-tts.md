@@ -6,7 +6,7 @@ difficulty: 'Medium'
 time_commitment: '1-4 weeks'
 target_skills:
   'Wyoming protocol, Home Assistant voice pipeline, TTS evaluation; later, recording a speech
-  dataset, Piper/VITS fine-tuning, rented-GPU training'
+  dataset, Piper/VITS fine-tuning, GPU training under WSL2 + CUDA'
 status: 'Not Started'
 depends_on:
   - homelab/home-assistant
@@ -39,11 +39,11 @@ it, and plugs it in — so the stock voice carries everything until mine beats i
 
 ## Choosing the voice
 
-| Candidate                                     | Where it runs                       | Notes                                                                                                                                                                                                                                                                                     |
-| --------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Piper stock voices**                        | Cluster CPU, Wyoming                | Many English voices at low/medium/high quality. Each voice carries its own licence in its model card, separate from the engine's — check before settling on one.                                                                                                                          |
-| **Kokoro presets** (`Kokoro-82M`, Apache-2.0) | Cluster CPU                         | Preset voices only; often described as more natural than Piper, but slower on CPU (published figures conflict) — both unmeasured here. No native Wyoming server confirmed; an OpenAI-compatible server (`Kokoro-FastAPI`) exists, and the Home Assistant integration path needs checking. |
-| **My own voice** (later phase)                | Rented GPU to train, Piper to serve | Fine-tuned from local recordings of me.                                                                                                                                                                                                                                                   |
+| Candidate                                     | Where it runs                                      | Notes                                                                                                                                                                                                                                                                                     |
+| --------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Piper stock voices**                        | Cluster CPU, Wyoming                               | Many English voices at low/medium/high quality. Each voice carries its own licence in its model card, separate from the engine's — check before settling on one.                                                                                                                          |
+| **Kokoro presets** (`Kokoro-82M`, Apache-2.0) | Cluster CPU                                        | Preset voices only; often described as more natural than Piper, but slower on CPU (published figures conflict) — both unmeasured here. No native Wyoming server confirmed; an OpenAI-compatible server (`Kokoro-FastAPI`) exists, and the Home Assistant integration path needs checking. |
+| **My own voice** (later phase)                | winpc's RTX 4060 Ti 16 GB to train, Piper to serve | Fine-tuned from local recordings of me.                                                                                                                                                                                                                                                   |
 
 Cloud "voice design" services (generate a voice from a description) are out of scope — not local —
 but are a fair reference point in the audition.
@@ -51,6 +51,30 @@ but are a fair reference point in the audition.
 **The audition:** a fixed script (three announcements and one 30-second paragraph), every candidate
 rendered from it, ranked blind, and synthesis time measured on a cluster node. The winner is the
 default until my own voice wins a blind A/B against it.
+
+## Audition result (2026-10-02)
+
+Thirteen stock voices (9 Piper, 4 Kokoro) rendered the same script, blinded and level-matched, and
+were ranked on a listening page. Kokoro took the top three places. Raw outputs are in
+`hestia:/mnt/main/agent-inbox/tts-audition/2026-10-02/`; the harness is in `gjcourt/voice`.
+
+| Rank | Voice               | Engine | 26 s paragraph on a cluster node\* | Licence                                             |
+| ---- | ------------------- | ------ | ---------------------------------- | --------------------------------------------------- |
+| 1    | `af_heart`          | Kokoro | 15.4 s                             | Apache-2.0                                          |
+| 2    | `am_michael`        | Kokoro | 13.4 s                             | Apache-2.0                                          |
+| 3    | `af_bella`          | Kokoro | 13.1 s                             | Apache-2.0                                          |
+| 4    | `en_GB-alan-medium` | Piper  | 2.3 s                              | Unclear — source folder reads "All Rights Reserved" |
+| 5    | `en_GB-cori-high`   | Piper  | 10.5 s                             | Public domain                                       |
+
+\*Under a throttled 4-CPU quota; Kokoro measured with `kokoro-onnx`.
+
+**Decision:** `af_heart` is the default voice, served by Kokoro-FastAPI on CPU
+([homelab#1532](https://github.com/gjcourt/homelab/pull/1532)). Home Assistant's core OpenAI
+integration only talks to `api.openai.com`, so it goes through the HACS **OpenAI TTS** integration.
+The `wyoming_openai` bridge (MIT) is the alternative if Wyoming streaming is needed later for the
+assistant. Alan was the favourite voice character; improving it is an experiment below. Kokoro has
+preset voices only, so any trained voice — alan or mine — is a Piper voice and has to beat
+`af_heart` in a blind A/B to replace it.
 
 ## Later: my own voice
 
@@ -91,11 +115,12 @@ on Apple Silicon (MPS) is undocumented — assume CUDA or ROCm. One hobbyist fin
 days on an old Tesla P4; a modern 24 GB card should be much faster, but there is no confirmed
 figure.
 
-| Option                                                                                                       | Verdict     | Why                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **winpc-5600x discrete GPU** — Radeon RX 580, 8 GB (read from the box 2026-10-02)                            | **No**      | CUDA is NVIDIA-only. ROCm on WSL2 supports only RX 7700 / 7800 XT / 7900-series / 9060 / 9070-class consumer cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)), and Polaris (`gfx803`) is not in current ROCm's supported list on native Linux either — community reports disagree on exactly when it was dropped.                            |
-| **Talos nodes' integrated GPU** (all four are HP EliteDesk 805 G6 Mini, Ryzen 5 PRO 4650GE, Radeon `gfx90c`) | **No**      | Not officially supported by ROCm; the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)). It shares system DDR4 and already does Immich/Jellyfin VAAPI transcoding on production nodes. Talos _can_ load AMD GPU extensions, so it's possible — just not worth it. The Mini chassis has no PCIe x16 slot, so adding a card to a node isn't an option. |
-| **Rented cloud GPU**                                                                                         | **Default** | A 24 GB NVIDIA card for the length of the fine-tune; duration unknown until measured. My recordings then sit on someone else's box — delete them afterwards.                                                                                                                                                                                                                                                        |
+| Option                                                                                                       | Verdict      | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------ | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **winpc-5600x discrete GPU** — Radeon RX 580, 8 GB (read from the box 2026-10-02)                            | **No**       | CUDA is NVIDIA-only. ROCm on WSL2 supports only RX 7700 / 7800 XT / 7900-series / 9060 / 9070-class consumer cards ([AMD matrix](https://rocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility/wsl/wsl_compatibility.html)), and Polaris (`gfx803`) is not in current ROCm's supported list on native Linux either — community reports disagree on exactly when it was dropped.                                                                                                                                                                                              |
+| **Talos nodes' integrated GPU** (all four are HP EliteDesk 805 G6 Mini, Ryzen 5 PRO 4650GE, Radeon `gfx90c`) | **No**       | Not officially supported by ROCm; the `HSA_OVERRIDE_GFX_VERSION=9.0.0` spoof has crash reports ([ROCm#5121](https://github.com/ROCm/ROCm/issues/5121)). It shares system DDR4 and already does Immich/Jellyfin VAAPI transcoding on production nodes. Talos _can_ load AMD GPU extensions, so it's possible — just not worth it. The Mini chassis has no PCIe x16 slot, so adding a card to a node isn't an option.                                                                                                                                                                   |
+| **RTX 4060 Ti 16 GB in winpc-5600x** (decided 2026-10-03; replaces the RX 580)                               | **The plan** | Ada, so CUDA under WSL2 with the stock Windows driver. Chosen over the faster RTX 4070 Super 12 GB because winpc is for training and inference only: memory caps what can run at all, while speed only changes how long it takes. 16 GB should fit Piper's default batch of 32 (community reports, unmeasured here) and leaves headroom for Chatterbox (~6–10 GB) and larger models. A compact 2-slot model (e.g. Zotac Twin Edge, ~221 mm) fits the NCASE M1 (dual-slot, ≤ 322 mm); ~165 W from one 8-pin is well within the SFX 800 W Gold PSU. Recordings never leave the network. |
+| **Rented cloud GPU**                                                                                         | Fallback     | A 24 GB NVIDIA card if 16 GB falls short. The data then sits on someone else's box — delete it afterwards.                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 Inference needs none of these: Piper on the existing CPUs is the point.
 
@@ -125,12 +150,13 @@ leaking past diarization degrade the voice silently. Spot-check by listening.
 
 ## Open questions
 
-- **Can Kokoro reach Home Assistant cleanly?** Through an OpenAI-compatible TTS integration or a
-  Wyoming wrapper — needs checking before it's a fair audition candidate.
 - **How much to record, and does published audio add anything?** Recording time is the main cost of
   the later phase.
-- **Rent, or buy a used NVIDIA card for winpc?** Renting is the default; buying only makes sense if
-  more training runs are likely.
+- **Software versions on the 4060 Ti.** piper1-gpl's `train` extra allows any `torch>=2,<3`, but
+  open issue [#225](https://github.com/OHF-Voice/piper1-gpl/issues/225) breaks checkpoint resume
+  (`--ckpt_path`, which fine-tuning needs) on torch ≥ 2.6; a community fork pins torch 2.5.1, which
+  Ada supports. Chatterbox pins `torch==2.6.0`. Plan on two separate environments rather than one.
+  (This is also why an RTX 50-series card was ruled out: it needs torch ≥ 2.7.)
 
 ## Exit Criteria
 
@@ -158,11 +184,16 @@ only), so audio work runs on George's machine.
 
 - [ ] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
       HTTPRoute), NetworkPolicy admitting only the Home Assistant namespace (`homeassistant-prod`,
-      or `homeassistant-stage` in the staging overlay), a default English medium voice.
+      or `homeassistant-stage` in the staging overlay), a default English medium voice —
+      [homelab#1529](https://github.com/gjcourt/homelab/pull/1529). Now the home for trained Piper
+      voices rather than the default.
+- [ ] `apps/base/kokoro/`: Kokoro-FastAPI with `af_heart`, same isolation, no internet egress —
+      [homelab#1532](https://github.com/gjcourt/homelab/pull/1532). George installs the HACS OpenAI
+      TTS integration and points it at the service.
 - [ ] George adds the Wyoming integration in Home Assistant's UI (it's a config-flow integration,
       not YAML) and makes it the default TTS.
-- [ ] Render the audition script with every candidate; measure synthesis time for the 30-second
-      paragraph on a cluster node; rank blind.
+- [x] Render the audition script with every candidate; measure synthesis time for the 30-second
+      paragraph on a cluster node; rank blind. Done 2026-10-02 — see _Audition result_.
 
 **Gate:** a stock voice chosen and set as default; synthesis faster than real time.
 
@@ -179,16 +210,18 @@ only), so audio work runs on George's machine.
 
 **Phase 3 — Record (George).**
 
-- [ ] Record the winpc-5600x GPU (Radeon RX 580, 8 GB) in `hosts/winpc-5600x` — homelab PR.
+- [ ] Install the RTX 4060 Ti 16 GB in winpc-5600x; record it in `hosts/winpc-5600x` — homelab PR.
+- [ ] WSL2 + CUDA on winpc (Debian is already installed): NVIDIA driver on the Windows side only;
+      keep datasets and checkpoints on the Linux filesystem, not `/mnt/c` (reported 3–5× slower);
+      cap WSL's memory in `.wslconfig`. Confirm the GPU with `nvidia-smi` inside WSL.
 - [ ] Create the private hestia dataset and its NFS export, readable from the cluster nodes only.
 - [ ] Record with `piper-recording-studio` in sessions, same setup each time; listen to a few takes
       from each session before the next.
 
 **Gate:** ≥ 1 h of clean recordings (or top up from published originals / plan B); training hardware
-chosen — a rented GPU by default, or an NVIDIA card bought for winpc (its RX 580 rules out training
-on it as-is).
+ready — winpc's RTX 4060 Ti 16 GB under WSL2, with a rented GPU as the fallback.
 
-**Phase 4 — Train and ship (NVIDIA GPU, rented or bought + homelab PR).**
+**Phase 4 — Train and ship (winpc RTX 4060 Ti 16 GB + homelab PR).**
 
 - [ ] Training setup in `gjcourt/voice`: pinned environment, a small per-run config (recordings
       folder, base checkpoint, output name); record versions.
@@ -200,6 +233,44 @@ on it as-is).
 - [ ] Static NFS PV/PVC (read-only) for the models path, mounted into `wyoming-piper` so trained
       voices are selectable; re-measure synthesis speed; verify the endpoint is unreachable from
       outside the LAN and from namespaces other than Home Assistant's.
+
+### Experiment — improve alan (V08)
+
+Alan ranked fourth but was the favourite voice character. The question is whether fine-tuning can
+make it sound more natural while keeping its character. Nothing here runs until this plan is agreed.
+
+**What exists to start from:** `rhasspy/piper-checkpoints` has an alan **medium** training
+checkpoint (`en/en_GB/alan/medium`, fine-tuned from lessac medium). Its folder includes
+`dataset.jsonl.gz`, which is phonemized text with no audio. The original recordings (Mycroft's
+`apope` voice) are not public anywhere found, and the source folder's licence reads "All Rights
+Reserved". The only en_GB **high** checkpoint is `cori/high`.
+
+**Arm A — re-voice with a stronger model, then fine-tune alan.** Use alan's own renders as reference
+audio for Chatterbox (MIT; GPU for the Turbo model, a smaller CPU-capable Nano exists) to synthesize
+~1,300–2,000 phrases with more natural prosody in alan's timbre. Whisper-check every clip, then
+fine-tune from the alan medium checkpoint. This is the documented hobbyist pattern
+([Cal Bryant](https://calbryant.uk/blog/training-a-new-ai-voice-for-piper-tts-with-only-4-words/));
+its author reports a less robotic but not identical result.
+
+**Arm B — the same dataset, fine-tuned from `cori/high`** for the high-quality architecture. Expect
+more natural audio and a larger timbre drift; slower on CPU (cori-high ran at RTF ~0.43).
+
+**Not doing:** training a high model on alan's own output alone. No evidence was found that it
+improves anything; it would mostly reproduce alan's artifacts.
+
+**How it's judged:** the audition harness renders the original alan, both arms and `af_heart` blind.
+Success is beating the original alan on naturalness while still sounding like alan; replacing
+`af_heart` as the default is a separate bar.
+
+**Where:** winpc's RTX 4060 Ti 16 GB for both Chatterbox generation and the Piper fine-tune, so the
+data stays on the network; a rented 24 GB GPU only if 16 GB falls short. Community reports suggest
+about a day per fine-tune on a 24 GB card; the 4060 Ti has less compute and memory bandwidth, so
+expect longer — an estimate, not a measurement. See _Open questions_ for the torch-version split
+between the two tools.
+
+**Use:** private household use only, like every voice here. Alan's licence is unclear and it is a
+real person's voice that was released as a TTS model, so the results stay on hestia and are not
+published.
 
 ## Related
 
