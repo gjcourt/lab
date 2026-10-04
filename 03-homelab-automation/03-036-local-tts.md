@@ -257,7 +257,10 @@ that Chatterbox made the voice less robotic and the trained model sounds similar
 output.
 
 **Arm B — the same dataset, fine-tuned from `cori/high`** for the high-quality architecture. Expect
-more natural audio and a larger timbre drift; slower on CPU (cori-high ran at RTF ~0.43).
+more natural audio and a larger timbre drift; slower on CPU (cori-high ran at RTF ~0.43). Piper's
+[training guide](https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/TRAINING.md) says only
+medium checkpoints are supported without tweaking other settings, so this arm needs the high-quality
+model settings worked out first.
 
 **Not doing:** training a high model on alan's own output alone. No evidence was found that it
 improves anything; it would mostly reproduce alan's artifacts.
