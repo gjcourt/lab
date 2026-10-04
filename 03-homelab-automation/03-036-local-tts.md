@@ -7,7 +7,7 @@ time_commitment: '1-4 weeks'
 target_skills:
   'Wyoming protocol, Home Assistant voice pipeline, TTS evaluation; later, recording a speech
   dataset, Piper/VITS fine-tuning, GPU training under WSL2 + CUDA'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - homelab/home-assistant
   - homelab/golinks
@@ -55,25 +55,27 @@ default until my own voice wins a blind A/B against it.
 ## Audition result (2026-10-02)
 
 Thirteen stock voices (9 Piper, 4 Kokoro) rendered the same script, blinded and level-matched, and
-were ranked on a listening page. Kokoro took the top three places. Raw outputs are in
-`hestia:/mnt/main/agent-inbox/tts-audition/2026-10-02/`; the harness is in `gjcourt/voice`.
+were ranked on a listening page. Kokoro took the top three places. The blinded samples, timings and
+key are in `hestia:/mnt/main/agent-inbox/tts-audition/2026-10-02/`; the harness is in
+`gjcourt/voice` ([voice#1](https://github.com/gjcourt/voice/pull/1)).
 
-| Rank | Voice               | Engine | 26 s paragraph on a cluster node\* | Licence                                             |
-| ---- | ------------------- | ------ | ---------------------------------- | --------------------------------------------------- |
-| 1    | `af_heart`          | Kokoro | 15.4 s                             | Apache-2.0                                          |
-| 2    | `am_michael`        | Kokoro | 13.4 s                             | Apache-2.0                                          |
-| 3    | `af_bella`          | Kokoro | 13.1 s                             | Apache-2.0                                          |
-| 4    | `en_GB-alan-medium` | Piper  | 2.3 s                              | Unclear — source folder reads "All Rights Reserved" |
-| 5    | `en_GB-cori-high`   | Piper  | 10.5 s                             | Public domain                                       |
+| Rank | Voice               | Engine | Paragraph synthesis time (audio length)\* | Licence                                             |
+| ---- | ------------------- | ------ | ----------------------------------------- | --------------------------------------------------- |
+| 1    | `af_heart`          | Kokoro | 15.4 s (26.0 s)                           | Apache-2.0                                          |
+| 2    | `am_michael`        | Kokoro | 13.4 s (27.7 s)                           | Apache-2.0                                          |
+| 3    | `af_bella`          | Kokoro | 13.1 s (26.0 s)                           | Apache-2.0                                          |
+| 4    | `en_GB-alan-medium` | Piper  | 2.3 s (29.2 s)                            | Unclear — source folder reads "All Rights Reserved" |
+| 5    | `en_GB-cori-high`   | Piper  | 10.5 s (24.5 s)                           | Public domain                                       |
 
-\*Under a throttled 4-CPU quota; Kokoro measured with `kokoro-onnx`.
+\*Median of three runs on a cluster node, under a throttled 4-CPU quota; Kokoro measured with
+`kokoro-onnx`.
 
 **Decision:** `af_heart` is the default voice, served by Kokoro-FastAPI on CPU
 ([homelab#1532](https://github.com/gjcourt/homelab/pull/1532)). Home Assistant's core OpenAI
 integration only talks to `api.openai.com`, so it goes through the HACS **OpenAI TTS** integration.
-The `wyoming_openai` bridge (MIT) is the alternative if Wyoming streaming is needed later for the
-assistant. Alan was the favourite voice character; improving it is an experiment below. Kokoro has
-preset voices only, so any trained voice — alan or mine — is a Piper voice and has to beat
+The `wyoming_openai` bridge (Apache-2.0) is the alternative if Wyoming streaming is needed later for
+the assistant. Alan was the favourite voice character; improving it is an experiment below. Kokoro
+has preset voices only, so any trained voice — alan or mine — is a Piper voice and has to beat
 `af_heart` in a blind A/B to replace it.
 
 ## Later: my own voice
@@ -250,7 +252,9 @@ audio for Chatterbox (MIT; GPU for the Turbo model, a smaller CPU-capable Nano e
 ~1,300–2,000 phrases with more natural prosody in alan's timbre. Whisper-check every clip, then
 fine-tune from the alan medium checkpoint. This is the documented hobbyist pattern
 ([Cal Bryant](https://calbryant.uk/blog/training-a-new-ai-voice-for-piper-tts-with-only-4-words/));
-its author reports a less robotic but not identical result.
+its author fine-tuned from an LJSpeech checkpoint rather than the source voice's own, and reports
+that Chatterbox made the voice less robotic and the trained model sounds similar to Chatterbox's
+output.
 
 **Arm B — the same dataset, fine-tuned from `cori/high`** for the high-quality architecture. Expect
 more natural audio and a larger timbre drift; slower on CPU (cori-high ran at RTF ~0.43).
@@ -263,10 +267,10 @@ Success is beating the original alan on naturalness while still sounding like al
 `af_heart` as the default is a separate bar.
 
 **Where:** winpc's RTX 4060 Ti 16 GB for both Chatterbox generation and the Piper fine-tune, so the
-data stays on the network; a rented 24 GB GPU only if 16 GB falls short. Community reports suggest
-about a day per fine-tune on a 24 GB card; the 4060 Ti has less compute and memory bandwidth, so
-expect longer — an estimate, not a measurement. See _Open questions_ for the torch-version split
-between the two tools.
+data stays on the network; a rented 24 GB GPU only if 16 GB falls short. There is no confirmed
+fine-tune time for a 24 GB card (see _Where training can run_), and the 4060 Ti has less compute and
+memory bandwidth than one, so expect it to be slower — an estimate, not a measurement. See _Open
+questions_ for the torch-version split between the two tools.
 
 **Use:** private household use only, like every voice here. Alan's licence is unclear and it is a
 real person's voice that was released as a TTS model, so the results stay on hestia and are not
