@@ -2,7 +2,7 @@
 
 # lab
 
-A curated list of 134 multidisciplinary engineering and skill-building projects
+A curated list of 138 multidisciplinary engineering and skill-building projects
 
 Picking a next project to learn on tends to default to whatever's easiest, not to whatever actually
 builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 134 project briefs spanning
@@ -22,7 +22,7 @@ Each directory holds one Markdown file per project plus a `projects.md` index; t
 ```text
 01-audio-midi/          22 projects — DSP, custom controllers, and audio hardware
 02-woodworking/         15 projects — functional furniture, speaker cabinets, homelab enclosures
-03-homelab-automation/  37 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
+03-homelab-automation/  41 projects — eBPF, K8s operators, ESP32 sensors, and infrastructure
 04-finance-analysis/    16 projects — EDGAR parsing, DCF modeling, personal finance tracking
 05-piano/               15 projects — classical repertoire tools, jazz theory, improvisation
 06-coffee-espresso/     19 projects — Lucca A53 profiling, leva! firmware, sensor integration

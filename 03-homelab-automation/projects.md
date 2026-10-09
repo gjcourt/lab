@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (37)
+# Homelab & Automation Projects (41)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -43,3 +43,7 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-035 | [Scan the Physical Photo Archive into the Family Library](03-035-scan-physical-photo-archive.md)                               | Not Started | Medium     | 1-2 weeks       |
 | 03-036 | [Local Text-to-Speech (stock voice first, my own voice later)](03-036-local-tts.md)                                            | Not Started | Medium     | 1-4 weeks       |
 | 03-037 | [Local Speech-to-Text (Home Assistant commands and dictation on CPU)](03-037-local-stt.md)                                     | Not Started | Medium     | 1-2 weeks       |
+| 03-038 | [Custom Wake Word (my own phrase, detected on the satellite)](03-038-custom-wake-word.md)                                      | Not Started | Easy       | 1-2 days        |
+| 03-039 | [Whisper Fine-Tuned on My Voice and Vocabulary](03-039-whisper-fine-tune-on-my-voice.md)                                       | Not Started | Medium     | 1-2 weeks       |
+| 03-040 | [Email Triage Classifier (trained on how I actually handle mail)](03-040-email-triage-classifier.md)                           | Not Started | Medium     | 1-2 weeks       |
+| 03-041 | [Personal Search with a Tuned Embedding Model](03-041-personal-search-embeddings.md)                                           | Not Started | Medium     | 1-2 weeks       |

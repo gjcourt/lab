@@ -126,6 +126,13 @@ figure.
 
 Inference needs none of these: Piper on the existing CPUs is the point.
 
+**Update (2026-10-08): rented GPU is now the working path.** The private `gjcourt/voice` harness
+fine-tunes Piper on Runpod Secure Cloud with a per-run cost cap and guaranteed teardown. The first
+real fine-tune ran on an RTX A5000 at $0.276/h, about 39 s per epoch on ~70 min of audio, and was
+intelligible within ~45 epochs. Community Cloud was dropped after slow image pulls and a host with
+no public SSH port. The own-voice phase can use the same harness; the delete-afterwards rule above
+still applies.
+
 ## Serving it
 
 - **Home Assistant:** a `wyoming-piper` Deployment in the homelab; HA's TTS points at it on
