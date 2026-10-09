@@ -5,12 +5,12 @@
 A curated list of 138 multidisciplinary engineering and skill-building projects
 
 Picking a next project to learn on tends to default to whatever's easiest, not to whatever actually
-builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 134 project briefs spanning
+builds a skill that's missing. `lab` (formerly `brainstorm`) tracks 138 project briefs spanning
 software, hardware, woodworking, finance, and music, each one scoped and leveled against existing
 skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than convenient. It's a
 personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
-**Status:** active — 134 briefs (1 done, 15 in progress), last content update 2026-09-01; the
+**Status:** active — 138 briefs (1 done, 15 in progress), last content update 2026-10-08; the
 espresso profiling build is installed on the machine and its controller app, Vibrato, runs in the
 homelab (see [`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 

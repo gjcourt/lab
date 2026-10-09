@@ -25,8 +25,9 @@ real recordings of the household saying it are a top-up, not the bulk of the dat
 
 - **microWakeWord** — runs on ESP32-S3 satellites (Home Assistant Voice Preview Edition); what
   `03-037` Phase 3 already assumes for on-device detection.
-- **openWakeWord** — runs on a CPU host instead of the device; a fallback if a satellite can't run a
-  custom microWakeWord model.
+- **openWakeWord** — runs on a CPU host instead of the device, so the satellite streams audio to
+  that host continuously. That breaks the "nothing leaves before the wake word" property above (and
+  `03-037`'s risk), so it's a last-resort fallback, not an equal option.
 
 Confirm each project's current training recipe before starting; this area moves quickly.
 
