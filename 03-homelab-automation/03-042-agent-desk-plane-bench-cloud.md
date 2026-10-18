@@ -24,7 +24,7 @@ self-hosted service rather than a paid SaaS plan. The agents are the existing **
 
 The loop:
 
-```
+```text
 plan PR (docs/plans/)  ──merge──▶  planner agent  ──▶  Plane tickets (one project per repo)
                                                           │
                      playbook says auto, or George labels "ready"
