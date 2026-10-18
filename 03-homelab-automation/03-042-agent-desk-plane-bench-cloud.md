@@ -29,7 +29,7 @@ plan PR (docs/plans/)  ──merge──▶  planner agent  ──▶  Plane tic
                                                           │
                      playbook says auto, or George labels "ready"
                                                           ▼
-                     dispatcher (webhook) ──▶ bench-cloud Job ──▶ PR linked to ticket
+                     dispatcher (webhooks) ──▶ bench-cloud Job ──▶ PR linked to ticket
                                                           │
                     babysit + critique ──▶ ticket "In review" ──▶ George merges ──▶ "Done"
 ```
@@ -60,14 +60,14 @@ An agent that gets stuck asks its question as a **ticket comment** and parks the
 
 ### Pieces to build
 
-| Piece                | What it does                                                                                                                                                                                                                                              |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Planner**          | On a merged plan PR, reads `docs/plans/*.md` and drafts tickets: title, acceptance criteria, files likely touched, playbook. Opens them in "Triage" for George to accept.                                                                                 |
-| **Dispatcher**       | Small service that receives Plane webhooks. When a ticket becomes startable under its playbook's rule, it launches a bench-cloud Job with the ticket as the brief. Respects the 5-Job quota and refuses to start a ticket that already has a running Job. |
-| **Ticket ⇄ PR link** | The agent's PR names the ticket; the ticket gets the PR link and moves to "In review". Merge moves it to "Done".                                                                                                                                          |
-| **Question loop**    | Agent comments a question and sets "Blocked"; a reply from George re-dispatches with the thread attached.                                                                                                                                                 |
-| **Playbooks**        | A skill plus a ticket template: what the agent does, which repos it may touch, the ready rule, and how its work is verified.                                                                                                                              |
-| **Automations**      | Triggers that create tickets without a plan: a failing main CI, a stale renovate hold, a recurring chore.                                                                                                                                                 |
+| Piece                | What it does                                                                                                                                                                                                                                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Planner**          | On a merged plan PR, reads `docs/plans/*.md` and drafts tickets: title, acceptance criteria, files likely touched, playbook. Opens them in "Triage" for George to accept.                                                                                                                                                        |
+| **Dispatcher**       | Small in-cluster service that receives Plane's webhooks, with a slow API poll as a backstop for missed deliveries. When a ticket becomes startable under its playbook's rule, it launches a bench-cloud Job with the ticket as the brief. Respects the 5-Job quota and refuses to start a ticket that already has a running Job. |
+| **Ticket ⇄ PR link** | The agent's PR names the ticket and attaches the PR URL as a work item link; the ticket moves to "In review". The dispatcher checks GitHub for merges and moves the ticket to "Done".                                                                                                                                            |
+| **Question loop**    | Agent comments a question and sets "Blocked"; a reply from George re-dispatches with the thread attached.                                                                                                                                                                                                                        |
+| **Playbooks**        | A skill plus a ticket template: what the agent does, which repos it may touch, the ready rule, and how its work is verified.                                                                                                                                                                                                     |
+| **Automations**      | Triggers that create tickets without a plan: a failing main CI, a stale renovate hold, a recurring chore.                                                                                                                                                                                                                        |
 
 ### Talking to a running agent
 
@@ -98,10 +98,27 @@ channel** interface, not from Plane directly, so phase 2 can swap in Matrix with
 
 ## Open questions
 
-- Plane CE's built-in GitHub integration versus a custom link via webhooks: which exists in the
-  self-hosted edition today? Verify before building the link piece.
-- Whether Plane's MCP server is good enough for agents to read and update tickets directly, or the
-  dispatcher should pass everything in the brief.
+Answered on 2026-10-18 from Plane v1.4.2's source, chart `plane-ce` 1.8.4 and the MCP server's
+source (detail in the homelab plan `docs/plans/2026-10-18-plane-staging.md`):
+
+- **GitHub integration: not in CE.** It is a paid feature run by a separate `silo` service. CE keeps
+  old GitHub tables but exposes no routes for them. Nothing needs building to replace it: the agent
+  attaches its PR URL to the ticket as a work item link, and the dispatcher checks GitHub for
+  merges.
+- **Webhooks can reach the dispatcher.** Plane blocks private addresses by default, but
+  `WEBHOOK_ALLOWED_HOSTS` exempts named hosts, checked both when a webhook is saved and on each
+  delivery. Allow only the dispatcher's in-cluster service name. Deliveries are HMAC-signed
+  (`X-Plane-Signature`) and retried up to 5 times. Nothing is exposed to the internet.
+- **Rate limit is a setting.** The 60 requests/min per API key is `API_KEY_RATE_LIMIT` (chart
+  `env.api_key_rate_limit`), so raise it rather than juggling keys.
+- **MCP: usable for the basics.** The official `makeplane/plane-mcp-server` (v0.3.4, MIT) runs in
+  stdio mode inside each Job. Its workitem, comment, state, label and link tools map to CE's API.
+  Two limits: CE rejects PQL queries, so filter tickets client-side; and the customer, initiative,
+  release, work-log and work-item-type tools are for paid editions. The playbooks say to use only
+  the basic tools.
+
+Still open:
+
 - Which playbooks start with auto-start. Candidates: dependency-hold investigation and docs-only
   fixes. Everything else waits for `ready`.
 
@@ -173,11 +190,11 @@ Phase 2:
 
 ## Tasks
 
-- [ ] Read Plane's current self-hosting docs; list components and versions
+- [x] Read Plane's current self-hosting docs; list components and versions (2026-10-18)
 - [ ] Homelab PR: Plane on staging (CNPG, storage, Gateway route)
 - [ ] Rehearse backup and restore; then production
 - [ ] Write the planner as a bench-cloud skill
-- [ ] Build the dispatcher (webhook receiver, quota, dedupe, deny list)
+- [ ] Build the dispatcher (webhook receiver plus backstop poll, quota, dedupe, deny list)
 - [ ] Ticket ⇄ PR linking and state transitions
 - [ ] Question loop
 - [ ] Live chat: comment hook that feeds new ticket comments into a running Job
