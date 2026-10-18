@@ -527,7 +527,10 @@ Net: do this project freely now; it does not foreclose — and arguably enables 
 - [ ] Build regulation stack (shut-off → solenoid → regulator)
 - [ ] Wire solenoid 12 VDC PSU to the control-board PUMP output (Line→PUMP tab, Neutral→NEUTRAL
       tab); bench-test open/close before plumbing
-- [ ] Drill rear-wall hole (~5/8", step bit); mount float valve with gasket + locknut
+- [ ] Measure the base-plate thickness and underside access; record them under "Drilling the base
+      plate for the riser"
+- [ ] Drill the two riser holes in the base plate (cobalt bits; see that section); mount the riser
+- [ ] Drill rear-wall hole (~5/8", NEIKO step bit); mount float valve with gasket + locknut
 - [ ] Wet test
 - [ ] Solenoid pump-cycle (opens on draw, closes on idle) + standby/off shutoff verified
 - [ ] 24h burn-in observation
@@ -553,6 +556,49 @@ OpenSCAD/STL files are in [`_reference/brackets/`](_reference/brackets/).
 Bolt the valve to the riser on the bench first, then set the unit on the base plate and drive the
 ear screws. See the [brackets README](_reference/brackets/README.md) for the full dimension table
 and how to regenerate the meshes.
+
+### Drilling the base plate for the riser
+
+The two base bolts need new holes in the machine's steel base plate, **48.5 mm c/c** on the fore/aft
+line (`base_ctc` in the `.scad`). The plate's thickness and whether the underside can be reached are
+**not yet recorded**: measure both before drilling and write them here.
+
+**Bits on hand, and their jobs:**
+
+| Bit                                                | Ordered    | Job                                                                      |
+| -------------------------------------------------- | ---------- | ------------------------------------------------------------------------ |
+| NEIKO 10194A step bit, 1/4"–1 3/8", TiN-coated HSS | 2026-07-01 | The ~5/8" float-valve hole in the **plastic tank** (install §4)          |
+| Hymnorq M35 cobalt twist set, 2–8 mm by 0.5        | 2026-08-02 | **Steel riser holes**: 3 mm pilot, 5.5 mm final (M5 clearance)           |
+| Hymnorq M35 cobalt step bit, 3–12 mm, 9 steps      | 2026-08-02 | **Steel riser holes** in thin sheet, where a twist bit grabs (6 mm step) |
+
+Keep the TiN step bit off the stainless: use the cobalt bits there.
+
+**Method:**
+
+1. **Protect the electronics.** Unplug the machine and let it cool. Steel swarf is conductive, so
+   cover the control board, pump and connectors.
+2. **Check underneath** each hole position for wires, a foot or a boss, and that a nut will fit.
+3. **Mark through the riser.** With the valve bolted to the riser and the unit set in place clear of
+   the pump, mark both holes through the feet. Center punch them.
+4. **Pilot with the 3 mm cobalt bit.** Use cutting oil, low speed (~600–800 rpm) and firm pressure.
+   Stainless work-hardens if the bit rubs: if it squeals and stops cutting, slow down and push
+   harder.
+5. **Open to size:**
+   - plate about 1.5 mm or thicker: **5.5 mm cobalt twist** (~400 rpm);
+   - thin sheet: the **cobalt step bit to its 6 mm step**. The hole is slightly loose, so put a
+     washer under the bolt head.
+6. **Deburr both faces** and collect every chip with a vacuum or magnet before re-powering.
+
+**Fixing, in order of preference:**
+
+- **Underside reachable:** bolt through with a washer and an M5 nyloc nut. This is the strongest,
+  and it doesn't depend on plate thickness.
+- **Underside not reachable:** use an M5 rivet nut (rivnut) in a hole sized for it. Tapping thin
+  sheet holds only a thread or two. M5's tap drill is 4.2 mm, which the set doesn't have.
+
+**Bolt length:** the M5×12 named above assumes threading into the plate. A through bolt has to pass
+the 7 mm foot, the plate, a washer (~1 mm) and a nyloc nut (~5 mm). That's about **M5×16 for plate
+≤1.5 mm, M5×20 if thicker or with a head washer.** Buy those two before drilling.
 
 ## Sources
 
