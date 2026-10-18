@@ -3,10 +3,10 @@ title: 'Agent Desk: Plane tickets worked by bench-cloud agents'
 number: '03-042'
 category: 'homelab-automation'
 difficulty: 'Hard'
-time_commitment: '3-5 weeks'
+time_commitment: '3-5 weeks (phase 1); 2-4 weeks (phase 2)'
 target_skills:
-  'Self-hosting (Plane CE on Kubernetes), webhooks and REST APIs, agent orchestration, playbook
-  design, GitHub automation'
+  'Self-hosting (Plane CE, Matrix homeserver on Kubernetes), webhooks and REST APIs, Matrix bots,
+  agent orchestration, playbook design, GitHub automation'
 status: 'Not Started'
 depends_on:
   - homelab/cnpg
@@ -84,9 +84,8 @@ So **the ticket is the chat**, made live:
 - The agent answers on the ticket. Plane's notifications are the push channel.
 - When no Job is running, a comment re-dispatches the ticket (the question loop above).
 
-Everything said stays on the ticket, which is also the record. If this proves too slow in practice,
-the fallbacks are Claude Code Channels (chat-app events pushed into a CLI session) or a self-hosted
-Matrix or Mattermost bridge.
+Everything said stays on the ticket, which is also the record. The hook reads from a **conversation
+channel** interface, not from Plane directly, so phase 2 can swap in Matrix without rewriting it.
 
 ### Guardrails (non-negotiable)
 
@@ -106,6 +105,48 @@ Matrix or Mattermost bridge.
 - Which playbooks start with auto-start. Candidates: dependency-hold investigation and docs-only
   fixes. Everything else waits for `ready`.
 
+## Phase 2: sessions over Matrix
+
+George, 2026-10-18: "Matrix feels like it would be the better long term fit for my needs. And then
+we could also build sessions in top of it like sessions in Devin". Phase 1 ships first on ticket
+comments; phase 2 moves the conversation to Matrix and adds Devin-style sessions.
+
+### Matrix homeserver
+
+- A homeserver on the homelab, deployed through Flux, staging first. Candidates: Synapse (mature,
+  Postgres on CNPG) or a lighter Rust server. Choose after checking current support for Element X,
+  the mobile app, which needs the newer sync API.
+- Federation off and reachable on LAN and VPN only to start. Opening it up is a later, separate
+  decision.
+- Clients: Element on phone and desktop.
+- Useful beyond agents: Matrix bridges (Signal, WhatsApp) could later carry homelab alerts, whose
+  Signal routing was removed in 2026-06. Out of scope here; noted so the server choice doesn't rule
+  it out.
+
+### Sessions
+
+- **One session is one Matrix room.** A session starts from a ticket (the dispatcher creates the
+  room) or from chat (George messages the agent bot, e.g. "fix the flaky test in vitals").
+- **The room is the live chat.** The phase-1 hook reads the room through the conversation channel
+  interface; the agent posts progress, questions and the PR link back into it.
+- **The ticket stays the record.** A session started from chat creates its Plane ticket
+  automatically. The room links the ticket and the ticket links the room. Decisions made in chat are
+  summarised onto the ticket when the session ends.
+- **The session list is the room list:** active rooms are running sessions, archived rooms are
+  finished ones.
+- **Starting from chat goes through the same gate as tickets:** the playbook's ready rule, the Job
+  quota, the dedupe check and the homelab deny list. Only George's Matrix account can start a
+  session.
+
+### Phase 2 risks
+
+- **Encryption.** Encrypted rooms mean the bot must manage its own keys and device verification.
+  Start with unencrypted rooms on the unfederated server; revisit once the loop works.
+- **Bot identity.** The bot's Matrix access token is a new secret; it goes through SOPS like every
+  other, operator-only.
+- **Two records.** Chat and ticket can drift. The summary-onto-ticket step is what keeps the ticket
+  authoritative; test it.
+
 ## Exit Criteria
 
 - [ ] Plane runs on the homelab from Flux, staging then production, with a rehearsed restore.
@@ -120,6 +161,16 @@ Matrix or Mattermost bridge.
       PR.
 - [ ] The dispatcher provably refuses homelab-repo tickets and duplicate pickups.
 
+Phase 2:
+
+- [ ] A Matrix homeserver runs on the homelab from Flux, staging then production, with a rehearsed
+      restore, reachable from Element on George's phone.
+- [ ] Starting a ticket opens a room; a message there reaches the running Job and its reply appears
+      in the room.
+- [ ] Messaging the bot starts a session, which creates its own Plane ticket and passes the same
+      gates as a ticket.
+- [ ] A finished session's decisions are summarised onto its ticket, and the room is archived.
+
 ## Tasks
 
 - [ ] Read Plane's current self-hosting docs; list components and versions
@@ -132,3 +183,11 @@ Matrix or Mattermost bridge.
 - [ ] Live chat: comment hook that feeds new ticket comments into a running Job
 - [ ] First three playbooks
 - [ ] Pilot on one real plan end to end
+
+Phase 2:
+
+- [ ] Choose the homeserver (check Element X support); homelab PR for staging
+- [ ] Bot account and token (SOPS, operator-only)
+- [ ] Matrix implementation of the conversation channel interface
+- [ ] Session rooms: create from ticket, start from chat, archive and summarise on finish
+- [ ] Pilot one session started from chat, end to end
