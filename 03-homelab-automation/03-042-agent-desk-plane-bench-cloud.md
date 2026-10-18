@@ -69,6 +69,25 @@ An agent that gets stuck asks its question as a **ticket comment** and parks the
 | **Playbooks**        | A skill plus a ticket template: what the agent does, which repos it may touch, the ready rule, and how its work is verified.                                                                                                                              |
 | **Automations**      | Triggers that create tickets without a plan: a failing main CI, a stale renovate hold, a recurring chore.                                                                                                                                                 |
 
+### Talking to a running agent
+
+Devin's Slack chat has no direct equivalent here. George doesn't use Slack outside work, and Claude
+Code's Remote Control can't serve these Jobs: per the Remote Control docs it needs an interactive or
+`claude remote-control` process signed in with a full claude.ai login, and it rejects the model-only
+OAuth token (`CLAUDE_CODE_OAUTH_TOKEN`) and API keys that headless Jobs use.
+
+So **the ticket is the chat**, made live:
+
+- George writes on the ticket from Plane's web or mobile app.
+- While a Job runs, a Claude Code hook checks its ticket for new comments after each tool call and
+  feeds them to the agent as input, so a comment lands mid-task, not only at the next dispatch.
+- The agent answers on the ticket. Plane's notifications are the push channel.
+- When no Job is running, a comment re-dispatches the ticket (the question loop above).
+
+Everything said stays on the ticket, which is also the record. If this proves too slow in practice,
+the fallbacks are Claude Code Channels (chat-app events pushed into a CLI session) or a self-hosted
+Matrix or Mattermost bridge.
+
 ### Guardrails (non-negotiable)
 
 - Agents never merge. Branch protection is never bypassed; George merges.
@@ -93,6 +112,8 @@ An agent that gets stuck asks its question as a **ticket comment** and parks the
 - [ ] A merged plan PR produces draft tickets in Plane without manual copying.
 - [ ] A startable ticket launches a bench-cloud Job, and the Job's PR is linked back to the ticket.
 - [ ] An agent question on a ticket, answered by George, resumes the same work.
+- [ ] A comment George writes on a ticket reaches its running Job mid-task, and the reply appears on
+      the ticket.
 - [ ] At least three playbooks exist, each declaring its own ready rule, and at least one runs on
       its own.
 - [ ] One full project goes plan → tickets → merged PRs through the loop, with George merging every
@@ -108,5 +129,6 @@ An agent that gets stuck asks its question as a **ticket comment** and parks the
 - [ ] Build the dispatcher (webhook receiver, quota, dedupe, deny list)
 - [ ] Ticket ⇄ PR linking and state transitions
 - [ ] Question loop
+- [ ] Live chat: comment hook that feeds new ticket comments into a running Job
 - [ ] First three playbooks
 - [ ] Pilot on one real plan end to end
