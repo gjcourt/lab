@@ -7,7 +7,7 @@ Checks:
    - Required keys: title, number, category, difficulty, time_commitment,
      target_skills, status
    - Allowed values for `difficulty` (Easy|Medium|Hard) and
-     `status` (Not Started|In Progress|Done)
+     `status` (Not Started|In Progress|Done|Cancelled)
    - `number:` value matches the filename prefix (e.g. `01-001`)
    - An `## Exit Criteria` section is present
 2. Per-category counts in each `<cat>/projects.md` heading match the actual
@@ -41,7 +41,7 @@ REQUIRED_KEYS = [
     "status",
 ]
 ALLOWED_DIFFICULTY = {"Easy", "Medium", "Hard"}
-ALLOWED_STATUS = {"Not Started", "In Progress", "Done"}
+ALLOWED_STATUS = {"Not Started", "In Progress", "Done", "Cancelled"}
 
 PROJECT_FILE_RE = re.compile(r"^(\d{2})-(\d{3})-.+\.md$")
 CATEGORY_DIR_RE = re.compile(r"^\d{2}-[a-z0-9-]+$")

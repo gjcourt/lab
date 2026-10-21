@@ -51,8 +51,9 @@ depends_on: # optional
 `difficulty` is `Easy` (1-2 days, builds on existing skills), `Medium` (1-4 weeks, combines
 disciplines or introduces new concepts), or `Hard` (months, stretches into low-level domains such as
 C/C++, RTOS, or advanced finance/music theory). `status` moves from `Not Started` through
-`In Progress` to `Done`. `depends_on` points at a prerequisite — another project's `NN-NNN`, or a
-resource reference like `hardware/esp32`. Every file also needs an `## Exit Criteria` section.
+`In Progress` to `Done`, or ends at `Cancelled` when a project is dropped. `depends_on` points at a
+prerequisite — another project's `NN-NNN`, or a resource reference like `hardware/esp32`. Every file
+also needs an `## Exit Criteria` section.
 
 To add a project, create the file with this frontmatter in the right category directory and update
 that category's `projects.md` count. To renumber prefixes after reordering, run
