@@ -36,7 +36,7 @@ Makefile               ← convenience targets
   `05-piano/`).
 - Every project file begins with YAML frontmatter. Required keys: `title`, `number`, `category`,
   `difficulty` (`Easy|Medium|Hard`), `time_commitment`, `target_skills`, `status`
-  (`Not Started|In Progress|Done`). The `number:` value must match the filename prefix.
+  (`Not Started|In Progress|Done|Cancelled`). The `number:` value must match the filename prefix.
 - `depends_on:` is an optional list of prerequisite references (e.g. `hardware/midi-keyboard`, or
   another project's `NN-NNN`); use it when a project can't start until another is in place.
 - Each file must include an `## Exit Criteria` section.
