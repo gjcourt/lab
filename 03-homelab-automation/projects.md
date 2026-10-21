@@ -1,4 +1,4 @@
-# Homelab & Automation Projects (42)
+# Homelab & Automation Projects (43)
 
 This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastructure.
 
@@ -48,3 +48,4 @@ This category focuses on eBPF, Kubernetes operators, ESP32 sensors, and infrastr
 | 03-040 | [Email Triage Classifier (trained on how I actually handle mail)](03-040-email-triage-classifier.md)                           | Not Started | Medium     | 1-2 weeks       |
 | 03-041 | [Personal Search with a Tuned Embedding Model](03-041-personal-search-embeddings.md)                                           | Not Started | Medium     | 1-2 weeks       |
 | 03-042 | [Agent Desk: Plane tickets worked by bench-cloud agents](03-042-agent-desk-plane-bench-cloud.md)                               | Not Started | Hard       | 3-5 weeks       |
+| 03-043 | [IP Addressing Cleanup: DHCP/LB Overlap, Per-VLAN Blocks, Device DNS](03-043-ip-addressing-cleanup.md)                         | Not Started | Medium     | 1-2 weeks       |
