@@ -10,7 +10,7 @@ software, hardware, woodworking, finance, and music, each one scoped and leveled
 skills (Go, Kubernetes, Docker) so the next pick is deliberate rather than convenient. It's a
 personal planning catalog, not a set of finished write-ups — most entries are still `Not Started`.
 
-**Status:** active — 140 briefs (1 done, 15 in progress), last content update 2026-10-08; the
+**Status:** active — 140 briefs (1 done, 17 in progress), last content update 2026-10-08; the
 espresso profiling build is installed on the machine and its controller app, Vibrato, runs in the
 homelab (see [`06-coffee-espresso/AGENTS.md`](06-coffee-espresso/AGENTS.md)).
 
