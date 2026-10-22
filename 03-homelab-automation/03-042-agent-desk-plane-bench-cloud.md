@@ -7,7 +7,7 @@ time_commitment: '3-5 weeks (phase 1); 2-4 weeks (phase 2)'
 target_skills:
   'Self-hosting (Plane CE, Matrix homeserver on Kubernetes), webhooks and REST APIs, Matrix bots,
   agent orchestration, playbook design, GitHub automation'
-status: 'Not Started'
+status: 'In Progress'
 depends_on:
   - homelab/cnpg
   - homelab/bench-cloud
