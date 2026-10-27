@@ -191,16 +191,16 @@ only), so audio work runs on George's machine.
 
 ### Phase 1 — Plumbing and audition (homelab PR + George)
 
-- [ ] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
+- [x] `apps/base/wyoming-piper/`: Deployment, Service on 10200 (cluster-internal only, no
       HTTPRoute), NetworkPolicy admitting only the Home Assistant namespace (`homeassistant-prod`,
       or `homeassistant-stage` in the staging overlay), a default English medium voice —
-      [homelab#1529](https://github.com/gjcourt/homelab/pull/1529). Now the home for trained Piper
-      voices rather than the default.
-- [ ] `apps/base/kokoro/`: Kokoro-FastAPI with `af_heart`, same isolation, no internet egress —
-      [homelab#1532](https://github.com/gjcourt/homelab/pull/1532). George installs the HACS OpenAI
-      TTS integration and points it at the service.
-- [ ] George adds the Wyoming integration in Home Assistant's UI (it's a config-flow integration,
-      not YAML) and makes it the default TTS.
+      [homelab#1529](https://github.com/gjcourt/homelab/pull/1529), merged 2026-10-04. Now the home
+      for trained Piper voices rather than the default.
+- [x] `apps/base/kokoro/`: Kokoro-FastAPI with `af_heart`, same isolation, no internet egress —
+      [homelab#1532](https://github.com/gjcourt/homelab/pull/1532), merged 2026-10-04.
+- [ ] George installs the HACS OpenAI TTS integration, points it at Kokoro
+      (`http://kokoro.kokoro-prod.svc.cluster.local:8880/v1`, model `kokoro`, voice `af_heart`) and
+      makes it the default TTS. The Wyoming integration for Piper waits for a trained voice.
 - [x] Render the audition script with every candidate; measure synthesis time for the 30-second
       paragraph on a cluster node; rank blind. Done 2026-10-02 — see _Audition result_.
 
