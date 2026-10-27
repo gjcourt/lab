@@ -155,14 +155,14 @@ Pictorial: [schmitt-breakout.svg](schmitt-breakout.svg). Three ways to get one:
   side to ito **`SNS`** (zero-cross + "pump on"), and drive the pump from ito **`Relay 1`**. Share
   the GICAR **`o` + `−`** into ito's flow input via a **CD4011B buffer on ito's 5 V rail** (keep
   GICAR `+` on the Vivaldi only). Opto optional (isolation).
-- **[06-011] plumb-in** — derive the fill-solenoid's 12 VDC PSU from the **PUMP** output (L = PUMP
-  tab, N = a white tab). The solenoid then opens **only when the pump draws from the tank** →
-  fail-safe (closed when idle/off), and with **no smart-plug dependency**. Same tab does double duty
-  with 06-001's `SNS` sense (a few-watt PSU is negligible on that relay, behind the 5 A fuse). ⚠️
-  **Refill-rate caveat:** pump-gating refills only during pump windows with no catch-up between
-  draws, so if the float valve can't match the pump's peak draw (worst case = boiler autofill, ≈600
-  mL/min) the tank ratchets down → size the fill ≥ pump draw, or add a ~30–60 s solenoid off-delay
-  (see 06-011).
+- **[06-011] plumb-in** — derive the fill-solenoid's 24 VDC PSU (fused 0.5–1 A slow-blow on Line,
+  tapped via insulated piggybacks) from the **PUMP** output (L = PUMP tab, N = a white tab). The
+  solenoid then opens **only when the pump draws from the tank** → fail-safe (closed when idle/off),
+  and with **no smart-plug dependency**. Same tab does double duty with 06-001's `SNS` sense (a
+  few-watt PSU is negligible on that relay, behind the 5 A fuse). ⚠️ **Refill-rate caveat:**
+  pump-gating refills only during pump windows with no catch-up between draws, so if the float valve
+  can't match the pump's peak draw (worst case = boiler autofill, ≈600 mL/min) the tank ratchets
+  down → size the fill ≥ pump draw, or add a ~30–60 s solenoid off-delay (see 06-011).
 - **[06-012] PID takeover** — the boiler/group heating elements switch via the **triac board** (an
   external 20 A SSR driven from ito's `SSR` connector), separate from M5.
 
