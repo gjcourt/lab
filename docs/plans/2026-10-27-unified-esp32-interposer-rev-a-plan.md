@@ -5,8 +5,10 @@
 interposer, a shared I²C header, and the 06-015 flow-tap circuit merged in. `SER` is a header +
 footprint only, for rev B after the Saleae capture. **Goal:** order this week.
 
-**Project file:** TBD. Either this extends **06-014** or it becomes a new **06-020**; George is
-deciding (see [Relationship to existing projects](#8-relationship-to-existing-projects)).
+**Project file:**
+[**06-014** Unified ESP32 Interposer Board](../../06-coffee-espresso/06-014-unified-esp32-interposer-board.md),
+reworked from the v0 button sidecar (George, 2026-10-27; see
+[Relationship to existing projects](#8-relationship-to-existing-projects)).
 
 **Machine:** La Spaziale S1 Mini Vivaldi II = LUCCA A53 Mini, US 120 V. Architecture source of
 truth: hestia `/mnt/main/family/projects/electronics/espresso/ARCHITECTURE.md` (cited as **ARCH
@@ -272,14 +274,13 @@ for any new family once M2/M4/M5 name it.
 
 ## 8. Relationship to existing projects
 
-- **06-014 ESP32 button sidecar:** shares the goal (ESP32/ESPHome → HA control of the machine's
-  native functions) but its **mechanism is superseded**. It assumes discrete buttons or a scanned
-  matrix with an opto per button. ARCH §4 says the panel is a serial peripheral (`SER`), so the
-  per-button opto plan likely doesn't apply to the Mini V2 (pending M8). Its temp/hot-water/standby
-  goals move to **rev B (`SER` MITM)**; its "probe the panel" pre-flight becomes **M8**. If George
-  files rev A under 06-014, rewrite its How-it-works/BoM around this plan and keep its HA exit
-  criteria. If it becomes 06-020, mark 06-014 as superseded by 06-020 (status note + link) rather
-  than deleting it.
+- **06-014 (this project's file; v0 was the ESP32 button sidecar):** v0 shares the goal
+  (ESP32/ESPHome → HA control of the machine's native functions) but its **mechanism is
+  superseded**. It assumed discrete buttons or a scanned matrix with an opto per button. ARCH §4
+  says the panel is a serial peripheral (`SER`), so the per-button opto plan likely doesn't apply to
+  the Mini V2 (pending M8). Its temp/hot-water/standby goals move to **rev B (`SER` MITM)**; its
+  "probe the panel" pre-flight becomes **M8**. 06-014 is rewritten around this plan, keeps its HA
+  goal, and records v0 in a History note.
 - **06-015 flow tap:** absorbed as F5 (same circuit + connectors). The standalone boards stay valid
   as the fallback and for bench work.
 - **06-016 board RE:** the supplier of open facts (NTC curve, `SER`/timer bus, panel map). Rev A

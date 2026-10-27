@@ -27,7 +27,7 @@ control lines, the proprietary OEM-timer serial bus, and — if reachable — th
 output is a wiring/protocol reference that feeds the sibling hardware projects
 ([06-010](06-010-grouphead-temperature-sensor.md),
 [06-012](06-012-leva-pid-temperature-takeover.md),
-[06-014](06-014-esp32-button-automation-sidecar.md), [06-015](06-015-gicar-flow-tap-interposer.md)).
+[06-014](06-014-unified-esp32-interposer-board.md), [06-015](06-015-gicar-flow-tap-interposer.md)).
 
 Grounded in the [control-board wiring reference](_reference/mini-v2-control-board-wiring.md) (M5
 strip, GICAR meter, "no switched mains rail"). This project extends it into the **digital** side the
@@ -128,7 +128,7 @@ required for the parallel keypad ribbon.
 1. **Keypad ribbon (parallel scanned matrix).** LA all 16 lines; press each button; capture the
    scan + LED-multiplex pattern (incl. the PWM/ground-oscillation on the LED lines). Output: exact
    timing to _simulate_ any press **and** _read_ state (which LED = which temp/ready). Delivers
-   [06-014](06-014-esp32-button-automation-sidecar.md). No factory timer needed.
+   [06-014](06-014-unified-esp32-interposer-board.md). No factory timer needed.
 2. **External-display header → Tigard UART.** Passive sniff (RX + GND only; leave TX open); set the
    Tigard level to the sensed Vtarget. Unknown baud → measure one bit's width on the scope first,
    then set the rate. If it's temp/state in the clear, this is the biggest win in the project.
@@ -159,7 +159,7 @@ required for the parallel keypad ribbon.
       injection.
 - [ ] Stage 1: full connector/pinout map + MCU part number identified (PICkit-vs-Tigard decided).
 - [ ] Stage 2: R→T curve logged from NTC sweep; dose↔flow-pulse mapping captured.
-- [ ] Stage 3a: keypad matrix + LED-state map confirmed on this board (feeds 06-014).
+- [ ] Stage 3a: keypad matrix + LED-state map confirmed on this board (feeds 06-014 rev B).
 - [ ] Stage 3b: external-display header characterized (UART? → what fields?).
 - [ ] Stage 3c: timer-bus waveform captured; two-sided capture attempted with a factory timer.
 - [ ] Stage 4: MCU dump attempted; result recorded (dumped / read-protected / reflash-only).
@@ -204,8 +204,7 @@ Prices drift — confirm at purchase.
 - [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md) — the gate + parent.
 - Sibling consumers of the findings: [06-010](06-010-grouphead-temperature-sensor.md),
   [06-012](06-012-leva-pid-temperature-takeover.md),
-  [06-014](06-014-esp32-button-automation-sidecar.md),
-  [06-015](06-015-gicar-flow-tap-interposer.md).
+  [06-014](06-014-unified-esp32-interposer-board.md), [06-015](06-015-gicar-flow-tap-interposer.md).
 - Community RE pointers (s1cafe thread numbers): t2629 (16-pin keypad/LED map), t261 (on/off + LED
   state-sense), t2507 (PIC MCU, PicoScope timer-bus capture, stalled decode), t2330 (NTC-vs-PT1000
   sensor type), t704 (GICAR internals). Full local synthesis kept off-repo.

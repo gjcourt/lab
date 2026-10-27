@@ -143,11 +143,11 @@ the pressure loop relies on (see
 ### Fix 2 (only if heavy-steam drift persists): software hold, not a discrete timer
 
 If sizing still can't keep up under sustained steam, don't build an analog off-delay — put the hold
-in **software on an MCU that already senses the pump**. The ESP32 button-automation sidecar
-([06-014](06-014-esp32-button-automation-sidecar.md)) or the ito-adjacent controller reads the PUMP
-/ `SNS` signal and holds a relay to the solenoid open for T≈5–10 min after each draw
-(retriggerable), giving the float minutes to catch up, then closes. Fail-safe preserved (no activity
-→ closed; MCU down → NC relay → closed). A few lines of code + one relay module, not a breadboard.
+in **software on an MCU that already senses the pump**. The unified ESP32 interposer board
+([06-014](06-014-unified-esp32-interposer-board.md)) or the ito-adjacent controller reads the PUMP /
+`SNS` signal and holds a relay to the solenoid open for T≈5–10 min after each draw (retriggerable),
+giving the float minutes to catch up, then closes. Fail-safe preserved (no activity → closed; MCU
+down → NC relay → closed). A few lines of code + one relay module, not a breadboard.
 
 ### Fix 3 (hardware version if no MCU): off-delay timer relay
 
@@ -167,8 +167,8 @@ problem at its source (no timer, no hold). This is the same pattern the Mini V2 
 - **Sensor:** a **reed float switch** at the high setpoint (reliable, no fouling — preferred over a
   conductivity probe for a cold reservoir). Add hysteresis (a second reed ~½" lower, or a controller
   dead-band) so it doesn't chatter at the line.
-- **Control:** the **ESP32 sidecar ([06-014](06-014-esp32-button-automation-sidecar.md))** reading
-  the switch and driving a relay/MOSFET to the coil (adds HA telemetry, remote cutoff, and a
+- **Control:** the **ESP32 interposer board ([06-014](06-014-unified-esp32-interposer-board.md))**
+  reading the switch and driving a relay/MOSFET to the coil (adds HA telemetry, remote cutoff, and a
   drip-tray leak-sensor hard-cutoff) — or a discrete **latching relay** (set-on-low, reset-on-high)
   for a no-MCU build.
 - **Actuator:** the existing **NC solenoid** (12 or 24 VDC — match the PSU), now switched by the
