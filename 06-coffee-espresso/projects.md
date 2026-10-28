@@ -20,7 +20,7 @@ integration.
 | 06-011 | [Mini V2 Direct Plumb-In](06-011-mini-v2-direct-plumb-in.md)                                                     | In Progress | Easy       | 1-2 days        |
 | 06-012 | [leva! PID Temperature Takeover (A53 Stock-Board Conflict)](06-012-leva-pid-temperature-takeover.md)             | Not Started | Hard       | Months          |
 | 06-013 | [Espresso Water Remineralization](06-013-espresso-water-remineralization.md)                                     | Not Started | Easy       | 1-2 days        |
-| 06-014 | [ESP32 Button-Automation Sidecar](06-014-esp32-button-automation-sidecar.md)                                     | Not Started | Medium     | 1-4 weeks       |
+| 06-014 | [Unified ESP32 Interposer Board (Mini V2 → Home Assistant)](06-014-unified-esp32-interposer-board.md)            | In Progress | Hard       | 1-4 weeks       |
 | 06-015 | [GICAR Flow-Tap Interposer PCB (stock meter → ito)](06-015-gicar-flow-tap-interposer.md)                         | In Progress | Medium     | 1-2 days        |
 | 06-016 | [A53 Control-Board Reverse Engineering (bench board)](06-016-a53-control-board-reverse-engineering.md)           | Not Started | Hard       | Weeks–months    |
 | 06-017 | [A53 Mini HASS On/Off Interposer (ESP32 / ESPHome)](06-017-a53-hass-onoff-interposer.md)                         | Not Started | Medium     | 1-2 days        |

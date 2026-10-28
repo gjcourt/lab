@@ -12,9 +12,9 @@ depends_on:
 
 # A53 Mini HASS On/Off Interposer (ESP32 / ESPHome)
 
-The concrete **v1 on/off build** of the general button sidecar
-([06-014](06-014-esp32-button-automation-sidecar.md)), and the first step of machine control (Phase
-4 of the Vibrato shot-feedback-loop roadmap, which lives in the `vibrato` repo). Give the LUCCA A53
+The **on/off stopgap** for the unified ESP32 interposer board
+([06-014](06-014-unified-esp32-interposer-board.md)), and the first step of machine control (Phase 4
+of the Vibrato shot-feedback-loop roadmap, which lives in the `vibrato` repo). Give the LUCCA A53
 Mini (= La Spaziale S1 Mini Vivaldi II) a **Home Assistant power switch** by simulating its front
 **ON/OFF button** — an ESP32 running ESPHome closes an isolated contact across the button's two pins
 for ~3 s, exactly like a finger press. It talks to **Home Assistant** directly (not to Vibrato).
@@ -184,10 +184,10 @@ switch:
   **best-effort approximation** (it debounces the standby flash to read as OFF). For a robust read,
   count pulses / measure **duty cycle** (a `pulse_counter` or an analog read) tuned to the
   standby-flash rate.
-- **Full button control ([06-014](06-014-esp32-button-automation-sidecar.md)):** the other buttons
-  (Single / Double / Hot-water / Boiler) are the same low-voltage membrane contacts — the full
-  16-pin ribbon matrix is mapped (s1cafe t=2629); add an opto/MOSFET per button-pin-pair and expose
-  them in this same ESPHome config.
+- **Full control ([06-014](06-014-unified-esp32-interposer-board.md), rev B `SER` interposer):** the
+  other buttons (Single / Double / Hot-water / Boiler) are the same low-voltage membrane contacts —
+  the full 16-pin ribbon matrix is mapped (s1cafe t=2629); add an opto/MOSFET per button-pin-pair
+  and expose them in this same ESPHome config.
 - **Deep RE ([06-016](06-016-a53-control-board-reverse-engineering.md)):** the bench-board project
   characterizes the keypad matrix, timer bus, and firmware for anything past button emulation.
 - **Deploy:** once proven, this ESPHome device graduates to the homelab repo (where the ESPHome/HASS
@@ -202,6 +202,7 @@ switch:
 - Wiring / keyboard diagrams: the A53 Mini manual and the S1 Mini Vivaldi II owner's manual PDF
   (static PDFs on s1cafe.com **are** fetchable), plus the
   [control-board wiring reference](_reference/mini-v2-control-board-wiring.md).
-- Parent / related: [06-014](06-014-esp32-button-automation-sidecar.md) (general button sidecar),
-  [06-016](06-016-a53-control-board-reverse-engineering.md) (bench-board RE). Umbrella: the Vibrato
-  shot-feedback-loop roadmap, Phase 4 (in the `vibrato` repo).
+- Parent / related: [06-014](06-014-unified-esp32-interposer-board.md) (unified ESP32 interposer;
+  this is its optional on/off), [06-016](06-016-a53-control-board-reverse-engineering.md)
+  (bench-board RE). Umbrella: the Vibrato shot-feedback-loop roadmap, Phase 4 (in the `vibrato`
+  repo).

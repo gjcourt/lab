@@ -248,8 +248,8 @@ tuned params).
 - **`06-012` leva! PID temperature takeover** — _Not Started, deliberately deferred._ Conflicts with
   the A53 stock board; SSR + TSic hardware already in hand. Bench-test on the spare control board
   first. Out of the core product's scope.
-- **`06-014` ESP32 button-automation sidecar** — its temperature role is superseded if `06-012`
-  succeeds; otherwise an alternative automation path.
+- **`06-014` unified ESP32 interposer board** (v0 was the button sidecar) — its temperature role is
+  superseded if `06-012` succeeds; otherwise an alternative automation path.
 
 ---
 
