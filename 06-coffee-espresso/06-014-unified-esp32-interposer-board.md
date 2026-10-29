@@ -108,6 +108,9 @@ outline, fab plan, tests, and the measure-first list below.
 - [x] Rev A scope decided (everything but `SER`)
 - [x] Plan written
       ([`docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md`](../docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md))
+- [x] Pre-measurement schematic draft
+      ([`_reference/interposer-rev-a/`](_reference/interposer-rev-a/README.md)): netlist as data in
+      `circuit.py`, ERC checker passing, every placeholder mapped to the measurement that closes it
 - [ ] Schematic + headless KiCad layout (DRC-clean; grep for bare `(remove_unused_layers)`)
 - [ ] Order from JLC (SMT top; hand-solder XH/KK/SH connectors)
 - [ ] Bench tests T1–T7 (pass-through, rails, NTC emulation + loading, level, flow, `ENC` on a
