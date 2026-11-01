@@ -6,7 +6,7 @@ difficulty: 'Hard'
 time_commitment: '1-4 weeks'
 target_skills:
   'ESP32 / ESPHome, PCB Design (KiCad), Analog Front-Ends, Signal Interposing, Home Assistant'
-status: 'In Progress'
+status: 'Not Started'
 depends_on:
   - hardware/lucca-a53
   - hardware/ito-module
