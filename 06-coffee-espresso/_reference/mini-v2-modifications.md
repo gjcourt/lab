@@ -62,7 +62,7 @@ AFTER   (★ = added;  stock control board left alone)
                                                                   so the stock board must switch the pump via a
                                                                   mechanical relay to trigger it reliably
   data in:    pressure sensor → ★[ito ADC]
-              stock GICAR meter → ★[CD4011 NAND buffer @5V] → ★[ito IMPULSE]   (reuse machine's meter; opto optional)
+              stock GICAR meter → ★[74LVC1G17 buffer @5V, 06-015 board] → ★[ito IMPULSE]   (reuse machine's meter)
 ```
 
 ## Reading it
@@ -73,11 +73,12 @@ AFTER   (★ = added;  stock control board left alone)
   meter** (a second meter in series restricted free flow ~10 %, t56816 #31).
 - **Electrical — interposition, not a rebuild.** The ito **`Relay 1`** (a solid-state relay) slips
   into the pump's mains circuit for phase-angle control; `SNS` reads the controller's pump-on lead
-  for zero-cross timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through a **CD4011
-  NAND buffer on ito's 5 V rail** (opto optional — galvanic isolation only; blondica's proven build
-  is the bare NAND); and both ito's `SNS` and the plumb-in solenoid's PSU tap the control-board
-  **PUMP output** — there is **no switched mains rail** on this machine (`F`/PHASE is always live;
-  full M5 terminal map in [control-board wiring](mini-v2-control-board-wiring.md)).
+  for zero-cross timing + "pump on"; the stock GICAR meter is shared to `IMPULSE` through the
+  **74LVC1G17 buffer on the [`06-015`](../06-015-gicar-flow-tap-interposer.md) interposer**, on
+  ito's 5 V rail (blondica's proven build used a bare CD4011 NAND instead); and both ito's `SNS` and
+  the plumb-in solenoid's PSU tap the control-board **PUMP output** — there is **no switched mains
+  rail** on this machine (`F`/PHASE is always live; full M5 terminal map in
+  [control-board wiring](mini-v2-control-board-wiring.md)).
 - **Untouched:** stock control board (profiling only — PID takeover is the deferred
   [06-012](../06-012-leva-pid-temperature-takeover.md)), low-water float switch (dry-run
   protection), boilers, group, and pump.

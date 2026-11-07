@@ -115,6 +115,7 @@ curve rather than as a separate PI phase.
 | [`_reference/ito-integration-walkthrough.md`](_reference/ito-integration-walkthrough.md)             | Bench → integrated roadmap.                                                                    |
 | [`_reference/ito-preinfusion-forum-draft.md`](_reference/ito-preinfusion-forum-draft.md)             | The PI-skip bug record + Home Barista forum draft.                                             |
 | [`_reference/mini-v2-control-board-wiring.md`](_reference/mini-v2-control-board-wiring.md)           | Authoritative M5 terminal map (which tab is pump / phase / neutral).                           |
+| [`_reference/mini-vivaldi-measurements.md`](_reference/mini-vivaldi-measurements.md)                 | Bench measurement guide: every open measurement, unplugged first, mains-hot last.              |
 
 ---
 

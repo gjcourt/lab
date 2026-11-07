@@ -20,6 +20,10 @@ depends_on:
 > from), and several stages risk bricking that board. Finish the thing that makes coffee first; this
 > is the "learn how the machine works fundamentally" follow-on, not a prerequisite for any shipping
 > capability.
+>
+> **Status note (2026-11-07):** a spare board (ING3/Laurma v05.02) is already on the bench
+> ([walkthrough](_reference/ito-integration-walkthrough.md)) while `06-001` is still In Progress.
+> The gate is unchanged; lifting it is George's call.
 
 Reverse-engineer a **spare** La Spaziale S1 Mini Vivaldi II controller board on the bench to
 document, at signal level: the front-panel button/LED matrix, the sensor front-ends, the boiler
@@ -98,8 +102,9 @@ required for the parallel keypad ribbon.
 ## Stage 1 — Static map (unpowered)
 
 - High-res photos both sides. Label every connector against the known set: 16-pin keypad ribbon,
-  S1/S2 NTC probes, `F` GICAR flow, EV solenoids, T1/T2 heat, the OEM **timer connector (B)**, the
-  **external-display header (SD/JP3)**.
+  S1/S2 NTC probes, the GICAR flow input (`F`, the flowmeter connector, **not** M5 `F`/PHASE, which
+  is 120 V mains), EV solenoids, T1/T2 heat, the OEM **timer connector (B)**, the **external-display
+  header (SD/JP3)**.
 - **Read the MCU part number off the chip** — the linchpin. It fixes the ICSP pinout, memory map,
   and read-protect story, and decides **PICkit vs Tigard** for Stage 4. Pull the datasheet.
 - DMM continuity/diode: find the GND plane, the regulator → 5 V rail, the PIC VDD/VSS, any secondary
@@ -117,8 +122,13 @@ required for the parallel keypad ribbon.
   "PT1000" label is folklore, t2330). Sweep "temperature" and watch the heater-control output toggle
   at the ~1 °C deadband → the bang-bang loop, characterized live. **Log resistance vs. the displayed
   temp step** to recover the board's own R→T curve (the corpus has spot points, not a Beta).
-- **Flowmeter emulation:** drive `F` with a pulse gen / ESP32 at the GICAR rate — the impeller has
-  **2 magnets → 2 pulses/rev** (t704), which the wiring reference and
+  **Open:** the 165k–228k figure doesn't say which unit it came from; the
+  [rev A plan](../docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md) §3.2 treats it as
+  forum (t2330), not measured on this machine. M5 in the
+  [measurement guide](_reference/mini-vivaldi-measurements.md) reads this machine's probes cold.
+- **Flowmeter emulation:** drive the GICAR flow input (the flowmeter connector, **never** M5
+  `F`/PHASE, which is 120 V mains) with a pulse gen / ESP32 at the GICAR rate — the impeller has **2
+  magnets → 2 pulses/rev** (t704), which the wiring reference and
   [06-015](06-015-gicar-flow-tap-interposer.md) calibrate to **~2 pulses/mL** volumetrically. Press
   a dose button, watch the count + cut-off → dose↔pulse mapping. **Nobody in the corpus counted
   these externally.**
@@ -128,7 +138,11 @@ required for the parallel keypad ribbon.
 1. **Keypad ribbon (parallel scanned matrix).** LA all 16 lines; press each button; capture the
    scan + LED-multiplex pattern (incl. the PWM/ground-oscillation on the LED lines). Output: exact
    timing to _simulate_ any press **and** _read_ state (which LED = which temp/ready). Delivers
-   [06-014](06-014-unified-esp32-interposer-board.md). No factory timer needed.
+   [06-014](06-014-unified-esp32-interposer-board.md). No factory timer needed. **Unconfirmed on
+   this board:** the scanned matrix comes from the forum (t2629). The
+   [rev A plan](../docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md) §3.7 records a
+   conflicting serial `SER` description of this panel. M7 in the
+   [measurement guide](_reference/mini-vivaldi-measurements.md) and `06-014`'s own M8 settle it.
 2. **External-display header → Tigard UART.** Passive sniff (RX + GND only; leave TX open); set the
    Tigard level to the sensed Vtarget. Unknown baud → measure one bit's width on the scope first,
    then set the rate. If it's temp/state in the clear, this is the biggest win in the project.

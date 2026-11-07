@@ -70,6 +70,9 @@ because it taps the same M5 board.
 
 ### Interposer PCB (`06-015`) — designed, not fabricated
 
+> **Later status:** boards in hand, not yet fitted (`AGENTS.md`); PCBs shipped 2026-07-22 (E2 doc).
+> The GICAR connector below was resolved as JST XH 4-pin (`06-015`).
+
 - Topology chosen: **in-line, reversible, Schmitt-buffered** interposer. Passes all three GICAR pins
   `J1→J2` straight through to the Vivaldi; breaks out only a buffered pulse to ito on `J3`. The
   **+14.3 V rail is physically confined to `J1↔J2`** (no `+` pin on `J3`) so it can never reach

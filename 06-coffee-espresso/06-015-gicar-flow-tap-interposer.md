@@ -118,8 +118,8 @@ To revert: pull the board, plug the meter back into the Vivaldi.
 - [x] Lay out the board — routed + **DRC-clean** (0 violations, 0 unconnected), 2-layer 23.1 × 19.8
       mm. Generated headlessly (`_reference/flow-tap-pcb/generate_pcb.py`) + validated with
       `kicad-cli`. Signals on F.Cu, GND on B.Cu. Render + Gerbers in `_reference/flow-tap-pcb/`
-- [ ] Final review in KiCad GUI (compact placement / right-angle headers if wanted) → order
-      JLC/PCBWay (SMT U1+C1, hand-solder connectors); Gerbers already exported
+- [x] Order JLC/PCBWay (SMT U1+C1, hand-solder connectors): PCBs shipped 2026-07-22 (E2 doc), boards
+      in hand (`AGENTS.md`). The docs don't record whether the KiCad GUI review was done
 - [ ] Assemble, bench-verify pulse pass-through + buffered output into ito
 - [ ] Install in-line; confirm machine still doses/autofills and ito reads flow
 

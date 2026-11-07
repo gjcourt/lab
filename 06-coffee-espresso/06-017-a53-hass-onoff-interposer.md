@@ -74,6 +74,11 @@ ESP32 5V/GND ◀── separate USB supply (isolated from the machine via the op
 - **Shelly Plus 1**: wire its **O/I dry-contact output** across pins 1 & 6; flash ESPHome; no opto
   needed.
 
+> **To be confirmed.** "Pins 1 & 6" here and below are the forum's numbering. Its "pin 6" may be
+> connector pin 11 (see the gotcha above), so don't count pins from this text. M1 in the
+> [measurement guide](_reference/mini-vivaldi-measurements.md) finds the pair by continuity and
+> records its physical position.
+
 ## ESPHome config
 
 `a53-power.yaml` (fill secrets in `secrets.yaml`; the `button` is the guaranteed-working v1, the
@@ -156,7 +161,8 @@ switch:
    multimeter (continuity) or an LED across the opto output pulse closed for ~3 s. **Prove it works
    before it's anywhere near the machine.**
 2. **Verify the pins (machine unplugged):** multimeter continuity → the two panel-connector pins
-   that close **only while the physical ON/OFF button is held.** Those are pins 1 & 6.
+   that close **only while the physical ON/OFF button is held.** Those are the forum's "pins 1 & 6"
+   (measurement guide M1 records their physical position).
 3. **Wire** the opto output across those two pins; keep the ESP32 on its own USB supply.
 4. **Plug in, fire the button** from HASS → the machine should boot and heat (the On/STBY LED goes
    solid). If nothing happens, re-check the pins and lengthen the hold (ON needs ~3 s; try up to 3.5
@@ -186,8 +192,9 @@ switch:
   standby-flash rate.
 - **Full control ([06-014](06-014-unified-esp32-interposer-board.md), rev B `SER` interposer):** the
   other buttons (Single / Double / Hot-water / Boiler) are the same low-voltage membrane contacts —
-  the full 16-pin ribbon matrix is mapped (s1cafe t=2629); add an opto/MOSFET per button-pin-pair
-  and expose them in this same ESPHome config.
+  the full 16-pin ribbon matrix is mapped (s1cafe t=2629; **unconfirmed on this board**, see M7 in
+  the [measurement guide](_reference/mini-vivaldi-measurements.md)); add an opto/MOSFET per
+  button-pin-pair and expose them in this same ESPHome config.
 - **Deep RE ([06-016](06-016-a53-control-board-reverse-engineering.md)):** the bench-board project
   characterizes the keypad matrix, timer bus, and firmware for anything past button emulation.
 - **Deploy:** once proven, this ESPHome device graduates to the homelab repo (where the ESPHome/HASS
