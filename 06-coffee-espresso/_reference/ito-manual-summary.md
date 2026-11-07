@@ -533,6 +533,12 @@ All ito headers use **Molex KK 100 series (2.54 mm grid)** plugs (2-contact 22-0
 Crimp (reichelt "CRIMPZANGE PSK") or solder; strip 2–3 mm, insert 4–5 mm, contacts click into the
 housing and can't be pulled out once seated.
 
+> **As-built note.** The KK statement is the manual's. On this board `IMPULSE` was metered as **JST
+> XH 2.5 mm, 3-pin** ([`06-015`](../06-015-gicar-flow-tap-interposer.md), confirmed 2026-07-13), and
+> the interposer's `J3` is built to that. No doc records an XH plug actually mated with it yet: see
+> Q3 in the [measurement guide](mini-vivaldi-measurements.md). The docs don't record the other
+> headers being metered; `06-014`'s own M6 checks `ENC` as KK.
+
 ### ESP8266 flash layout (p.69)
 
 16 Mbit (2 MB) or 32 Mbit (4 MB) WROOM-02, two-partition OTA layout: 0x0000 bootloader (4 KB);
@@ -619,8 +625,8 @@ are ZMD America trademarks; ATMEL/AVR are Atmel trademarks.
 - **ADC:** 1 GND · 2 AnalogIn1 · 3 AnalogIn2 · 4 AVCC(+5 V, ≤300 mA)
 - **AUX:** 1 GND · 2 I/O1/TXD1 · 3 I/O2/RXD1 · 4 VCC(+5 V)
 - **ENC:** 1 GND · 2 SW · 3 A · 4 B
-- **IMPULSE:** 1 GND · 2 Signal · 3 VCC(+5 V) — R6 4K7 pull-up if meter lacks one; C8 10N for
-  Digmesa nano
+- **IMPULSE:** _(metered as JST XH on this board, see the as-built note above)_ 1 GND · 2 Signal · 3
+  VCC(+5 V) — R6 4K7 pull-up if meter lacks one; C8 10N for Digmesa nano
 - **PWM:** 1 GND · 2 LED1 · 3 LED2 · 4 VCC (40 mA/out; source or sink per firmware)
 - **SPI (OLED/ISP):** 1 GND · 2 C/D · 3 /CS · 4 MOSI · 5 MISO(=OLED RST) · 6 CLK · 7 /AVR RESET · 8
   VCC

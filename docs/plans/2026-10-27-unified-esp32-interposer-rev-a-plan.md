@@ -212,7 +212,7 @@ the machine stock (the 06-015 pattern).
 
 | Channel     | Mates                           | Family                               | Status                                         |
 | ----------- | ------------------------------- | ------------------------------------ | ---------------------------------------------- |
-| Flow `F`    | GICAR plug ↔ control board `F` | **JST XH 4-pin**, pos 1 key-blank    | ✅ (06-015)                                    |
+| Flow input  | GICAR plug ↔ board flow header | **JST XH 4-pin**, pos 1 key-blank    | ✅ (06-015)                                    |
 | ito IMPULSE | board → ito                     | **JST XH 3-pin**                     | ✅ (06-015 / `reference_ito_impulse_pinout`)   |
 | ito `ENC`   | encoder plug ↔ ito `ENC`       | **Molex KK 254, 4-pin**              | ✅ family (manual); ⚠️ mate with George's plug |
 | `S1` / `S2` | probe plug ↔ control board     | ⚠️ unknown                           | **M2**                                         |

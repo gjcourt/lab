@@ -15,6 +15,10 @@ Control-Board Connection Diagram, §6.5 legend), cross-checked against `blondica
 > ⚠️ **Mains voltage.** Unplug at the wall before opening — the soft-touch pad does **not** cut
 > mains (see below). Let the dual boilers cool + depressurize. Qualified-electrician territory for
 > the mains-side work; measure, don't assume.
+>
+> **Capacitors: no discharge procedure or time is documented anywhere in these docs.** Before
+> touching a point, confirm with a meter that it reads 0 V (LoZ or under load: see the
+> phantom-voltage note below). Don't assume that waiting has made it safe.
 
 ## The M5 output terminal strip
 
@@ -77,6 +81,13 @@ suspect tab → a NEUTRAL tab:
 | `+`          | VCC (~14.3 V) — **Vivaldi-side ONLY; NEVER to a 5 V logic input** (5 V + 0.5 V max) |
 | `−`          | GND                                                                                 |
 | `o`          | Output — **5 V open-collector** pulse (pulled to 5 V inside the Vivaldi)            |
+
+> **Unverified: the rail value and who measured it.** This table says ~14.3 V; `06-001` and the
+> t56816 digest also cite 14.8 V. The digest takes 14.3 V from blondica's scope trace (#26), the
+> Sources below credit that trace to blondica, and the walkthrough says the meter wasn't on George's
+> bench boards. The docs don't establish whether this machine was metered. See Q4 in the
+> [measurement guide](mini-vivaldi-measurements.md); `06-014`'s own M9 re-checks it. Either value,
+> `+` stays off ito.
 
 Coarse (~2 pulses/ml) — fine for **display + volume dosing**; leva! 3.0 flow-_tracking_ prefers the
 Digmesa nano (48 pulses/ml), adaptable per sandc (t61709 #179): 10 N on C8, 4K7 on R6, set 48000
@@ -151,10 +162,11 @@ Pictorial: [schmitt-breakout.svg](schmitt-breakout.svg). Three ways to get one:
 
 ## How each project taps this board
 
-- **[06-001] ito + leva! profiling** — cut the **PUMP** wire at the pump → route the control-board
-  side to ito **`SNS`** (zero-cross + "pump on"), and drive the pump from ito **`Relay 1`**. Share
-  the GICAR **`o` + `−`** into ito's flow input via a **CD4011B buffer on ito's 5 V rail** (keep
-  GICAR `+` on the Vivaldi only). Opto optional (isolation).
+- **[06-001] ito + leva! profiling** — unplug the **PUMP** wire at the pump (push-on plugs, no cut)
+  → route the control-board side to ito **`SNS`** (zero-cross + "pump on"), and drive the pump from
+  ito **`Relay 1`**. Share the GICAR **`o` + `−`** into ito's flow input via the **74LVC1G17 buffer
+  on the [`06-015`](../06-015-gicar-flow-tap-interposer.md) interposer**, on ito's 5 V rail (keep
+  GICAR `+` on the Vivaldi only).
 - **[06-011] plumb-in** — derive the fill-solenoid's 24 VDC PSU (fused 0.5–1 A slow-blow on Line,
   tapped via insulated piggybacks) from the **PUMP** output (L = PUMP tab, N = a white tab). The
   solenoid then opens **only when the pump draws from the tank** → fail-safe (closed when idle/off),

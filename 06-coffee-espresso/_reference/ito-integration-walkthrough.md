@@ -49,8 +49,8 @@ because it taps the same M5 board.
   grease, PTFE, 3× G1/8" fittings), TouchCell bracket, BLE, and a **USB-serial (FTDI) adapter**. Kit
   config card values recorded in `06-001` ("As-received kit configuration"): PCB 2.x, OLED SSD1309
   (jumper J1), Digmesa 932-xxxx, WiFi AP `ito Module` 2.4 GHz.
-- **Spare Mini Vivaldi V2 control board on the bench** (ING3/Laurma Elettronica v05.02) alongside
-  the ito V2.0 — enables bench work without opening the machine.
+- **No spare control board.** Corrected 2026-11-07: George considered buying one (ING3/Laurma
+  Elettronica v05.02) but never did, so bench work on a spare isn't available.
 - `06-011` plumb-in parts (float valve, regulator, solenoid, Claryum filter) in hand.
 
 ### Firmware / flasher — DONE, but note the merge state
@@ -69,6 +69,9 @@ because it taps the same M5 board.
   below.
 
 ### Interposer PCB (`06-015`) — designed, not fabricated
+
+> **Later status:** boards in hand, not yet fitted (`AGENTS.md`); PCBs shipped 2026-07-22 (E2 doc).
+> The GICAR connector below was resolved as JST XH 4-pin (`06-015`).
 
 - Topology chosen: **in-line, reversible, Schmitt-buffered** interposer. Passes all three GICAR pins
   `J1→J2` straight through to the Vivaldi; breaks out only a buffered pulse to ito on `J3`. The
@@ -246,8 +249,8 @@ tuned params).
 - **Display/encoder PETG housing** — external, no-cut mount (or a printed La Spaziale Dream S1 bezel
   with a display slot). Needed for `06-001` Exit criterion 7; can trail the electrical work.
 - **`06-012` leva! PID temperature takeover** — _Not Started, deliberately deferred._ Conflicts with
-  the A53 stock board; SSR + TSic hardware already in hand. Bench-test on the spare control board
-  first. Out of the core product's scope.
+  the A53 stock board; SSR + TSic hardware already in hand. Bench-test on a spare control board, if
+  one is bought first. Out of the core product's scope.
 - **`06-014` unified ESP32 interposer board** (v0 was the button sidecar) — its temperature role is
   superseded if `06-012` succeeds; otherwise an alternative automation path.
 
