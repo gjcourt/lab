@@ -3,8 +3,8 @@
 **Purpose.** This is one checklist for every measurement still open across the Mini Vivaldi II
 projects (06-001, 06-012, 06-014, 06-015, 06-016, 06-017). It is sorted by risk: unplugged work
 first, mains-hot work last. Every pin, value and claim below comes from the lab docs, with a
-citation. Where the docs don't say, this guide says so instead of guessing. `06-014` keeps its own
-separate measurement list, which isn't folded in here (Q19).
+citation. Where the docs don't say, this guide says so instead of guessing. `06-014`'s ten
+measurements, which gate the interposer PCB, are folded in as Tier 0 (Tests 28-37).
 
 **Published copy.** The [published page](https://claude.ai/artifact/DiZmUDMpqG3V54nRDwrrH4) is an
 earlier snapshot of this guide. If the two differ, this file is current.
@@ -18,7 +18,8 @@ pump (`AGENTS:18-20`, `e2:13-14`).
 - **In the machine:** the stock control board, called "Main Computer / CPU" (`06-012:113-115`). Its
   terminal strip is M5 (`wiring:23-36`). The heater triacs are on a separate triac sub-board
   (`06-012:116-117`, `wiring:178-179`).
-- **Spare on the bench:** "ING3/Laurma Elettronica v05.02" (`walk:52`).
+- **No spare board.** George, 2026-11-07: he considered buying one but never did. `walk:52` said a
+  spare was on the bench; that was wrong. Tests that need one are marked on hold.
 - **Clive replacement part:** "La Spaziale S1 Main Computer", about $400. Clive describes it as "the
   updated control board that powers all S1 espresso machine models, including the A53 and Vivaldi
   variants" and "a universal main computer board". It says the board "requires configuration to
@@ -59,9 +60,8 @@ so check `git log` if one has drifted.
 | `mods`     | [`_reference/mini-v2-modifications.md`](mini-v2-modifications.md)                                                                    |
 | `plan`     | [`docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md`](../../docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md) |
 
-**M numbers.** M1-M27 are this guide's own. `06-014` and its rev A plan use the same labels for a
-different M1-M10 list (`06-014:94-104`, `plan:300-309`). This guide writes "`06-014`'s M8" when it
-means that list.
+**Test numbers.** Tests 1-37 are this guide's own. They are not the board's `M1`, `M5` and so on,
+which are connector names. Tests 28-37 are `06-014`'s M1-M10 (`06-014:94-104`, `plan:300-309`).
 
 ---
 
@@ -115,46 +115,46 @@ means that list.
 
 | Item                                                                                                                      | Used in                  |
 | ------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| DMM with continuity, diode test and ideally **LoZ** (`wiring:71-73`)                                                      | M1-M5, M11, M14-M16, M22 |
-| 4-ch scope, silent (`06-016:75`)                                                                                          | M7, M9, M17-M19, M24-M26 |
-| Logic analyzer, ≥16 ch, deep buffer (`06-016:77`, `06-016:192-195`)                                                       | M7, M8, M20, M22         |
-| Tigard (FT2232H), **UART sniff on SD/JP3 only, never on timer bus B** (`06-016:88-98`)                                    | M21                      |
-| Clamp / current meter (`06-012:67-69`, `06-012:98`)                                                                       | M24                      |
-| Isolation transformer (fused) or variac + isolated probes (`06-016:62`, `06-012:99`)                                      | M23-M27                  |
-| 2-ch current-limited linear bench PSU (`06-016:76`)                                                                       | M10, M17-M22             |
-| Divider **15 kΩ (top) : 3.3 kΩ (bottom)**, about ×0.18, for 3.3 V logic; or 10 k : 3.3 k for 5 V logic (`06-016:150-152`) | M22                      |
-| About 500 kΩ multi-turn pots ×2 (NTC emulation) (`06-016:79`, `06-016:120`)                                               | M18                      |
-| Resistance decade box (alternative NTC emulation) (`06-012:98`, `06-012:134`)                                             | M26                      |
-| Pulse source: pulse generator or ESP32 (`06-016:79`, `06-016:129-130`)                                                    | M10, M19                 |
-| 16-pin IDC ribbon breakout (`06-016:79`)                                                                                  | M8, M20                  |
-| JST XH pigtails: `XHP-4` / `XHP-3` + `SXH-001T-P0.6` (`06-015:58-61`)                                                     | M10, M11                 |
-| Measuring jug + kitchen scale                                                                                             | M12                      |
-| ESP32 + opto (PC817 / TLP222A) or Shelly Plus 1 (`06-017:52-58`)                                                          | M2, M3                   |
-| Lamp / resistor dummy load (`06-012:137`)                                                                                 | M25-M27                  |
-| Thermocouple (`06-012:98`)                                                                                                | M24 (optional)           |
-| Factory OEM timer or shot-counter module (two-sided capture) (`06-016:153-155`)                                           | M22 (optional)           |
+| DMM with continuity, diode test and ideally **LoZ** (`wiring:71-73`)                                                      | Tests 1-5, 11, 14-16, 22 |
+| 4-ch scope, silent (`06-016:75`)                                                                                          | Tests 7, 9, 17-19, 24-26 |
+| Logic analyzer, ≥16 ch, deep buffer (`06-016:77`, `06-016:192-195`)                                                       | Tests 7, 8, 20, 22       |
+| Tigard (FT2232H), **UART sniff on SD/JP3 only, never on timer bus B** (`06-016:88-98`)                                    | Test 21                  |
+| Clamp / current meter (`06-012:67-69`, `06-012:98`)                                                                       | Test 24                  |
+| Isolation transformer (fused) or variac + isolated probes (`06-016:62`, `06-012:99`)                                      | Tests 23-27              |
+| 2-ch current-limited linear bench PSU (`06-016:76`)                                                                       | Tests 10, 17-22          |
+| Divider **15 kΩ (top) : 3.3 kΩ (bottom)**, about ×0.18, for 3.3 V logic; or 10 k : 3.3 k for 5 V logic (`06-016:150-152`) | Test 22                  |
+| About 500 kΩ multi-turn pots ×2 (NTC emulation) (`06-016:79`, `06-016:120`)                                               | Test 18                  |
+| Resistance decade box (alternative NTC emulation) (`06-012:98`, `06-012:134`)                                             | Test 26                  |
+| Pulse source: pulse generator or ESP32 (`06-016:79`, `06-016:129-130`)                                                    | Tests 10, 19             |
+| 16-pin IDC ribbon breakout (`06-016:79`)                                                                                  | Tests 8, 20              |
+| JST XH pigtails: `XHP-4` / `XHP-3` + `SXH-001T-P0.6` (`06-015:58-61`)                                                     | Tests 10, 11             |
+| Measuring jug + kitchen scale                                                                                             | Test 12                  |
+| ESP32 + opto (PC817 / TLP222A) or Shelly Plus 1 (`06-017:52-58`)                                                          | Tests 2, 3               |
+| Lamp / resistor dummy load (`06-012:137`)                                                                                 | Tests 25-27              |
+| Thermocouple (`06-012:98`)                                                                                                | Test 24 (optional)       |
+| Factory OEM timer or shot-counter module (two-sided capture) (`06-016:153-155`)                                           | Test 22 (optional)       |
 
 ---
 
 ## 3. Already measured (don't repeat)
 
-| What                                                          | Value                                                                                                                                                    | Cite                                        |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `F`/PHASE → GND                                               | **120 VAC in Standby**; no switched rail                                                                                                                 | `wiring:43-48`, `e2:30`                     |
-| M5 strip, top → bottom                                        | `A` EV.AL · `2` EV.H · PUMP (unmarked) · `1` EV.GR · `F` PHASE · N · N. Individual push-on plugs with ID markers.                                        | `wiring:28-36`, `06-001:281-286`            |
-| PUMP identity                                                 | Unmarked plug, hot in both brew and autofill. **E1 done:** pump on ito Relay 1, pump-on lead on SNS, profiled shots pulled.                              | `wiring:66`, `AGENTS:32`, `e2:8-9`          |
-| Earth                                                         | Separate ground stud, not on M5                                                                                                                          | `wiring:38`                                 |
-| Phantom voltage                                               | About 40 VAC on an unconnected tab, high-Z meter                                                                                                         | `wiring:71-73`                              |
-| GICAR VCC                                                     | **+14.3 V** (see Q4: the docs disagree on who measured it and also cite 14.8 V)                                                                          | `06-001:310-312`, `wiring:81`               |
-| GICAR signal                                                  | Open collector, **0↔5 V** (pulled up to 5 V inside the Vivaldi)                                                                                         | `06-001:311-312`, `wiring:83`               |
-| GICAR connector                                               | **JST XH 2.5 mm, 4-pin**: 1 key/blank, 2 +14.3 V (red), 3 GND (black), 4 signal (white). Pins are 2.0 mm apart, which gives 2.5 mm pitch with the posts. | `06-015:42-56`, `fpcb:18-25`                |
-| ito IMPULSE connector                                         | **JST XH 3-pin**: 1 GND, 2 signal, 3 +5 V (silk `# / ⊤ / +`)                                                                                             | `06-015:51-56`, `walk:82-83`                |
-| GICAR resolution (coarse, not calibrated)                     | About 2 pulses/mL; 2 magnets → 2 pulses/rev                                                                                                              | `wiring:92`, `06-016:129-132`               |
-| Stock NTC (forum figure, **not this machine**, see M5 and Q6) | About **200 kΩ** NTC, **165k–228k at room temp** ("PT1000" label is folklore)                                                                            | `06-016:121-122`                            |
-| Faston size                                                   | **6.3 × 0.8 mm** (board blades and pump tabs)                                                                                                            | `06-001:287-288`, `06-001:388`              |
-| Pressure-sensor port                                          | **1/8" BSP** (former pre-infusion chamber port); kit G1/8 fitting threads in; sensor installed                                                           | `06-001:178`, `06-001:302-303`, `AGENTS:31` |
-| Machine fuse                                                  | 5 A (behind the PUMP output)                                                                                                                             | `06-011:371`, `wiring:174`                  |
-| Spare board ID                                                | ING3/Laurma Elettronica v05.02                                                                                                                           | `walk:52`                                   |
+| What                                                              | Value                                                                                                                                                    | Cite                                        |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `F`/PHASE → GND                                                   | **120 VAC in Standby**; no switched rail                                                                                                                 | `wiring:43-48`, `e2:30`                     |
+| M5 strip, top → bottom                                            | `A` EV.AL · `2` EV.H · PUMP (unmarked) · `1` EV.GR · `F` PHASE · N · N. Individual push-on plugs with ID markers.                                        | `wiring:28-36`, `06-001:281-286`            |
+| PUMP identity                                                     | Unmarked plug, hot in both brew and autofill. **E1 done:** pump on ito Relay 1, pump-on lead on SNS, profiled shots pulled.                              | `wiring:66`, `AGENTS:32`, `e2:8-9`          |
+| Earth                                                             | Separate ground stud, not on M5                                                                                                                          | `wiring:38`                                 |
+| Phantom voltage                                                   | About 40 VAC on an unconnected tab, high-Z meter                                                                                                         | `wiring:71-73`                              |
+| GICAR VCC                                                         | **+14.3 V** (see Q4: the docs disagree on who measured it and also cite 14.8 V)                                                                          | `06-001:310-312`, `wiring:81`               |
+| GICAR signal                                                      | Open collector, **0↔5 V** (pulled up to 5 V inside the Vivaldi)                                                                                          | `06-001:311-312`, `wiring:83`               |
+| GICAR connector                                                   | **JST XH 2.5 mm, 4-pin**: 1 key/blank, 2 +14.3 V (red), 3 GND (black), 4 signal (white). Pins are 2.0 mm apart, which gives 2.5 mm pitch with the posts. | `06-015:42-56`, `fpcb:18-25`                |
+| ito IMPULSE connector                                             | **JST XH 3-pin**: 1 GND, 2 signal, 3 +5 V (silk `# / ⊤ / +`)                                                                                             | `06-015:51-56`, `walk:82-83`                |
+| GICAR resolution (coarse, not calibrated)                         | About 2 pulses/mL; 2 magnets → 2 pulses/rev                                                                                                              | `wiring:92`, `06-016:129-132`               |
+| Stock NTC (forum figure, **not this machine**, see Test 5 and Q6) | About **200 kΩ** NTC, **165k–228k at room temp** ("PT1000" label is folklore)                                                                            | `06-016:121-122`                            |
+| Faston size                                                       | **6.3 × 0.8 mm** (board blades and pump tabs)                                                                                                            | `06-001:287-288`, `06-001:388`              |
+| Pressure-sensor port                                              | **1/8" BSP** (former pre-infusion chamber port); kit G1/8 fitting threads in; sensor installed                                                           | `06-001:178`, `06-001:302-303`, `AGENTS:31` |
+| Machine fuse                                                      | 5 A (behind the PUMP output)                                                                                                                             | `06-011:371`, `wiring:174`                  |
+| Current board revision                                            | Clive's product photo shows ING3 v.05.02. Whether your installed board is this revision is open (Q25)                                                    | George's photo                              |
 
 ---
 
@@ -166,16 +166,128 @@ State tags:
 
 - **UNPLUGGED**: at the wall, boilers cool.
 - **POWERED**: plugged in, panels off; probe low-voltage only, never mains.
-- **BENCH**: spare board or parts on the desk, no mains.
+- **BENCH**: parts on the desk, no mains. Tests that need a spare board are on hold: George doesn't
+  own one.
 - **MAINS-HOT**: mains present at the probe point. Defer this tier.
 
 > **Gate:** 06-016 says not to start bench RE until 06-001 has shipped (`06-016:17-22`), and 06-001
 > is still In Progress. Tier 3 items marked 06-016 are formally gated. Do them only if George lifts
 > the gate.
 
+### Tier 0: Interposer gate (from 06-014; do these first)
+
+These are `06-014`'s M1-M10, from the plan's "Open facts" table (`plan:292-313`). Tests 28, 29, 30,
+33, 34 and 37 are **required before ordering the PCB**. Tests 31, 32 and 35 are optional for rev A:
+without them, those functions ship as pass-through connectors and unpopulated footprints.
+
+Live checks, per the plan: case closed except the probe point, one hand, a CAT-rated meter.
+
+**Test 28 · 06-014 M1 · Is the control board's low-voltage GND isolated from mains? (gates
+everything)**
+
+- **Where:** control-board GND at GICAR pin 3 (black), to chassis (PE), to N and to `F`
+  (`plan:300`).
+- **Instrument / state:** DMM. UNPLUGGED, then POWERED. On the live step one probe touches N, a
+  mains conductor.
+- **Steps:**
+  1. Unplugged: check continuity GND to N, and GND to M5 `F`. Expect open. The plan lists this
+     second; do it first, and stop if either reads closed.
+  2. Live: DMM AC-V and DC-V from GND to PE, and from GND to N. Expect about 0 V if isolated.
+  3. Look for the mains supply on the board. Clive's v.05.02 photo shows a sealed module, `PS1`
+     (input 100-240 V, output 5 V 1000 mA, 5 W). Its isolation rating isn't on the visible label.
+- **Unblocks:** everything: the board's shared GND (`plan:94`).
+- **Result:**
+
+**Test 29 · 06-014 M2 · `S1` / `S2` connector type and pin count**
+
+- **Where:** the plugs at the control board (`plan:301`).
+- **Instrument / state:** camera and calipers. UNPLUGGED.
+- **Steps:** photograph both plugs head-on and from the side; measure the pitch with calipers, as
+  for the GICAR XH (gap + post width); note housing markings and latch style. Record which header
+  each plug is on (Q22).
+- **Unblocks:** the F1/F2 connectors.
+- **Result:**
+
+**Test 30 · 06-014 M3 · `S1` / `S2` node voltage range and bias**
+
+- **Where:** across each NTC at the board connector (`plan:302`).
+- **Instrument / state:** DMM DC-V, POWERED; then DMM Ω, UNPLUGGED.
+- **Steps:**
+  1. Live: measure cold (machine just on), at temperature, and steam boiler at temperature.
+  2. Unplugged: NTC resistance cold at ambient; record the °C. Note which pin is GND.
+- **Also closes:** Test 5 (cold resistance).
+- **Unblocks:** ADS1115 range, buffer rails, T3/T4.
+- **Result:**
+
+**Test 31 · 06-014 M4 (optional) · `SB` boiler-level sensing method and excitation**
+
+- **Where:** find `SB` at the board and trace it to the boiler (`plan:303`).
+- **Instrument / state:** scope preferred, or DMM AC-V and DC-V probe to GND. POWERED.
+- **Steps:** measure with the boiler full and low. Record the waveform, frequency, amplitude and DC
+  offset. Photograph the probe and connector.
+- **Unblocks:** the F3 front end, or the decision to leave it unpopulated.
+- **Result:**
+
+**Test 32 · 06-014 M5 (optional) · `SL` tank-level method and connector**
+
+- **Where:** the tank sensor (`plan:304`).
+- **Instrument / state:** DMM continuity. UNPLUGGED.
+- **Steps:** identify it (reed/float or probe). Check continuity tank full and empty. If it's a
+  probe, measure it as in Test 31. Photograph the connector.
+- **Unblocks:** the F4 front end, or the decision to leave it unpopulated.
+- **Result:**
+
+**Test 33 · 06-014 M6 · ito `ENC` plug: Molex KK 254 4-pin and pin order**
+
+- **Where:** your encoder cable and the ito header (`plan:305`).
+- **Instrument / state:** camera, calipers, DMM continuity. UNPLUGGED.
+- **Steps:** photograph the plug and header; measure the pitch (expect 2.54 mm); buzz the encoder
+  pin through to the ito silkscreen pin 1.
+- **Unblocks:** the F6 connectors.
+- **Result:**
+
+**Test 34 · 06-014 M7 · Encoder rest state at a detent, and ito pull-up level**
+
+- **Where:** A, B and SW on the encoder (`plan:306`).
+- **Instrument / state:** DMM. BENCH, with the ito powered through `IMPULSE` (+5 V pin 3, GND pin
+  1).
+- **Steps:** measure each of A/B/SW to GND with the knob resting at a detent (try 3 detents), and
+  while held pressed. Expect about 5 V released.
+- **Unblocks:** the F6 injection design.
+- **Result:**
+
+**Test 35 · 06-014 M8 (optional) · Panel to board link: serial, 16-pin ribbon or discrete**
+
+- **Where:** the panel-to-board connector (`plan:307`).
+- **Instrument / state:** eyes and DMM continuity. UNPLUGGED.
+- **Steps:** open the panel side; count the wires; photograph the connector and both ends; read the
+  IC markings near it. Then do Test 1. Test 7 gives the full answer if you want it.
+- **Unblocks:** F8 stub levels, and whether F9 (on/off) gets populated.
+- **Result:**
+
+**Test 36 · 06-014 M9 · GICAR `+` about 14.3 V, and `o` pulled to 5 V (re-check)**
+
+- **Where:** the GICAR plug (`plan:308`).
+- **Instrument / state:** DMM. POWERED.
+- **Steps:** measure `+` to `-`, and `o` to `-` with no flow. A one-minute check, since F5 now feeds
+  the ESP32 too. Also settles which rail figure is yours (Q4).
+- **Result:**
+
+**Test 37 · 06-014 M10 · Physical envelope**
+
+- **Where:** inside the machine (`plan:309`).
+- **Instrument / state:** tape measure. UNPLUGGED.
+- **Steps:** decide where the board mounts; measure the distance to each connector (cable lengths)
+  and the largest board size that fits; note any heat-shield needs near the boilers.
+- **Unblocks:** the board outline and cable list.
+- **Result:**
+
 ### Tier 1: Unplugged, DMM
 
-**M1 · 06-017 · Find the two ON/OFF button pins by continuity**
+**Test 1 · 06-017 · Find the two ON/OFF button pins by continuity**
+
+> Forum map t2629 gives On/Off as **ribbon pins 1 (GND) and 11 (5V)**, the same line as the forum's
+> "panel pin 6". This test confirms it on your machine, and also closes the on/off part of Test 35.
 
 - **Where:** the low-voltage front-panel connector. The forum calls them "pin 1 (GND)" and "pin 6
   (ON/OFF)", but its "pin 6" is numbered off the panel picture and may be **connector pin 11**
@@ -194,7 +306,12 @@ State tags:
   reed relay or a Shelly, polarity doesn't matter (`06-017:72-75`).
 - **Result:**
 
-**M4 · 06-012 Phase A · Locate the safety thermostat / thermal fuse and trace the element leads**
+**Test 4 · 06-012 Phase A · Locate the safety thermostat / thermal fuse and trace the element
+leads**
+
+> The owner's manual schematic (§6.1) shows each element with one side on NEUTRAL and the other
+> through its safety thermostat to the triac outlet: RB → TSB → boiler triac, RC → TSC → group
+> triac. This test confirms that on your machine.
 
 - **Where:** brew-boiler element circuit. The docs say one lead goes to L, often through a safety
   stat, and the other goes to the triac output (`06-012:67-68`).
@@ -208,7 +325,7 @@ State tags:
   (`06-012:68-73`).
 - **Result:**
 
-**M5 · 06-012 Phase A · Confirm the sensor type on this machine (cold resistance)**
+**Test 5 · 06-012 Phase A · Confirm the sensor type on this machine (cold resistance)**
 
 - **Where:** boiler probe leads S1/S2 (`06-016:105-107`).
 - **Instrument / state:** DMM Ω, UNPLUGGED, cold.
@@ -218,11 +335,11 @@ State tags:
   3. Repeat for the other probe.
 - **Expected:** NTC about 200 kΩ (165k–228k) per `06-016:121-122`. 06-012's generic rule of thumb is
   "NTC ≈ tens of kΩ, Pt100 ≈ 100 Ω, thermostat = continuity" (`06-012:64-65`).
-- **Why:** the 165k–228k figure isn't from this machine, as far as the docs say (Q6). `06-014`'s M3
-  also wants this reading (`plan:302`).
+- **Why:** the 165k–228k figure isn't from this machine, as far as the docs say (Q6). Test 30 also
+  wants this reading (`plan:302`).
 - **Result:**
 
-**M6 · 06-001 · Read the pressure-sensor PSI rating**
+**Test 6 · 06-001 · Read the pressure-sensor PSI rating**
 
 - **Where:** the kit "keep this document" card (offline) and the sensor body.
 - **Instrument / state:** eyes, any state.
@@ -237,13 +354,13 @@ State tags:
 > The board makes its low-voltage rails from an onboard transformer (`06-016:54`), and 06-017 calls
 > the button lines low-voltage logic that is safe to interpose (`06-017:22-23`).
 >
-> - Whether the logic ground is isolated from mains is still open. It is `06-014`'s M1, which that
->   project marks as gating everything (`06-014:94`, `plan:300`).
+> - Whether the logic ground is isolated from mains is still open. It is Test 28, which that project
+>   marks as gating everything (`06-014:94`, `plan:300`).
 > - Before clipping a scope ground lead to the board, confirm with the DMM (AC and DC) that the
 >   board GND reads about 0 V to earth. Otherwise use a differential or isolated probe.
 > - Stay off M5 and the triac board.
 
-**M7 · 06-014 · Panel link: discrete inputs, scanned matrix, or serial?**
+**Test 7 · 06-014 · Panel link: discrete inputs, scanned matrix, or serial?**
 
 - **Where:** the connector between the button panel and the CPU, which 06-016 and 06-017 describe as
   a 16-pin keypad ribbon (`06-016:138`, `06-017:194-197`).
@@ -265,10 +382,10 @@ State tags:
     `SER2`→`SER1`, not a matrix (`06-014:73-75`, `plan:190-194`). The plan notes that the forum
     corpus may be the S1 Vivaldi II, not the Mini (`plan:193`).
 - **Unblocks:** which description applies to this machine. This is the same question as `06-014`'s
-  M8 (`plan:307`), and it decides 06-017's per-button upgrade (`06-017:194-197`).
+  Test 8 (`plan:307`), and it decides 06-017's per-button upgrade (`06-017:194-197`).
 - **Result:**
 
-**M8 · 06-017 v1.1 (optional) · On/STBY LED waveform and duty cycle**
+**Test 8 · 06-017 v1.1 (optional) · On/STBY LED waveform and duty cycle**
 
 - **Where:** the On/STBY LED, or its ribbon line (`06-017:59`, `06-017:187-192`). Confirm which LED
   it is against the panel and manual. The "D"/"Econ" labels are not in the verified map
@@ -284,7 +401,7 @@ State tags:
   (`06-017:190-192`).
 - **Result:**
 
-**M9 · 06-012 Phase A · Scope the boiler sensor input while heating**
+**Test 9 · 06-012 Phase A · Scope the boiler sensor input while heating**
 
 - **Where:** S1/S2 sensor input at the board (`06-012:65-66`).
 - **Instrument / state:** scope, POWERED, heating from cold.
@@ -295,7 +412,7 @@ State tags:
 - **Expected:** not documented.
 - **Result:**
 
-**M11 · 06-015 · Install check (after M10 passes)**
+**Test 11 · 06-015 · Install check (after Test 10 passes)**
 
 - **Where:**
   - meter → `J1`;
@@ -312,7 +429,7 @@ State tags:
   after the swap (`06-001:364-367`, `AGENTS:94-95`).
 - **Result:**
 
-**M12 · 06-001 · GICAR K-factor (pulses per litre)**
+**Test 12 · 06-001 · GICAR K-factor (pulses per litre)**
 
 - **Where:** buffered pulse at `J3` pin 2 (OUT), or ito IMPULSE pin 2.
 - **Instrument / state:** LA/scope pulse counter (or leva!'s count, if it reports one; the docs
@@ -330,7 +447,7 @@ State tags:
   water path the meter sits. Brew only, with the OPV not cracking (`06-001:127-130`).
 - **Result:**
 
-**M13 · 06-001 E2 · Bench checks after moving EV.GR to Relay 2**
+**Test 13 · 06-001 E2 · Bench checks after moving EV.GR to Relay 2**
 
 - **Where:**
   - the solenoid hot lead moves from M5 EV.GR (`1`) to ito clamp `2`;
@@ -350,9 +467,9 @@ State tags:
 - **Unblocks:** app-brew, and possibly the pre-infusion skip bug (`AGENTS:72-75`).
 - **Result:**
 
-**M14 · 06-017 · Installed hold-length tuning**
+**Test 14 · 06-017 · Installed hold-length tuning**
 
-- **Where:** opto across the M1 pins, ESP32 on its own USB supply (`06-017:166`).
+- **Where:** opto across the Test 1 pins, ESP32 on its own USB supply (`06-017:166`).
 - **Instrument / state:** functional, POWERED.
 - **Steps:**
   1. Fire the HASS button and confirm the machine boots (On/STBY goes solid).
@@ -362,9 +479,13 @@ State tags:
      the double 1 s state-reset pulse. (`06-017:43-48`, `06-017:167-169`, `06-017:178-179`)
 - **Result:**
 
-### Tier 3: Bench, spare board or parts (no mains)
+### Tier 3: Bench, parts only (no mains)
 
-**M2 · 06-017 · Prove the opto/relay pulse off-machine**
+> **On hold without a spare board: Tests 15-22 and 26.** George doesn't own one (Clive sells it,
+> about $400). 06-016 says not to do this work on the machine you drink from. Tests 2, 3 and 10 only
+> need parts on the desk, so they can still go ahead.
+
+**Test 2 · 06-017 · Prove the opto/relay pulse off-machine**
 
 - **Where:** the opto output, with the ESP32 flashed with `a53-power.yaml` (`06-017:82-156`).
 - **Instrument / state:** DMM continuity (or an LED) across the output, BENCH.
@@ -376,12 +497,12 @@ State tags:
   (`06-017:160-162`, `06-017:173-174`).
 - **Result:**
 
-**M3 · 06-017 · (if PC817) confirm output polarity matches M1**
+**Test 3 · 06-017 · (if PC817) confirm output polarity matches Test 1**
 
 - **Not in the docs.** Skip with a TLP222A, reed relay or Shelly (`06-017:72-75`).
 - **Result:**
 
-**M10 · 06-015 · Interposer bench checks**
+**Test 10 · 06-015 · Interposer bench checks**
 
 - **Where:** `J1` / `J2` (4-pin) and `J3` (3-pin).
 - **Instrument / state:** DMM, 5 V supply on `J3.3`/`J3.1`, pulse source, scope. BENCH.
@@ -395,9 +516,9 @@ State tags:
   `fpcb:34`). (`06-015:105-107`, `walk:165`)
 - **Result:**
 
-**M15 · 06-016 Stage 1 · Static map of the spare board (unpowered)**
+**Test 15 · 06-016 Stage 1 · Static map of the spare board (unpowered)**
 
-- **Where:** spare board ING3/Laurma v05.02 (`walk:52`).
+- **Where:** a spare board, if you buy one (on hold).
 - **Instrument / state:** camera, DMM continuity/diode. BENCH, unpowered.
 - **Steps:**
   1. Take high-res photos of both sides.
@@ -414,7 +535,7 @@ State tags:
   (`06-016:108-109`).
 - **Result:**
 
-**M16 · 06-016 · Regulator and rail voltages**
+**Test 16 · 06-016 · Regulator and rail voltages**
 
 - **Where:** regulator output (the "PIC's ~5 V VDD rail") and the secondary DC control rail
   (`06-016:56-59`).
@@ -427,13 +548,13 @@ State tags:
     figure as unverified" (`06-016:58-60`). The board does feed GICAR `+` at about 14.3 V
     (`wiring:81`). Whether that is the same rail is undocumented.
   - The timer bus runs on ">12 V" rails (`06-016:94-95`).
-- **Unblocks:** the PSU settings for M17.
+- **Unblocks:** the PSU settings for Test 17.
 - **Result:**
 
-**M17 · 06-016 Stage 2 · Injection power-up**
+**Test 17 · 06-016 Stage 2 · Injection power-up**
 
-- **Where:** inject 5 V (and the secondary rail, once known from M16) from the current-limited PSU
-  (`06-016:56-61`).
+- **Where:** inject 5 V (and the secondary rail, once known from Test 16) from the current-limited
+  PSU (`06-016:56-61`).
 - **Instrument / state:** PSU, scope. BENCH.
 - **Steps:**
   1. Set DIP switches for the Mini V2.
@@ -445,7 +566,7 @@ State tags:
   DIP all-off gives a fault code, which is a useful liveness check (`06-016:66-67`).
 - **Result:**
 
-**M18 · 06-016 Stage 2 · NTC sweep (R → T curve)**
+**Test 18 · 06-016 Stage 2 · NTC sweep (R → T curve)**
 
 - **Where:** a ~500 kΩ multi-turn pot on each of S1/S2 in place of the probes (`06-016:120`).
 - **Instrument / state:** pots, DMM, scope on the heater-control output. BENCH.
@@ -456,7 +577,7 @@ State tags:
 - **Expected:** toggling at about a 1 °C deadband (bang-bang) (`06-016:122-124`).
 - **Result:**
 
-**M19 · 06-016 Stage 2 · Flow-pulse ↔ dose mapping**
+**Test 19 · 06-016 Stage 2 · Flow-pulse ↔ dose mapping**
 
 - **Where:** the GICAR flow input (**not** M5 `F`). Drive it from the pulse source at the GICAR rate
   (`06-016:129-134`).
@@ -468,7 +589,7 @@ State tags:
 - **Expected:** nobody has counted these externally yet (`06-016:133-134`).
 - **Result:**
 
-**M20 · 06-016 Stage 3 · Keypad ribbon logic-analyzer capture**
+**Test 20 · 06-016 Stage 3 · Keypad ribbon logic-analyzer capture**
 
 - **Where:** all 16 ribbon lines (`06-016:138-141`).
 - **Instrument / state:** ≥16-ch LA. BENCH.
@@ -476,10 +597,14 @@ State tags:
   1. Capture idle.
   2. Capture each button press.
   3. Capture the LED-multiplex/PWM pattern.
-- **Output:** timing to simulate presses and read LED state. Feeds 06-014 and M7.
+- **Output:** timing to simulate presses and read LED state. Feeds 06-014 and Test 7.
 - **Result:**
 
-**M21 · 06-016 Stage 3 · External-display header SD/JP3 via Tigard UART**
+**Test 21 · 06-016 Stage 3 · External-display header SD/JP3 via Tigard UART**
+
+> On hold without a spare board. The owner's manual (§6.5) calls `DISPLAY` the "cable connector for
+> optional timer module", `JP3` the "optional timer switch connector" and `SD` the "optional timer
+> on/off switch". So the data header may be `DISPLAY`, not SD/JP3 (Q21).
 
 - **Where:** SD/JP3 (`06-016:88-90`, `06-016:146-148`).
 - **Instrument / state:** scope first, then Tigard RX + GND only (leave TX open). BENCH.
@@ -491,7 +616,7 @@ State tags:
 - **Expected:** possibly temperature and state in the clear. Unconfirmed.
 - **Result:**
 
-**M22 · 06-016 Stage 3 · OEM timer bus (B) waveform**
+**Test 22 · 06-016 Stage 3 · OEM timer bus (B) waveform**
 
 - **Where:** timer connector (B).
 - **Instrument / state:** scope or LA **through the 15 k : 3.3 k divider**. Check it against the
@@ -505,9 +630,13 @@ State tags:
   (`06-016:94-97`).
 - **Result:**
 
-**M23 · 06-001 · Pump output: relay or semiconductor?**
+**Test 23 · 06-001 · Pump output: relay or semiconductor?**
 
-- **Where:** the component that drives M5 PUMP on the spare board (`06-001:248-256`).
+> Likely answered. The manual schematic (§6.1) draws a mechanical relay contact on the PUMP output,
+> and Clive's photo of the v.05.02 board shows five NT10-A-S-5 relays beside M5. Which relay drives
+> PUMP isn't marked. Check your own board by eye; no spare is needed.
+
+- **Where:** the component that drives M5 PUMP on your board (`06-001:248-256`).
 - **Instrument / state:** visual. BENCH. The method is not in the docs.
 - **Steps:** identify a mechanical relay versus a triac/SSR on the PUMP output path.
 - **Why:** ito SNS is an opto input. A semiconductor switch might not sink enough current. SNS draws
@@ -517,14 +646,14 @@ State tags:
 
 ### Tier 4: Mains-hot (defer; needs isolation transformer or variac + isolated probes)
 
-**M24 · 06-012 Phase A · Heater-switch leg + safety stat in circuit**
+**Test 24 · 06-012 Phase A · Heater-switch leg + safety stat in circuit**
 
 - **Instrument / state:** clamp meter, live machine heating. MAINS-HOT.
-- **Steps:** clamp each element lead (from M4) while the boiler heats, and record which one carries
-  the switched current (`06-012:67-69`).
+- **Steps:** clamp each element lead (from Test 4) while the boiler heats, and record which one
+  carries the switched current (`06-012:67-69`).
 - **Result:**
 
-**M25 · 06-012 Phase A · Triac gate drive ("heat command")**
+**Test 25 · 06-012 Phase A · Triac gate drive ("heat command")**
 
 - **Where:** CPU → triac gate.
 - **Instrument / state:** scope with isolated / differential probes. MAINS-HOT.
@@ -534,10 +663,11 @@ State tags:
   (`06-016:62-64`).
 - **Result:**
 
-**M26 · 06-012 Phase B · Spare-board fault behaviour**
+**Test 26 · 06-012 Phase B · Spare-board fault behaviour**
 
-- **Where:** spare board on the bench rig: decade box for the probe, a jumper for "water present",
-  momentary switches for buttons, a lamp/resistor as the heater load (`06-012:131-137`).
+- **Where:** a spare board on a bench rig, if you buy one (on hold): decade box for the probe, a
+  jumper for "water present", momentary switches for buttons, a lamp/resistor as the heater load
+  (`06-012:131-137`).
 - **Instrument / state:** scope/DMM. BENCH with mains through the isolation transformer. MAINS-HOT.
 - **Steps:**
   1. **Current-sense check:** open the triac output while heating and watch for an instant error.
@@ -548,7 +678,7 @@ State tags:
 - **Go/no-go:** see `06-012:101-104`.
 - **Result:**
 
-**M27 · 06-001 (likely superseded) · PUMP hot in brew AND autofill**
+**Test 27 · 06-001 (likely superseded) · PUMP hot in brew AND autofill**
 
 - **Where:** M5 PUMP tab → N tab (`wiring:57-67`).
 - **Instrument / state:** DMM (LoZ). MAINS-HOT.
@@ -573,24 +703,24 @@ and is spare-board only (`06-016:157-167`).
 - **Q3. Connector family: left open.** ito-sum says all ito headers are **Molex KK 2.54 mm**
   (`ito-sum:531`, `ito-sum:623`). 06-015 says IMPULSE is metered as **JST XH 2.5 mm**
   (`06-015:42-45`). A note now says so (`ito-sum:536-540`). No doc records an XH plug mated with
-  IMPULSE, and M11 is the first time it happens, so check that it actually mates before trusting
+  IMPULSE, and Test 11 is the first time it happens, so check that it actually mates before trusting
   `J3`.
 - **Q4. GICAR rail, 14.3 V vs 14.8 V: left open.** Both figures appear (`06-001:319`,
   `t56816:26-37`). The t56816 digest attributes the 14.3 V figure to blondica's thread (#26), and
   `walk:84` says the meter wasn't on George's bench boards. Notes now say so (`wiring:85-90`,
-  `06-001:320-323`). No M here measures it; `06-014`'s M9 does (`plan:308`).
+  `06-001:320-323`). No M here measures it; Test 36 does (`plan:308`).
 - **Q5. Pressure sensor thread.** ito-sum lists the sensor as 1/8" NPT (`ito-sum:93`). The port is
   1/8" BSP, and the docs describe the "kit G1/8 fitting" threading in (`06-001:178`). It is
   installed and working, so this is documentation only.
 - **Q6. NTC source: left open.** 06-016 doesn't say which unit gave "measured 165k–228k". The rev A
   plan treats it as forum t2330, not measured on this machine (`plan:100-101`). A note now says so
-  (`06-016:125-128`). M5 settles it.
+  (`06-016:125-128`). Test 5 settles it.
 - **Q7. ON/OFF pin numbering: left open.** Forum "pin 6" may be connector pin 11 (`06-017:37-41`).
-  The text still says "pins 1 & 6", with a note (`06-017:77-80`, `06-017:164-165`). M1 settles it.
-  The plan also asks whether this panel has the pair at all (`plan:203-206`).
+  The text still says "pins 1 & 6", with a note (`06-017:77-80`, `06-017:164-165`). Test 1 settles
+  it. The plan also asks whether this panel has the pair at all (`plan:203-206`).
 - **Q8. Matrix vs discrete vs serial: left open.** The matrix comes from forum t2629 and is marked
   unconfirmed (`06-016:141-145`, `06-017:195`). 06-014 and the plan say serial (`06-014:73-75`,
-  `plan:190-194`). M7 and `06-014`'s M8 settle it.
+  `plan:190-194`). Test 7 and Test 35 settle it.
 - **Q9. "`F`" naming collision: fixed in 06-016.** M5 `F` is PHASE at 120 V. 06-016 now spells out
   the flow input (`06-016:105-106`, `06-016:129-130`). `plan:215` still says "Flow `F`".
 - **Q10. Interposer status: resolved.** `AGENTS:33` and `AGENTS:94` already say boards in hand, not
@@ -599,9 +729,9 @@ and is spare-board only (`06-016:157-167`).
   happened.
 - **Q11. "Cut the PUMP wire": fixed.** The wiring ref now says unplug (`wiring:165`), matching
   `06-001:284-290`. `06-011:361` still says "pump-wire cut".
-- **Q12. 06-016 gate vs reality: George's call.** It is gated on 06-001 shipping (`06-016:17`), yet
-  the spare board is already on the bench (`walk:52`). A note records this; the gate is unchanged
-  (`06-016:24-26`).
+- **Q12. 06-016 gate vs reality: George's call.** It is gated on 06-001 shipping (`06-016:17`), and
+  needs a spare board, which George doesn't own. The gate is unchanged, and nothing in 06-016 can
+  start without one (`06-016:24-26`).
 - **Q13. Clive board vs the docs.**
   - Clive calls it "universal" across all S1 models, with model configuration required. That fits
     06-016's DIP switches (`06-016:66`).
@@ -618,12 +748,30 @@ and is spare-board only (`06-016:157-167`).
 - **Q16. E2 open questions** (`e2:129-152`): does the valve follow the pump on a physical brew, is
   an unloaded EV.GR tolerated, and does volumetric dosing survive? All are untested.
 - **Q17. Relay vs triac on the PUMP output** has never been recorded, though it works in practice
-  (`06-001:248-256`, `AGENTS:32`). A note now points at M23.
+  (`06-001:248-256`, `AGENTS:32`). A note now points at Test 23.
 - **Q18. Capacitor discharge.** No discharge procedure or time is documented anywhere.
   `wiring:19-21` now says so.
-- **Q19. `06-014`'s own M1-M10 aren't folded into this guide** (`06-014:94-104`). Some overlap: its
-  M1 with the Tier 2 ground check, M3 with M5/M9, M8 with M7, M9 with Q4. Whether to merge the two
-  lists is George's call.
+- **Q19. `06-014`'s list: resolved.** Folded in as Tier 0, Tests 28-37. Tests 35 and 36 overlap
+  Tests 1, 7 and Q4.
+
+- **Q20. Serial or parallel ribbon?** The hestia ARCHITECTURE.md and 06-014 call `SER1`-`SER2` a
+  serial link to an "M1 MCU". The forum map (t2629) says parallel contacts. In the manual's figures
+  and on the v.05.02 silkscreen, `M1` is the header's own name, not a chip, and it is a 16-pin 2x8
+  box header. Tests 7 and 35 settle it; correct ARCHITECTURE.md after.
+- **Q21. Which header is the timer's data line?** 06-016 says SD/JP3; the manual's definitions point
+  to `DISPLAY` (see Test 21). The forum calls the timer plug 3-wire; the schematic numbers it 1
+  to 4.
+- **Q22. Which header carries which sensor?** Figure §6.2 shows S1 on its own 2-pin header and S2 +
+  SB on another. Schematic §6.1 shows S2 on a 2-pin header and S1 + earth + SB on a 4-pin header.
+  The v.05.02 silkscreen labels these headers `M2`, `M3`, `M10` and `M9`, with no function names.
+  Trace the leads before unplugging anything.
+- **Q23. Does the t2629 ribbon map apply to this model?** It was posted on an S1 thread. Test 1 and
+  Test 7 confirm it on the Mini Vivaldi II.
+- **Q24. Fuse rating.** The docs and manual say 5 A. Clive's v.05.02 photo has silkscreen "220Vac
+  T5A / 110Vac T10A" beside `F3`. Read the fuse in your machine. Don't change it based on this.
+- **Q25. Which board revision is in your machine?** Clive's photo is v.05.02: five relays, `M5` +
+  `M4` tabs. The manual shows four relays and seven tabs on `M5`, which is what `wiring:24-32`
+  records. A photo of your installed board settles it.
 
 ---
 
@@ -634,7 +782,7 @@ Copy one block per measurement:
 ```text
 ID:            M__
 Date / who:
-Unit:          machine | spare board v05.02 | interposer
+Unit:          machine | interposer
 State:         UNPLUGGED | POWERED | BENCH | MAINS-HOT
 Instrument:    (model, range, probe/ground used)
 Points:        (connector + pin, how you counted pins)

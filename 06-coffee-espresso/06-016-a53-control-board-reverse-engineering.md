@@ -17,9 +17,9 @@ depends_on:
 > ⛔ **GATED on [06-001](06-001-lucca-a53-mini-leva-firmware-integration.md).** Do not start this
 > project until the ito + `leva!` pressure/flow profiling on the daily machine is **proven and
 > shipped**. This work needs a **spare control board on the bench** (never the machine you drink
-> from), and several stages risk bricking that board. Finish the thing that makes coffee first; this
-> is the "learn how the machine works fundamentally" follow-on, not a prerequisite for any shipping
-> capability.
+> from; George doesn't own one as of 2026-11-07), and several stages risk bricking that board.
+> Finish the thing that makes coffee first; this is the "learn how the machine works fundamentally"
+> follow-on, not a prerequisite for any shipping capability.
 >
 > **Status note (2026-11-07):** a spare board (ING3/Laurma v05.02) is already on the bench
 > ([walkthrough](_reference/ito-integration-walkthrough.md)) while `06-001` is still In Progress.

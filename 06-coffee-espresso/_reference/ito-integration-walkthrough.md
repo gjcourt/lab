@@ -49,8 +49,8 @@ because it taps the same M5 board.
   grease, PTFE, 3× G1/8" fittings), TouchCell bracket, BLE, and a **USB-serial (FTDI) adapter**. Kit
   config card values recorded in `06-001` ("As-received kit configuration"): PCB 2.x, OLED SSD1309
   (jumper J1), Digmesa 932-xxxx, WiFi AP `ito Module` 2.4 GHz.
-- **Spare Mini Vivaldi V2 control board on the bench** (ING3/Laurma Elettronica v05.02) alongside
-  the ito V2.0 — enables bench work without opening the machine.
+- **No spare control board.** Corrected 2026-11-07: George considered buying one (ING3/Laurma
+  Elettronica v05.02) but never did, so bench work on a spare isn't available.
 - `06-011` plumb-in parts (float valve, regulator, solenoid, Claryum filter) in hand.
 
 ### Firmware / flasher — DONE, but note the merge state
@@ -162,7 +162,7 @@ day rather than soldering-in-place.
 | B2   | Finalize `J1/J2` footprints (or commit to **JST-XH 2.54 mm + pigtails** fallback). `J3` = JST-XH 2.5 mm (confirmed).                                                                        | `06-015`                             | B1                  | connector BoM closed                      |
 | B3   | Draw the schematic in KiCad from the netlist, assign footprints, lay out **~20 × 20 mm, 2-layer**, export Gerbers/BoM/CPL.                                                                  | `06-015`, `_reference/flow-tap-pcb/` | KiCad (Windows), B2 | Gerbers exported                          |
 | B4   | Order JLC/PCBWay — **SMT-assemble U1 + C1 only**, hand-solder TH connectors. Piggyback on the plumb-in bracket order (one cart).                                                            | `06-015`                             | B3                  | boards ordered                            |
-| B5   | Assemble; **bench-verify**: `J1→J2` passes all 3 pins unchanged; injected pulse on `o` appears clean at `J3.OUT` (0↔5 V); **no continuity `+`↔any `J3` pin**.                             | `06-015` Exit                        | B4                  | bench checks pass                         |
+| B5   | Assemble; **bench-verify**: `J1→J2` passes all 3 pins unchanged; injected pulse on `o` appears clean at `J3.OUT` (0↔5 V); **no continuity `+`↔any `J3` pin**.                               | `06-015` Exit                        | B4                  | bench checks pass                         |
 
 _Note:_ if B1 stalls (meter connector can't be sourced/matched), the interposer can still be built
 on the JST-XH fallback, OR the machine can fall back to the **kit Digmesa inline** meter (accepts
@@ -219,11 +219,11 @@ entirely. the machine is a profiling machine until re-wired.
 
 ### Phase F — Configure + first-light [SOFT]
 
-| Step | Do                                                                                                                                                                                                                                                                                                               | Maps to           | Done when          |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------ |
-| F1   | Set pressure-sensor scaling, flow-meter type/impulses, and **`PRESS OPV`** in leva!; set the machine's **bypass valve to crack just above 9 bar**.                                                                                                                                                               | `06-001` step 7   | values set         |
+| Step | Do                                                                                                                                                                                                                                                                                                              | Maps to           | Done when          |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ------------------ |
+| F1   | Set pressure-sensor scaling, flow-meter type/impulses, and **`PRESS OPV`** in leva!; set the machine's **bypass valve to crack just above 9 bar**.                                                                                                                                                              | `06-001` step 7   | values set         |
 | F2   | Run the **pressure pre-test** (blind filter). ⚠️ **A53 gotcha:** the stock board drops `SNS` on "inactivity" and aborts the test — either **press the shot button then start the pre-test**, or temporarily **jumper `SNS`↔`L`** (set SNS action to "do nothing" first). Survives firmware upgrades → one-time. | `06-001` Tuning   | pre-test completes |
-| F3   | Confirm Status Monitor + HASS/MQTT now show **live pressure + flow + temp** from the installed machine.                                                                                                                                                                                                          | Product req 11–12 | live plots         |
+| F3   | Confirm Status Monitor + HASS/MQTT now show **live pressure + flow + temp** from the installed machine.                                                                                                                                                                                                         | Product req 11–12 | live plots         |
 
 ### Phase G — Tuning (the real, ongoing work) [SOFT, iterative]
 
@@ -249,8 +249,8 @@ tuned params).
 - **Display/encoder PETG housing** — external, no-cut mount (or a printed La Spaziale Dream S1 bezel
   with a display slot). Needed for `06-001` Exit criterion 7; can trail the electrical work.
 - **`06-012` leva! PID temperature takeover** — _Not Started, deliberately deferred._ Conflicts with
-  the A53 stock board; SSR + TSic hardware already in hand. Bench-test on the spare control board
-  first. Out of the core product's scope.
+  the A53 stock board; SSR + TSic hardware already in hand. Bench-test on a spare control board, if
+  one is bought first. Out of the core product's scope.
 - **`06-014` unified ESP32 interposer board** (v0 was the button sidecar) — its temperature role is
   superseded if `06-012` succeeds; otherwise an alternative automation path.
 
