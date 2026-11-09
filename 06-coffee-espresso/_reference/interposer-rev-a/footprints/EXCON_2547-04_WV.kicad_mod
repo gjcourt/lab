@@ -1,0 +1,152 @@
+(footprint "EXCON_2547-04_WV"
+	(version 20241229)
+	(generator "lab-gen_excon_footprints")
+	(layer "F.Cu")
+	(descr "EXCON 2547 series wafer, 254704WV203, 1x04 P2.54mm vertical, shrouded, latch window (dimensions: EXCON drawing C2547WV rev E, https://www.excon.com.tw/wp-content/uploads/2547WV.pdf: pitch 2.54, hole 1.00 +0.1, pin 0.64 sq, body 12.70 W x 5.0 D x 12.6 H, pin row 2.2 from the latch-window face). Mates 254704HA203 housing + 254700TC351/TC501 terminals. Probable match to Mini Vivaldi II S1 Universal Board v.05.01 sensor headers: confirm by calipers")
+	(tags "connector EXCON 2547 wafer vertical 2.54mm")
+	(property "Reference" "REF**"
+		(at 3.81 -4.4 0)
+		(layer "F.SilkS")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "EXCON_2547-04_WV"
+		(at 3.81 3.9 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_rect
+		(start -2.65 -2.91)
+		(end 10.27 2.31)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+	)
+	(fp_rect
+		(start 2.81 1.71)
+		(end 4.81 2.31)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -2.95 2.61)
+		(end -2.95 1.11)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_line
+		(start -2.95 2.61)
+		(end -1.45 2.61)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+	)
+	(fp_rect
+		(start -3.04 -3.3)
+		(end 10.66 2.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+	)
+	(fp_rect
+		(start -2.54 -2.8)
+		(end 10.16 2.2)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 2.81 1.7)
+		(end 4.81 1.7)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start -0.625 2.2)
+		(end 0 1.2)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_line
+		(start 0 1.2)
+		(end 0.625 2.2)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 3.81 -1.8 0)
+		(layer "F.Fab")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.7 2.0)
+		(drill 1.0)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+	)
+	(pad "2" thru_hole oval
+		(at 2.54 0)
+		(size 1.7 2.0)
+		(drill 1.0)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+	)
+	(pad "3" thru_hole oval
+		(at 5.08 0)
+		(size 1.7 2.0)
+		(drill 1.0)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+	)
+	(pad "4" thru_hole oval
+		(at 7.62 0)
+		(size 1.7 2.0)
+		(drill 1.0)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+	)
+	(embedded_fonts no)
+)

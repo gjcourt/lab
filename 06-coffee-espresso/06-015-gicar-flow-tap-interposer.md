@@ -17,8 +17,27 @@ A small, JLC/PCBWay-assembled interposer PCB that lets
 [ito + `leva!`](06-001-lucca-a53-mini-leva-firmware-integration.md) read the **stock GICAR flow
 meter in parallel** — no inline Digmesa (avoids the ~10% flow restriction), no soldering into the
 machine or ito, and fully reversible. It buffers the meter's 5 V open-collector pulse into ito
-through a **74LVC1G17 Schmitt gate**, and its connector layout makes the 14.3 V rail physically
-unable to reach ito.
+through a **74LVC1G17 Schmitt gate**, and its connector layout makes the meter's supply rail
+physically unable to reach ito.
+
+> **Corrected 2026-11-08 (George's bench measurements, Tests 29 and 36; the
+> [06-014](06-014-unified-esp32-interposer-board.md) bench page).** Two facts below came from forum
+> threads, not from this machine, and are wrong for it:
+>
+> - **The meter supply is ~3.3 V, not +14.3 V.** Machine on, meter unplugged, at the board's flow
+>   header (M6): P2 (red, `+`) → P3 (black, GND) = 3.3 V; P4 (white, signal) → P3 = 4.9 V; P2 → P4 =
+>   1.62 V. Everything on the flow connector is ≤ 5 V, so the "14.3 V can't reach ito" reasoning was
+>   guarding against a rail this machine doesn't have. The real situation is safer. The
+>   pass-through-only rule for pin 2 still holds: it is the meter's own supply. The loaded voltage
+>   (meter connected) is not measured yet.
+> - **The connector is not JST XH.** The machine's flow header (M6) and the meter's plug are black,
+>   shrouded **EXCON 2547**-family parts (probable, 2.54 mm; caliper confirmation pending), the same
+>   family as the sensor headers. The JST XH `J1`/`J2` on the boards in hand don't mate with them.
+>   ito's `IMPULSE` side (`J3`) is still JST XH 3-pin. The unified interposer (06-014) draws
+>   `J1`/`J2` as EXCON 2547 4-pin; for these standalone boards, an EXCON-to-XH adapter lead would be
+>   needed.
+>
+> The original text is kept below for the record.
 
 Grounded in the [control-board wiring reference](_reference/mini-v2-control-board-wiring.md) — read
 that first for the GICAR pinout, the buffer rationale (blondica vs sandc), and why the buffer runs
@@ -32,17 +51,19 @@ straight through so the machine is untouched, and breaking out only what ito nee
 
 - **Reversible:** unplug the board, plug the meter back into the Vivaldi → stock. `J1↔J2` is a
   straight pass-through; the machine never knows it was there.
-- **Safe by construction:** the +14.3 V rail only bridges `J1→J2`. There is **no `+` pin on `J3`**,
-  so 14.3 V cannot physically reach ito (whose input is 5 V + 0.5 V absolute max).
+- **Safe by construction:** the meter's `+` rail only bridges `J1→J2`. There is **no `+` pin on
+  `J3`**, so it cannot physically reach ito (whose input is 5 V + 0.5 V absolute max). _(This was
+  written for a +14.3 V rail; the machine measures ~3.3 V, see the correction above.)_
 - **Clean signal:** the Schmitt input adds hysteresis → squares up the coarse ~2 pulse/mL edges and
   rejects noise; its high-impedance input never loads the line the machine uses for dosing/autofill.
 
 ## Connectors — three ports
 
-All three ports are **JST XH, 2.5 mm pitch** — confirmed 2026-07-13. The GICAR board connector
-measures **2.0 mm _between_ pins**, which with the 0.5 mm posts = 2.5 mm pitch (XH, not the 2.0 mm
-PH it superficially resembles). ito's IMPULSE side is XH too, so one connector family + one crimp
-tool covers the whole board.
+_(Superseded for `J1`/`J2` on 2026-11-08: the machine's flow header is EXCON 2547, see the
+correction above.)_ All three ports are **JST XH, 2.5 mm pitch** — confirmed 2026-07-13. The GICAR
+board connector measures **2.0 mm _between_ pins**, which with the 0.5 mm posts = 2.5 mm pitch (XH,
+not the 2.0 mm PH it superficially resembles). ito's IMPULSE side is XH too, so one connector
+family + one crimp tool covers the whole board.
 
 | Ref  | Role                     | Connector         | Pinout (numbered from the key/latch end)                                  |
 | ---- | ------------------------ | ----------------- | ------------------------------------------------------------------------- |
@@ -71,7 +92,7 @@ README: [`_reference/flow-tap-pcb/`](_reference/flow-tap-pcb/README.md).
 
 ```text
   (J1.1 / J2.1 = keyed blank — no connection)
-  N_PLUS (14.3 V):  J1.2 ── J2.2                       (pass-through ONLY — not to U1 or J3)
+  N_PLUS (~3.3 V):  J1.2 ── J2.2                       (pass-through ONLY — not to U1 or J3)
   GND:              J1.3 ── J2.3 ── J3.1 ── U1.GND ── C1
   N_O   (pulse):    J1.4 ── J2.4 ── U1.A(in)
   V5    (ito 5 V):  J3.3 ── U1.VCC ── C1
@@ -120,6 +141,9 @@ To revert: pull the board, plug the meter back into the Vivaldi.
       `kicad-cli`. Signals on F.Cu, GND on B.Cu. Render + Gerbers in `_reference/flow-tap-pcb/`
 - [x] Order JLC/PCBWay (SMT U1+C1, hand-solder connectors): PCBs shipped 2026-07-22 (E2 doc), boards
       in hand (`AGENTS.md`). The docs don't record whether the KiCad GUI review was done
+- [x] Re-check on the machine (2026-11-08, Tests 29/36): meter supply ~3.3 V, not 14.3 V; flow
+      header is EXCON 2547 (probable), not JST XH, so `J1`/`J2` need an adapter lead or the 06-014
+      board
 - [ ] Assemble, bench-verify pulse pass-through + buffered output into ito
 - [ ] Install in-line; confirm machine still doses/autofills and ito reads flow
 

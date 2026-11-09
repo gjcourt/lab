@@ -8,17 +8,22 @@ Checks (each cites where its rule comes from):
   C1  every part has a vendored KiCad footprint, and every REF.pad named exists in it
   C2  every footprint pad is either on a net or listed in NC (nothing silently floating)
   C3  every net has >= 2 pins; no pin on two nets; no pin both on a net and NC
-  C4  +14.3 V (N_PLUS) touches only J1.2 / J2.2                         (06-015, plan §3.4)
-  C5  ito 5 V nets never meet a board rail (+3V3/+5V/VA/VBUS), directly or through any
+  C4  GICAR meter supply (N_PLUS) touches only J1.2 / J2.2               (06-015, plan §3.4)
+  C5  ito 5 V nets never meet a board rail (+3V3/+5V/VBUS), directly or through any
       two-terminal part; U1 is on ito 5 V and U2 on +3V3                  (plan §3.4)
+      (06-015 called N_PLUS +14.3 V; bench Test 36 measured ~3.3 V. The rule stands: it is the
+      meter's own supply and must stay pass-through.)
   C6  ESP32 GPIO: each used once, matches the GPIO table, no strapping / octal-PSRAM / UART0 /
       not-led-out pin used, USB only on GPIO19/20, analog nets on ADC1  (module DS v1.8 §3, §4)
   C7  SB/SL probe lines: no DC path -- only the pass-through connectors and the series
       coupling caps touch them; the aux pins are pure pass-through       (plan §3.3)
-  C8  S1/S2 NTC lines: only the pass-through connectors and the series R (no bias injected)
-                                                                          (plan §3.2)
+  C8  S1/S2 NTC feed lines: only the pass-through connectors and the series R (no bias
+      injected); the follower input is clamped by a BAV99 to +5V / GND and nothing else; the
+      ADS1115 input sits behind a divider whose ratio keeps a +5V follower output under the
+      ADS VDD (3V3) + 0.3 V abs max            (plan §3.2, George 2026-11-08, SBAS444E)
   C9  ENC lines: only connectors, FET drains (pull-low only) and LVC inputs; no pull-up or
-      push-pull driver; every FET gate has a pull-down                    (plan §3.5)
+      push-pull driver; every FET gate has a pull-down; ito-side pin 1 = GND, encoder-side
+      pin 1 NC                                                 (plan §3.5, bench Test 33)
   C10 every IC power pin on the intended rail
 Info: nets left with a single fitted pin once DNP parts are removed (expected for DNP blocks).
 """
@@ -112,10 +117,10 @@ for pin, nets in pin_net.items():
         probs.append(f'{pin} is on {nets[0]} and also NC')
 check('C3', 'every net >= 2 pins; no pin on two nets', probs, f'{len(ckt.NETS)} nets')
 
-# ---- C4 +14.3 V ---------------------------------------------------------------------------------
-plus = set(ckt.NETS[ckt.PLUS_14V3_NET])
+# ---- C4 GICAR meter supply ----------------------------------------------------------------------
+plus = set(ckt.NETS[ckt.FLOW_SUPPLY_NET])
 probs = [] if plus == {'J1.2', 'J2.2'} else [f'N_PLUS = {sorted(plus)}, must be exactly J1.2, J2.2']
-check('C4', '+14.3 V touches only J1.2 / J2.2', probs)
+check('C4', 'GICAR meter supply touches only J1.2 / J2.2', probs)
 
 # ---- C5 ito 5 V isolation ---------------------------------------------------------------------
 probs = []
@@ -196,23 +201,38 @@ for net in ckt.LEVEL_AUX_NETS:
             probs.append(f'{net}: {pin} (aux line must be pure pass-through)')
 check('C7', 'SB/SL probe lines: pass-through + series coupling C only', probs)
 
-# ---- C8 NTC lines: no bias injected -------------------------------------------------------------
+# ---- C8 NTC lines: no bias injected; clamp + divider sized for the ADS ---------------------------
 probs = []
-series = {'S1_A': 'R5', 'S1_B': 'R6', 'S2_A': 'R7', 'S2_B': 'R8'}
-for net, r in series.items():
+for net, r in ckt.NTC_SERIES.items():
     for pin in ckt.NETS[net]:
         ref, _ = split(pin)
         if ref.startswith('J') or ref == r:
             continue
         probs.append(f'{net}: {pin} touches the NTC line (only J + {r} allowed)')
-    if any(split(p)[0] == r for p in ckt.NETS[net]):
-        other = [x for x in pin_net if split(x)[0] == r and pin_net[x][0] != net]
-        if len(other) != 1 or not other or not re.match(r'^S\d[AB]_IN$', pin_net[other[0]][0]):
-            probs.append(f'{r} must go from {net} straight to a follower input net')
-for net in ('S1A_IN', 'S1B_IN', 'S2A_IN', 'S2B_IN'):
-    if not any(split(p)[0] == 'U6' for p in ckt.NETS[net]):
+    other = [x for x in pin_net if split(x)[0] == r and pin_net[x][0] != net]
+    if len(other) != 1 or pin_net[other[0]][0] not in ckt.NTC_FOLLOWER_IN:
+        probs.append(f'{r} must go from {net} straight to a follower input net')
+for net in sorted(ckt.NTC_FOLLOWER_IN):
+    refs = {split(p)[0] for p in ckt.NETS[net]}
+    if 'U6' not in refs:
         probs.append(f'{net} does not reach the U6 follower')
-check('C8', 'S1/S2 lines: pass-through + series R into a follower only', probs)
+    for ref in refs - {'U6'}:
+        if ref.startswith('R'):
+            continue  # the series R (checked above)
+        if ckt.part(ref).value != 'BAV99':
+            probs.append(f'{net}: {ref} is not the series R, the follower or a BAV99 clamp')
+            continue
+        if pin_net.get(f'{ref}.3') != [net] or pin_net.get(f'{ref}.1') != ['GND'] or pin_net.get(f'{ref}.2') != ['+5V']:
+            probs.append(f'{ref} must clamp {net} (pin 3) to GND (pin 1) and +5V (pin 2)')
+# divider: follower output (<= +5V) x ratio must stay <= ADS VDD + 0.3 V = 3.6 V
+VAL = {'10k': 10e3, '5.1k': 5.1e3}
+for top, bot, adc in (('R9', 'R13', 'S1_ADC'), ('R10', 'R14', 'S2_ADC')):
+    rt, rb = VAL.get(ckt.part(top).value), VAL.get(ckt.part(bot).value)
+    if rt is None or rb is None or 5.0 * rb / (rt + rb) > 3.6:
+        probs.append(f'{top}/{bot}: divider must hold a 5 V follower output under 3.6 V at {adc}')
+    if not any(split(p)[0] == 'U7' for p in ckt.NETS[adc]):
+        probs.append(f'{adc} does not reach the ADS1115')
+check('C8', 'S1/S2 feeds: pass-through + series R + clamp into a follower; ADS input bounded', probs)
 
 # ---- C9 ENC open-drain only ---------------------------------------------------------------------
 probs = []
@@ -232,12 +252,17 @@ for net in ('ENC_A', 'ENC_B', 'ENC_SW'):
         if ckt.part(ref).value == '74LVC1G17' and pad == '2':  # A input
             continue
         probs.append(f'{net}: {pin} is not a connector, FET drain or LVC input')
+# Test 33: the encoder cable has no wire in hole 1; ito ENC pin 1 is GND (our FET return)
+if 'J14.1' not in ckt.NC:
+    probs.append('J14.1 must be NC (encoder cable hole 1 is empty, Test 33)')
+if pin_net.get('J15.1') != ['GND']:
+    probs.append('J15.1 (ito ENC pin 1) must be GND')
 check('C9', 'ENC lines: pull-low-only injection, high-Z read-back', probs)
 
 # ---- C10 IC power pins ------------------------------------------------------------------------
 power = {
     'U4.3': '+5V', 'U4.2': '+3V3', 'U4.1': 'GND',
-    'U6.4': 'VA', 'U6.11': 'GND',
+    'U6.4': '+5V', 'U6.11': 'GND',
     'U7.8': '+3V3', 'U7.3': 'GND', 'U7.1': 'GND',  # ADDR = GND -> 0x48
     'U8.5': '+3V3', 'U9.5': '+3V3', 'U10.5': '+3V3',
     'U11.2': '+3V3', 'U11.1': 'GND', 'U3.5': 'VBUS', 'U3.2': 'GND',
