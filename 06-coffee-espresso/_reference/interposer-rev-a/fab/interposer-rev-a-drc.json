@@ -1,0 +1,131 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-11-09T03:43:01+0000",
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "9.0.9",
+    "schematic_parity": [],
+    "source": "interposer-rev-a.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 100.0
+                    },
+                    "uuid": "8ad97f9a-01ee-4afe-ad71-296fdf188071"
+                },
+                {
+                    "description": "Segment of U5 on F.Silkscreen",
+                    "pos": {
+                        "x": 174.8,
+                        "y": 99.85
+                    },
+                    "uuid": "5246f6e3-5f7f-41cd-af61-b8aa786939a8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 100.0
+                    },
+                    "uuid": "8ad97f9a-01ee-4afe-ad71-296fdf188071"
+                },
+                {
+                    "description": "Segment of U5 on F.Silkscreen",
+                    "pos": {
+                        "x": 193.2,
+                        "y": 99.85
+                    },
+                    "uuid": "9ea4b617-b6a7-4076-a6b1-86e10fbf4c4e"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 200.0,
+                        "y": 102.0
+                    },
+                    "uuid": "d25a1f49-691a-4cd9-bb08-979c657b897a"
+                },
+                {
+                    "description": "Segment of J5 on F.Silkscreen",
+                    "pos": {
+                        "x": 198.1,
+                        "y": 135.3
+                    },
+                    "uuid": "b0b75136-aeda-439a-8bc3-2ad3d765432d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 200.0,
+                        "y": 102.0
+                    },
+                    "uuid": "d25a1f49-691a-4cd9-bb08-979c657b897a"
+                },
+                {
+                    "description": "Segment of J5 on F.Silkscreen",
+                    "pos": {
+                        "x": 198.1,
+                        "y": 144.7
+                    },
+                    "uuid": "57a260f7-2ad7-429e-adc8-7362d1d2c1c2"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        },
+        {
+            "description": "Silkscreen clipped by board edge",
+            "items": [
+                {
+                    "description": "Segment on Edge.Cuts",
+                    "pos": {
+                        "x": 200.0,
+                        "y": 102.0
+                    },
+                    "uuid": "d25a1f49-691a-4cd9-bb08-979c657b897a"
+                },
+                {
+                    "description": "Segment of J5 on F.Silkscreen",
+                    "pos": {
+                        "x": 200.0,
+                        "y": 144.7
+                    },
+                    "uuid": "2d7f8c29-7f06-463f-a531-4e35a5b5837a"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_edge_clearance"
+        }
+    ]
+}

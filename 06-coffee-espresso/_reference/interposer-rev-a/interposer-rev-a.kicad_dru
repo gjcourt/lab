@@ -1,0 +1,7 @@
+(version 1)
+(rule "U11 KiCad VSSOP-8 2.3x2 land: 0.15 mm pad gaps (DNP; compare with TI DCU before fitting)"
+  (condition "A.memberOfFootprint('U11') && B.memberOfFootprint('U11')")
+  (constraint clearance (min 0.15mm)))
+(rule "JLC 6 mil floor everywhere else"
+  (condition "!(A.memberOfFootprint('U11') && B.memberOfFootprint('U11'))")
+  (constraint clearance (min 0.1524mm)))

@@ -1,0 +1,31 @@
+** Drc report for interposer-rev-a.kicad_pcb **
+** Created on 2026-11-09T03:43:07+0000 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 5 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(102.0000 mm, 100.0000 mm): Segment on Edge.Cuts
+    @(174.8000 mm, 99.8500 mm): Segment of U5 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(102.0000 mm, 100.0000 mm): Segment on Edge.Cuts
+    @(193.2000 mm, 99.8500 mm): Segment of U5 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(200.0000 mm, 102.0000 mm): Segment on Edge.Cuts
+    @(198.1000 mm, 135.3000 mm): Segment of J5 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(200.0000 mm, 102.0000 mm): Segment on Edge.Cuts
+    @(198.1000 mm, 144.7000 mm): Segment of J5 on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(200.0000 mm, 102.0000 mm): Segment on Edge.Cuts
+    @(200.0000 mm, 144.7000 mm): Segment of J5 on F.Silkscreen
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
