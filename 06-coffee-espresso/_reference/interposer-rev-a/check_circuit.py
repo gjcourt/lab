@@ -25,6 +25,8 @@ Checks (each cites where its rule comes from):
       push-pull driver; every FET gate has a pull-down; ito-side pin 1 = GND, encoder-side
       pin 1 NC                                                 (plan §3.5, bench Test 33)
   C10 every IC power pin on the intended rail
+  C11 M9 tap: the RS-232 transceiver's line pins, its RX output and the passive path reach
+      M9 / GPIO38 only through DNP links; DIN1 has its pull-up         (George 2026-11-08)
 Info: nets left with a single fitted pin once DNP parts are removed (expected for DNP blocks).
 """
 
@@ -225,7 +227,13 @@ for net in sorted(ckt.NTC_FOLLOWER_IN):
         if pin_net.get(f'{ref}.3') != [net] or pin_net.get(f'{ref}.1') != ['GND'] or pin_net.get(f'{ref}.2') != ['+5V']:
             probs.append(f'{ref} must clamp {net} (pin 3) to GND (pin 1) and +5V (pin 2)')
 # divider: follower output (<= +5V) x ratio must stay <= ADS VDD + 0.3 V = 3.6 V
-VAL = {'10k': 10e3, '5.1k': 5.1e3}
+VAL = {'10k': 10e3, '5.1k': 5.1e3, '100k': 100e3, '1M': 1e6}
+# series R: a 24 V fault (George: "survive 24 V") into a clamp at +5V + 0.3 V must stay under the
+# MCP6004's +-2 mA input-pin rating (DS20001733L abs max)
+for r in ckt.NTC_SERIES.values():
+    v = VAL.get(ckt.part(r).value)
+    if v is None or (24 - 5.3) / v > 2e-3:
+        probs.append(f'{r} = {ckt.part(r).value}: 24 V fault current must stay under 2 mA')
 for top, bot, adc in (('R9', 'R13', 'S1_ADC'), ('R10', 'R14', 'S2_ADC')):
     rt, rb = VAL.get(ckt.part(top).value), VAL.get(ckt.part(bot).value)
     if rt is None or rb is None or 5.0 * rb / (rt + rb) > 3.6:
@@ -266,9 +274,25 @@ power = {
     'U7.8': '+3V3', 'U7.3': 'GND', 'U7.1': 'GND',  # ADDR = GND -> 0x48
     'U8.5': '+3V3', 'U9.5': '+3V3', 'U10.5': '+3V3',
     'U11.2': '+3V3', 'U11.1': 'GND', 'U3.5': 'VBUS', 'U3.2': 'GND',
+    'U13.16': '+3V3', 'U13.15': 'GND', 'U13.10': 'GND',  # MAX3232; unused DIN2 tied low (SLLS410O §9.2.2)
 }
 probs = [f'{p} should be {n}, is {pin_net.get(p)}' for p, n in power.items() if pin_net.get(p) != [n]]
 check('C10', 'IC power pins on the intended rails', probs)
+
+# ---- C11 M9 tap: nothing fitted reaches the machine until M9 is scoped --------------------------
+dnp_refs = {p.ref for p in ckt.PARTS if p.dnp}
+probs = []
+for net, owner in ckt.M9_LINK_NETS.items():
+    for pin in ckt.NETS[net]:
+        ref = split(pin)[0]
+        if ref != owner and ref not in dnp_refs:
+            probs.append(f'{net}: {pin} is fitted; only DNP links may join {owner} here')
+for pin in ckt.NETS['M9_P1'] + ckt.NETS['M9_P2'] + ckt.NETS['M9_P3'] + ckt.NETS['M9_P4']:
+    if split(pin)[0] not in dnp_refs:
+        probs.append(f'{pin} is fitted on an M9 line')
+if pin_net.get('U13.11') != ['M9_TX'] or not any(split(p)[0] == 'R55' for p in ckt.NETS['M9_TX']):
+    probs.append('U13 DIN1 must be on M9_TX with the R55 pull-up (SLLS410O §9.2.2)')
+check('C11', 'M9 tap: machine side reached only through DNP links', probs)
 
 # ---- info: nets that are single-pin once DNP parts are left off --------------------------------
 dnp = {p.ref for p in ckt.PARTS if p.dnp}

@@ -66,6 +66,7 @@ FP_SOT23_5 = 'Package_TO_SOT_SMD:SOT-23-5'
 FP_SOT23_6 = 'Package_TO_SOT_SMD:SOT-23-6'
 FP_SOT223 = 'Package_TO_SOT_SMD:SOT-223-3_TabPin2'
 FP_SOIC14 = 'Package_SO:SOIC-14_3.9x8.7mm_P1.27mm'
+FP_SOIC16 = 'Package_SO:SOIC-16_3.9x9.9mm_P1.27mm'
 FP_VSSOP10 = 'Package_SO:VSSOP-10_3x3mm_P0.5mm'
 FP_VSSOP8_DCU = 'Package_SO:VSSOP-8_2.3x2mm_P0.5mm'
 FP_SMA = 'Diode_SMD:D_SMA'
@@ -153,9 +154,10 @@ PARTS: list[Part] = [
     # the boiler body). So S2 and SB share one 4-pin plug, and pin 1 of each probe header is GND
     # (Test 30: 0.2 ohm to M6 pin 3), pin 2 the feed. Each interposer pair is a header for the probe's
     # own plug (_IN) and a header for a 2547HA203-to-2547HA203 jumper to the control board (_OUT).
-    # Front end per George's decision 2026-11-08: "Measure 0-5.5 V, survive 24 V" -- ~100k series R
-    # + clamp diodes into a high-impedance follower, then a divider so the node reads at full ADS
-    # resolution. Only the feed pin is buffered (the GND pin is known now).
+    # Front end per George's decisions 2026-11-08: "Measure 0-5.5 V, survive 24 V", then, on the
+    # follow-up questions, "1 MΩ series" and "Accept 0–5.0 V". So: 1M series R + clamp diodes into
+    # a high-impedance follower on +5V (reads 0 to ~5.0 V), then a divider into the ADS1115. Only
+    # the feed pin is buffered (the GND pin is known now).
     Part('J6', 'S1_IN (steam probe plug)', FP_EX2, 'F1', 'EXCON 254702WV203', '', HAND,
          note='1 GND, 2 S1 feed (Test 29/30). EXCON 2547 probable: caliper-confirm before ordering'),
     Part('J7', 'S1_OUT (to control board M2)', FP_EX2, 'F1', 'EXCON 254702WV203', '', HAND,
@@ -168,14 +170,16 @@ PARTS: list[Part] = [
          note='quad CMOS RRIO, IB +-1 pA typ, 1.8-6.0 V (DS20001733L). A = S1, B = S2, C/D unused '
               '(followers with IN+ at VSS: inside the RRIO common-mode range)'),
     C('C8', '100nF', C_100N, 'F1', note='U6 VDD decoupling (U6 on +5V)'),
-    R('R5', '100k', R_100K, 'F1', note='S1 series R: George 2026-11-08 "survive 24 V": (24-5.3) V / 100k = 0.19 mA '
-      'into the clamp, under the MCP6004 +-2 mA input-pin rating'),
-    R('R6', '100k', R_100K, 'F2', note='S2 series R (as R5)'),
-    Part('D2', **BAV99, func='F1', note='clamp S1_IN to +5V / GND. Leakage <= 25 nA (Diodes ds12007) x 100k '
-         '= <= 2.5 mV worst case at the follower; through the ~15k feed it is <= 0.4 mV at the node'),
+    R('R5', '1M', R_1M, 'F1', note='S1 series R, George 2026-11-08 "1 MΩ series". 24 V: (24-5.3) V / 1M = 19 uA '
+      'into the clamp (MCP6004 input pin +-2 mA). Interposer unpowered: ~0.3 C shift at the control board, '
+      'vs ~3 C at 100k (5 V / 15k model, Test 30)'),
+    R('R6', '1M', R_1M, 'F2', note='S2 series R (as R5)'),
+    Part('D2', **BAV99, func='F1', note='clamp S1_IN to +5V / GND. Leakage <= 25 nA (Diodes ds12007, at 20 V) x 1M '
+         '= <= 25 mV worst case at the follower (~0.6 C at 94 C); <= 0.4 mV at the node through the ~15k feed'),
     Part('D3', **BAV99, func='F2', note='clamp S2_IN to +5V / GND'),
-    R('R9', '10k', R_10K, 'F1', note='divider top: node x 5.1/15.1 = 0.338, so 5.5 V -> 1.86 V and the '
-      'ADS1115 +-2.048 V FSR spans 0..6.06 V at the node (SBAS444E PGA table)'),
+    R('R9', '10k', R_10K, 'F1', note='divider top: node x 5.1/15.1 = 0.338. The follower tops out at ~5.0 V '
+      '-> 1.69 V, 83 % of the ADS1115 +-2.048 V FSR (SBAS444E PGA table). Kept for "Accept 0–5.0 V": '
+      'a closer ratio would need a new resistor value for < 1 bit'),
     R('R10', '10k', R_10K, 'F2', note='divider top'),
     R('R13', '5.1k', R_5K1, 'F1', note='divider bottom; also bounds AIN to 0.338 x 5 V = 1.69 V < VDD + 0.3'),
     R('R14', '5.1k', R_5K1, 'F2', note='divider bottom'),
@@ -274,20 +278,42 @@ PARTS: list[Part] = [
     Part('D10', **BAV99, func='F8', dnp=True, note='IO1 clamp'),
     Part('D11', **BAV99, func='F8', dnp=True, note='IO2 clamp'),
 
-    # --- F8b M9 "RS232 serial / Seriale 232" tap (all DNP; Test 29 case sticker) ----------------
+    # --- F8b M9 "RS232 serial / Seriale 232" tap (Test 29 case sticker) ---------------------------
     # M9 is a 4-pin EXCON header on the control board with nothing plugged in. Its pin roles and
-    # levels are unknown: SCOPE BEFORE CONNECTING. J20 breaks every M9 pin out to J21.1-4; once a
-    # scope shows which pin is TX/RX, two wire links on J21 join them to the ESP32 side (J21.5/.6).
-    # The R/R/clamp footprints are the level-shift room (series R, divider bottom, clamp), values TBD.
-    # True RS-232 levels (beyond the rails, negative swings) would need a transceiver: not footprinted.
+    # levels are unknown: SCOPE BEFORE CONNECTING. J20 breaks every M9 pin out to J21.1-4. Two
+    # paths to UART2, both open until M9 is scoped and one is chosen (George 2026-11-08):
+    #  * passive (DNP): R49 TX series, R50/R51 RX divider, D12 clamp -> wire links on J21.5/.6
+    #  * RS-232 transceiver (FITTED, "Add a DNP transceiver footprint", then "why wouldn't we place
+    #    the transceiver if it's cheap?"): U13 MAX3232 + charge-pump caps, line side through DNP 0R
+    #    R52/R53 to J22, logic RX through DNP 0R R54.
+    # The links stay open because U13's driver swings about +-5.4 V (SLLS410O VOH/VOL at 3 kOhm): into
+    # a 5 V logic input on the control board's MCU that could damage the machine. RS-232 is also
+    # inverted vs TTL (ESP32 UART can invert in software).
     Part('J20', 'M9 RS232 tap (cable to control board M9)', FP_EX4, 'F8', 'EXCON 254704WV203', '', HAND, dnp=True,
          note='pin roles unknown; EXCON 2547 probable (Test 29)'),
     Part('J21', 'M9 link field', FP_HDR6, 'F8', jlc=HAND, dnp=True,
-         note='1-4 = M9 pins 1-4 (via J20); 5 = ESP32 UART2 TX side; 6 = ESP32 UART2 RX side. Wire-link after scoping'),
-    R('R49', 'TBD', TBD, 'F8', dnp=True, note='M9 TX series R. PLACEHOLDER until M9 is scoped'),
-    R('R50', 'TBD', TBD, 'F8', dnp=True, note='M9 RX series R (divider top)'),
-    R('R51', 'TBD', TBD, 'F8', dnp=True, note='M9 RX divider bottom'),
-    Part('D12', **BAV99, func='F8', dnp=True, note='M9 RX clamp to 3V3 / GND'),
+         note='1-4 = M9 pins 1-4 (via J20); 5 = passive TX side; 6 = passive RX side. Wire-link after scoping'),
+    R('R49', 'TBD', TBD, 'F8', dnp=True, note='passive path: M9 TX series R. PLACEHOLDER until M9 is scoped'),
+    R('R50', 'TBD', TBD, 'F8', dnp=True, note='passive path: M9 RX series R (divider top)'),
+    R('R51', 'TBD', TBD, 'F8', dnp=True, note='passive path: M9 RX divider bottom'),
+    Part('D12', **BAV99, func='F8', dnp=True, note='passive path: M9 RX clamp to 3V3 / GND'),
+    Part('U13', 'MAX3232', FP_SOIC16, 'F8', 'MAX3232EIDR (TI)', 'C193666', EXTENDED,
+         note='2 drivers + 2 receivers, 3-5.5 V, 250 kbit/s, +-15 kV ESD (TI SLLS410O, Jun 2021). VCC = 3V3. '
+              'Pins 1 C1+, 2 V+, 3 C1-, 4 C2+, 5 C2-, 6 V-, 7 DOUT2, 8 RIN2, 9 ROUT2, 10 DIN2, 11 DIN1, '
+              '12 ROUT1, 13 RIN1, 14 DOUT1, 15 GND, 16 VCC (Table 5-1). Channel 2 unused'),
+    C('C19', '100nF', C_100N, 'F8', note='U13 C1 (C1+/C1-): 0.1 uF at VCC 3.3 V (SLLS410O Table 9-1)'),
+    C('C20', '100nF', C_100N, 'F8', note='U13 C2 (C2+/C2-)'),
+    C('C21', '100nF', C_100N, 'F8', note='U13 C3: V+ to GND (Fig 9-1: C3 to VCC or GND). 50 V part vs V+ <= 7 V'),
+    C('C22', '100nF', C_100N, 'F8', note='U13 C4: GND (+) to V- (-), Fig 9-1'),
+    C('C23', '100nF', C_100N, 'F8', note='U13 VCC bypass 0.1 uF (Fig 9-1)'),
+    R('R55', '10k', R_10K, 'F8', note='M9_TX pull-up: holds U13 DIN1 at a valid level (idle high = UART mark) while '
+      'GPIO21 is unconfigured; SLLS410O §8.3.2, §9.2.2: DIN must be valid low or high, and DIN input current is only +-1 uA (§6.6), so no internal pull'),
+    R('R52', '0', R_0, 'F8', dnp=True, note='LINK, open until M9 is scoped: U13 DOUT1 -> J22.1'),
+    R('R53', '0', R_0, 'F8', dnp=True, note='LINK, open until M9 is scoped: J22.2 -> U13 RIN1 (open RIN = ROUT high, SLLS410O §8.3.3)'),
+    R('R54', '0', R_0, 'F8', dnp=True, note='LINK: U13 ROUT1 -> GPIO38. Fit only on the transceiver path '
+      '(ROUT1 is push-pull and would fight the passive RX path)'),
+    Part('J22', 'M9 RS-232 link pads', FP_HDR2, 'F8', jlc=HAND, dnp=True,
+         note='1 = transceiver TX line (via R52), 2 = transceiver RX line (via R53). Wire-link to J21.1-4 after scoping'),
 
     # --- F9 on/off dry contact (plan §3.8) -------------------------------------------------------
     Part('U12', 'TLP222A', FP_DIP4, 'F9', 'TLP222A(TP1,F) (Toshiba)', 'C2152279', EXTENDED, dnp=True,
@@ -336,8 +362,8 @@ GPIO = {
     18: ('SER_RX', 'in', 'U1RXD default (F8 stub, DNP)'),
     19: ('USB_DN', 'usb', 'USB_D- (fixed function)'),
     20: ('USB_DP', 'usb', 'USB_D+ (fixed function)'),
-    21: ('M9_TX', 'out', 'UART2 TX via the GPIO matrix (M9 tap, DNP)'),
-    38: ('M9_RX', 'in', 'UART2 RX via the GPIO matrix (M9 tap, DNP)'),
+    21: ('M9_TX', 'out', 'UART2 TX via the GPIO matrix: U13 DIN1 + R55 pull-up; passive R49 (DNP)'),
+    38: ('M9_RX', 'in', 'UART2 RX via the GPIO matrix: U13 ROUT1 via R54 or passive R50 (both DNP links)'),
 }
 
 # Rules the checker enforces (module datasheet v1.8 §3 Table 3-1 notes, §4 Table 4-1):
@@ -375,6 +401,7 @@ NETS: dict[str, list[str]] = {
         'J16.2', 'R34.1', 'R35.1', 'U11.2',
         'R24.1', 'R25.1', 'D6.2', 'D7.2',
         'R39.1', 'D8.2', 'D9.2', 'D10.2', 'D11.2', 'D12.2',
+        'U13.16', 'C23.1', 'R55.1',
     ],
     'EN': ['U5.3', 'R3.2', 'C7.1', 'SW1.1'],
     'BOOT': [esp(0), 'R4.2', 'SW2.1'],
@@ -437,9 +464,20 @@ NETS: dict[str, list[str]] = {
     'M9_P3': ['J20.3', 'J21.3'],
     'M9_P4': ['J20.4', 'J21.4'],
     'M9_TX_H': ['J21.5', 'R49.2'],
-    'M9_TX': ['R49.1', esp(21)],
+    'M9_TX': ['R49.1', esp(21), 'U13.11', 'R55.2'],
     'M9_RX_H': ['J21.6', 'R50.1'],
-    'M9_RX': ['R50.2', 'R51.1', 'D12.3', esp(38)],
+    'M9_RX': ['R50.2', 'R51.1', 'D12.3', esp(38), 'R54.2'],
+    'RS_DOUT1': ['U13.14', 'R52.1'],
+    'RS_TX_H': ['R52.2', 'J22.1'],
+    'RS_RX_H': ['J22.2', 'R53.1'],
+    'RS_RIN1': ['R53.2', 'U13.13'],
+    'RS_ROUT1': ['U13.12', 'R54.1'],
+    'MAX_C1P': ['U13.1', 'C19.1'],
+    'MAX_C1N': ['U13.3', 'C19.2'],
+    'MAX_C2P': ['U13.4', 'C20.1'],
+    'MAX_C2N': ['U13.5', 'C20.2'],
+    'MAX_VP': ['U13.2', 'C21.1'],
+    'MAX_VN': ['U13.6', 'C22.2'],
     # ---- F9 on/off ----
     'ONOFF_DRV': [esp(12), 'R48.1'],
     'ONOFF_LED': ['R48.2', 'U12.1'],
@@ -461,6 +499,7 @@ NETS: dict[str, list[str]] = {
         'J16.1', 'J16.MP', 'U11.1', 'J17.2',
         'J18.1', 'R44.2', 'R45.2', 'R46.2', 'R47.2', 'D8.1', 'D9.1', 'D10.1', 'D11.1',
         'R51.2', 'D12.1',
+        'U13.15', 'U13.10', 'C21.2', 'C22.1', 'C23.2',
         'U12.2',
     ],
 }
@@ -470,6 +509,9 @@ NC: dict[str, str] = {
     'J1.1': 'GICAR key-blank (Test 36: M6 P1 blank)',
     'J2.1': 'GICAR key-blank',
     'J14.1': 'encoder cable hole 1 is empty: no GND carried (Test 33)',
+    'U13.7': 'MAX3232 DOUT2: channel 2 unused',
+    'U13.8': 'MAX3232 RIN2: unused; an open receiver input reads high (SLLS410O §8.3.3)',
+    'U13.9': 'MAX3232 ROUT2: unused output',
     'U1.1': '74LVC1G17 NC pin',
     'U2.1': '74LVC1G17 NC pin',
     'U8.1': '74LVC1G17 NC pin',
@@ -503,6 +545,9 @@ BOARD_RAILS = {'+3V3', '+5V', 'VBUS'}
 # NTC feed lines: only the pass-through headers and one series R into a follower (plan §3.2).
 NTC_SERIES = {'S1_FEED': 'R5', 'S2_FEED': 'R6'}
 NTC_FOLLOWER_IN = {'S1_IN', 'S2_IN'}
+# M9 tap: nets where the transceiver meets the machine side or the ESP32 RX pin. Every other part on
+# them must be DNP (a link), so nothing reaches M9 until it is scoped (checker C11).
+M9_LINK_NETS = {'RS_DOUT1': 'U13', 'RS_RIN1': 'U13', 'RS_ROUT1': 'U13', 'M9_TX_H': 'J21', 'M9_RX_H': 'J21'}
 
 # ---------------------------------------------------------------------------------------------
 # Placeholders: what is a stand-in, and which measurement closes it (plan "Open facts").
@@ -514,11 +559,11 @@ PLACEHOLDERS = [
     ('M2', 'J1 J2 J6 J7 J8 J9 J12 J13 J20', 'EXCON 2547 is probable, not caliper-confirmed (Test 29): '
      'confirm the 4-pin header is ~12.7 mm wide (2.54 mm pitch) before ordering housings and boards.'),
     ('M3', 'R5 R6 D2 D3 U6 (VDD)', 'Live S1/S2 node voltages not measured (Test 30 live half waits for an '
-     'EXCON extension lead). Estimate 1.5-4.7 V (5 V through ~15k). U6 on +5V reads 0 to ~5.0 V; '
-     'George\'s 0-5.5 V span needs U6 VDD >= 5.5 V (open question, see README).'),
-    ('M3', 'R5 R6', '100k series R per George 2026-11-08. With the interposer UNPOWERED and the machine on, '
-     'the feed backfeeds the dead +5V rail through 100k + clamp: estimated ~0.1 V at the group node at 94 C, '
-     'about 3 C at the control board (5 V / 15k model, Test 30). T4 must run powered AND unpowered (open question, see README).'),
+     'EXCON extension lead). Estimate 1.5-4.7 V (5 V through ~15k). U6 on +5V reads 0 to ~5.0 V: George '
+     '"Accept 0–5.0 V"; revisit in rev B if the live node sits near 5 V.'),
+    ('M3', 'R5 R6 D2 D3', '1M series R (George "1 MΩ series"). T4 runs with the interposer powered AND '
+     'unpowered (~0.3 C estimated unpowered shift). BAV99 leakage x 1M is <= 25 mV worst case at the '
+     'follower: if T3 shows it matters, D2/D3 can go DNP (op-amp input diodes + 1M still limit 24 V to 19 uA).'),
     ('M3', 'firmware', 'Steam NTC curve: 201.7k @21 C, 6.8k hot at an unknown temperature; needs a second '
      'known point. Group: beta ~4340 K, R25 ~205k (Test 30).'),
     ('M4', 'C14 R22 R24 R26 D6', 'SB sensing method + excitation (Test 31 not done). SB is on J8/J9 pin 3, '
@@ -527,8 +572,9 @@ PLACEHOLDERS = [
      'done). Pin 1 drawn as the tapped line, pin 2 pass-through only. Front-end DNP.'),
     ('M8', 'J18 R39-R47 D8-D11 U12 R48 J19', 'Panel link: 16-way ribbon on M1 seen (Test 35 partial); panel '
      'end and ON/OFF pair not reached. All DNP.'),
-    ('M9-RS232', 'J20 J21 R49-R51 D12', 'Control board M9 "RS232 serial" (case sticker, Test 29): pin roles '
-     'and levels unknown. Scope before connecting. All DNP; values TBD.'),
+    ('M9-RS232', 'J20 J21 J22 R49-R54 D12', 'Control board M9 "RS232 serial" (case sticker, Test 29): pin '
+     'roles and levels unknown. Scope before connecting, then fit ONE path: R52/R53/R54 (U13 MAX3232) or '
+     'R49-R51/D12 (passive, values TBD) + wire links on J21/J22.'),
     ('M10', 'outline, jumper cables', 'Sites measured (Test 37): box 55x50 mm / 35 mm deep, beside ito '
      '70x50 / 25, opposite tank ~130x120 / 30+. Cable lengths to each connector NOT measured.'),
     ('datasheet', 'U12 R48', 'TLP222A datasheet not read (pinout, IFT); LCSC page says DIP-4.'),

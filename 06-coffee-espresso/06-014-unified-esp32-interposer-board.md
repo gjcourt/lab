@@ -47,8 +47,9 @@ outline, fab plan, tests, and the measure-first list below.
 - **Shared I²C** header. The ESP32 is the master; ito `EXPANSION` sits behind DNP jumpers.
 - **`SER`:** header and DNP footprints only. Rev B, after the Saleae capture.
 - **M9 "RS232 serial" tap (added 2026-11-08):** a DNP EXCON 4-pin header to the control board's
-  empty M9 header, broken out to a link field and a spare ESP32 UART, with DNP level-shift
-  footprints. Pin roles and levels are unknown: scope before connecting.
+  empty M9 header, broken out to a link field and a spare ESP32 UART. Two paths: a fitted MAX3232
+  RS-232 transceiver and a DNP passive level-shift network, each joined to M9 only through DNP
+  links. Pin roles and levels are unknown: scope before connecting, then fit one path.
 - **Optional on/off:** a DNP dry contact using [06-017](06-017-a53-hass-onoff-interposer.md)'s
   recipe, as a stopgap until `SER` lands. It is populated only if the panel really has a closable
   ON/OFF pin pair.
@@ -56,8 +57,8 @@ outline, fab plan, tests, and the measure-first list below.
 ## Relationship to other projects
 
 - **[06-015 GICAR flow-tap interposer](06-015-gicar-flow-tap-interposer.md):** **absorbed** as this
-  board's flow function. The standalone boards (in hand) stay valid as the fallback and for bench
-  work.
+  board's flow function. The standalone boards (in hand) are shelved (George, 2026-11-08: "Rely on
+  the new interposer"): their JST XH `J1`/`J2` don't mate the machine's EXCON flow header.
 - **[06-017 HASS on/off interposer](06-017-a53-hass-onoff-interposer.md):** the **optional on/off
   stopgap** (DNP on rev A) until rev B's `SER` interposer gives full control.
 - **[06-016 control-board RE](06-016-a53-control-board-reverse-engineering.md):** the source of the
@@ -108,8 +109,8 @@ on 2026-11-08 (bench page Tests 28–37):**
 - [ ] **M3** `S1`/`S2` node voltage range + bias (cold / at temp), cold NTC resistance. Resistance
       half done (Test 30): group 249 kΩ at 21 °C, 13.3 kΩ at 94 °C (β ≈ 4340 K, R25 ≈ 205 kΩ); steam
       201.7 kΩ at 21 °C, 6.8 kΩ hot (temperature unknown); feed pin to GND ≈ 15 / 16.5 kΩ on the
-      unpowered board. **Decided (George):** "Measure 0–5.5 V, survive 24 V". Live node voltages
-      wait for an EXCON extension lead.
+      unpowered board. **Decided (George):** "Measure 0–5.5 V, survive 24 V", then "1 MΩ series" and
+      "Accept 0–5.0 V". Live node voltages wait for an EXCON extension lead.
 - [ ] **M4** `SB` boiler-level sensing method + excitation _(optional for rev A; Test 31 not done)_
 - [ ] **M5** `SL` tank-level method + connector _(optional for rev A; Test 32 not done)_
 - [x] **M6** ito `ENC` plug: Molex KK 254 4-pin + pin order confirmed (Test 33). The cable carries

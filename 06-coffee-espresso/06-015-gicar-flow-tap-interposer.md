@@ -37,6 +37,10 @@ physically unable to reach ito.
 >   `J1`/`J2` as EXCON 2547 4-pin; for these standalone boards, an EXCON-to-XH adapter lead would be
 >   needed.
 >
+> **Shelved 2026-11-08 (George: "Rely on the new interposer").** The standalone boards in hand are
+> not adapted with EXCON leads; flow tapping moves to the
+> [06-014](06-014-unified-esp32-interposer-board.md) interposer, whose `J1`/`J2` are EXCON 2547.
+>
 > The original text is kept below for the record.
 
 Grounded in the [control-board wiring reference](_reference/mini-v2-control-board-wiring.md) — read
@@ -142,8 +146,8 @@ To revert: pull the board, plug the meter back into the Vivaldi.
 - [x] Order JLC/PCBWay (SMT U1+C1, hand-solder connectors): PCBs shipped 2026-07-22 (E2 doc), boards
       in hand (`AGENTS.md`). The docs don't record whether the KiCad GUI review was done
 - [x] Re-check on the machine (2026-11-08, Tests 29/36): meter supply ~3.3 V, not 14.3 V; flow
-      header is EXCON 2547 (probable), not JST XH, so `J1`/`J2` need an adapter lead or the 06-014
-      board
+      header is EXCON 2547 (probable), not JST XH, so `J1`/`J2` don't mate. Shelved: George, "Rely
+      on the new interposer" (no adapter leads)
 - [ ] Assemble, bench-verify pulse pass-through + buffered output into ito
 - [ ] Install in-line; confirm machine still doses/autofills and ito reads flow
 
