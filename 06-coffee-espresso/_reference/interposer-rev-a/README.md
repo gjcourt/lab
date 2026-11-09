@@ -457,6 +457,13 @@ next to the ito on the left side panel, 70 × 50 mm, 25 mm deep; opposite the wa
 vibe pump, about 130 × 120 mm, 30 mm or more deep (heat and pump vibration there). Still to record:
 the cable run to each connector and the heat exposure per site.
 
+**Site decision (George, 2026-11-09):** the large bay opposite the water tank, beside the vibe pump
+(~130 × 120 mm, ≥30 mm deep): "let's keep it by the water tank / pump so we can fit all the
+components. i'd rather have a bigger and more complete board than try to make it fit in a tight
+space". The 100 × 60 mm rev A outline stays. Follow-ups for that site: cable runs from there to each
+connector (M10), heat exposure near the pump, and vibration-tolerant mounting (standoffs; locking
+connectors are already the EXCON/KK families).
+
 ## Layout (draft, 2026-11-08)
 
 **100 × 60 mm, 2 layers, 1.6 mm, all SMT on top. DRC: 0 errors, 0 unconnected, 5 warnings** (all
