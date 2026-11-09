@@ -139,8 +139,9 @@ does. Unplug the board and re-mate the original plugs → bone stock.
 
 - Reuse 06-015 verbatim for the ito path (✅ lab 06-015 + `_reference/flow-tap-pcb/`):
   - `J1` GICAR in / `J2` to the Vivaldi: **JST XH 4-pin**, pos 1 key-blank, 2 = +14.3 V (red), 3 =
-    GND (black), 4 = signal `o` (white). `J3` to ito `IMPULSE`: **JST XH 3-pin**, 1 GND / 2 OUT / 3
-    +5 V (✅).
+    GND (black), 4 = signal `o` (white). _(Corrected 2026-11-08, Tests 29/36: the machine's header
+    is EXCON 2547 (probable), not XH, and `+` measures ~3.3 V, not 14.3 V.)_ `J3` to ito `IMPULSE`:
+    **JST XH 3-pin**, 1 GND / 2 OUT / 3 +5 V (✅).
   - `+14.3 V` bridges `J1↔J2` **only**. No path to any other net (✅ 06-015 "safe by
     construction").
   - `U1` 74LVC1G17 on **ito's 5 V** (from `J3.3`), C1 100 nF, LCSC C7836 / C14663 (✅ BoM).
@@ -210,16 +211,16 @@ populate later. If M8 shows the panel is pure serial, leave it empty.
 Every machine-side tap is a **male/female pair** so the board drops in-line and comes out leaving
 the machine stock (the 06-015 pattern).
 
-| Channel     | Mates                           | Family                               | Status                                         |
-| ----------- | ------------------------------- | ------------------------------------ | ---------------------------------------------- |
-| Flow input  | GICAR plug ↔ board flow header | **JST XH 4-pin**, pos 1 key-blank    | ✅ (06-015)                                    |
-| ito IMPULSE | board → ito                     | **JST XH 3-pin**                     | ✅ (06-015 / `reference_ito_impulse_pinout`)   |
-| ito `ENC`   | encoder plug ↔ ito `ENC`       | **Molex KK 254, 4-pin**              | ✅ family (manual); ⚠️ mate with George's plug |
-| `S1` / `S2` | probe plug ↔ control board     | ⚠️ unknown                           | **M2**                                         |
-| `SB` / `SL` | probe lead ↔ control board     | ⚠️ unknown (faston? header?)         | **M4 / M5**                                    |
-| 5 V in      | off-board PSU → board           | choose (JST XH 2-pin or screw term.) | our choice                                     |
-| I²C         | add-ons                         | JST-SH 4-pin (Qwiic)                 | our choice                                     |
-| `SER` stub  | rev B                           | 0.1" header, DNP                     | our choice                                     |
+| Channel     | Mates                           | Family                                           | Status                                         |
+| ----------- | ------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
+| Flow input  | GICAR plug ↔ board flow header | ~~JST XH~~ **EXCON 2547 4-pin**, pos 1 key-blank | ⚠️ probable (Test 29, 2026-11-08)              |
+| ito IMPULSE | board → ito                     | **JST XH 3-pin**                                 | ✅ (06-015 / `reference_ito_impulse_pinout`)   |
+| ito `ENC`   | encoder plug ↔ ito `ENC`       | **Molex KK 254, 4-pin**                          | ✅ family (manual); ⚠️ mate with George's plug |
+| `S1` / `S2` | probe plug ↔ control board     | **EXCON 2547** 2-pin (M2) / 4-pin (M3)           | ⚠️ probable (Test 29, 2026-11-08)              |
+| `SB` / `SL` | probe lead ↔ control board     | `SB` on M3 pin 3; `SL` = M10 EXCON 2-pin         | ⚠️ probable (Test 29); method M4 / M5          |
+| 5 V in      | off-board PSU → board           | choose (JST XH 2-pin or screw term.)             | our choice                                     |
+| I²C         | add-ons                         | JST-SH 4-pin (Qwiic)                             | our choice                                     |
+| `SER` stub  | rev B                           | 0.1" header, DNP                                 | our choice                                     |
 
 **Interposer jumper cables:** where the board can't present the native plug back to the control
 board (as `J2` does for flow), use short pigtails with the native housing on one end. Crimp families
@@ -256,7 +257,9 @@ for any new family once M2/M4/M5 name it.
   (amd64). **Docker is currently down on this Mac.** Use Podman, or fix Docker, before layout day.
 - Pre-fab checks: DRC 0 / unconnected 0; grep for bare `(remove_unused_layers)`; render top/bottom
   and eyeball; BoM/CPL LCSC numbers all in stock; Y-sign convention on CPL (as 06-015).
-- **Order 5** (JLC minimum). Keep the 06-015 boards as the fallback flow path.
+- **Order 5** (JLC minimum). Keep the 06-015 boards as the fallback flow path. _(2026-11-08: shelved
+  instead, George "Rely on the new interposer"; their XH `J1`/`J2` don't mate the EXCON flow
+  header.)_
 
 ## 7. Test plan
 
@@ -282,7 +285,8 @@ for any new family once M2/M4/M5 name it.
   "probe the panel" pre-flight becomes **M8**. 06-014 is rewritten around this plan, keeps its HA
   goal, and records v0 in a History note.
 - **06-015 flow tap:** absorbed as F5 (same circuit + connectors). The standalone boards stay valid
-  as the fallback and for bench work.
+  as the fallback and for bench work. _(2026-11-08: shelved, George "Rely on the new interposer"; M6
+  is EXCON 2547, so F5's `J1`/`J2` are EXCON now.)_
 - **06-016 board RE:** the supplier of open facts (NTC curve, `SER`/timer bus, panel map). Rev A
   doesn't need its spare-board bench to ship; rev B does.
 - **06-017 on/off interposer:** absorbed as optional F9 (DNP), only if M8 confirms the pin pair.
@@ -307,6 +311,29 @@ closed except the probe point, one hand, a CAT-rated meter.
 | M8  | Front panel ⇄ board link: **serial `SER` vs 16-pin ribbon vs discrete pins**     | Open the panel side; count wires on the panel→board connector; photo the connector + both ends; read IC markings near it (the panel `M1`). Continuity: is there a pin pair that closes **only** while ON/STBY is held (06-017)?                       | F8 stub levels, F9 populate/omit       |
 | M9  | GICAR `+` really ~14.3 V on this machine, and `o` pulled to 5 V                  | **(live)** DMM at the GICAR plug: `+`→`−`, and `o`→`−` with no flow. (Already documented; one-minute re-check, since F5 now feeds the ESP32 too.)                                                                                                     | F5 confirmation                        |
 | M10 | Physical envelope                                                                | Where the board mounts; distance to each connector (cable lengths); max board size; any heat-shield needs (near boilers).                                                                                                                             | Board outline, cable BoM               |
+
+### Status, 2026-11-08
+
+George took the measurements on 2026-11-08; the bench page numbers them Tests 28–37 (one per M). The
+schematic in
+[`_reference/interposer-rev-a/`](../../06-coffee-espresso/_reference/interposer-rev-a/README.md)
+carries them.
+
+| #   | Status                | Result (George, 2026-11-08)                                                                                                                                                                                                                                                                                                                                    |
+| --- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M1  | ✅ closed (Test 28)   | GND→N and GND→F open unplugged; powered GND→PE 2 mV AC, 0 V DC. PS1 = Lauma SMR30.10, Class II. **But GND is bonded to chassis earth through M3 pin 4** (the steam-level return to the boiler body; Test 30 continuity, with M3 plugged in only). The interposer's GND is earth: flash an installed board from a grounded or battery-powered laptop.           |
+| M2  | ⚠️ probable (Test 29) | EXCON 2547, 2.54 mm, black PBT: header 2547xxWV203, housing 2547xxHA203, terminal 254700TC351/TC501. M2 2-pin = steam NTC (1 GND, 2 feed); M3 4-pin = 1 GND, 2 group NTC feed, 3 steam level probe, 4 level return; M6 = flow; M10 = tank level; M9 = empty, "RS232 serial"; M1 = panel. Confirm by calipers (4-pin ≈ 12.7 mm wide) before ordering.           |
+| M3  | ⚠️ half (Test 30)     | Group 249 kΩ @ 21 °C, 13.3 kΩ @ 94 °C (β ≈ 4340 K, R25 ≈ 205 kΩ); steam 201.7 kΩ @ 21 °C, 6.8 kΩ hot (temperature unknown). Feed pin to GND ≈ 15 kΩ (M3) / 16.5 kΩ (M2) unpowered. Estimate 1.5–4.7 V at the node. **Decided: "Measure 0–5.5 V, survive 24 V", then "1 MΩ series" and "Accept 0–5.0 V".** Live node voltages wait for an EXCON extension lead. |
+| M4  | open (Test 31)        | Not done. `SB` is M3 pin 3. Optional: DNP front-end.                                                                                                                                                                                                                                                                                                           |
+| M5  | open (Test 32)        | Not done. `SL` is M10 (2-pin EXCON). Optional: DNP front-end.                                                                                                                                                                                                                                                                                                  |
+| M6  | ✅ closed (Test 33)   | Molex KK 254 (~7.7 mm across 4 pins). Cable: hole 1 empty (no GND carried), 2 SW, 3 A, 4 B, each through 4.7 kΩ on the display board (V1.3). ito pin 1 is GND.                                                                                                                                                                                                 |
+| M7  | ✅ closed (Test 34)   | SW, A, B idle at 5.05 V (ito pull-ups); A/B open at detents; SW pressed 0 V. Injection is pull-low only; nothing masked at rest.                                                                                                                                                                                                                               |
+| M8  | ⚠️ partial (Test 35)  | 16-way ribbon with red pin-1 stripe on M1; panel end not reached. Optional: stays DNP.                                                                                                                                                                                                                                                                         |
+| M9  | ✅ closed (Test 36)   | **`+` = ~3.3 V** (meter unplugged), not 14.3 V; `o` idles at 4.9 V; P2→P4 1.62 V. Everything on M6 is ≤ 5 V.                                                                                                                                                                                                                                                   |
+| M10 | ⚠️ half (Test 37)     | Sites: control-board box 55 × 50 mm (35 mm deep), beside ito 70 × 50 mm (25 mm), opposite the tank ~130 × 120 mm (30 mm+). Cable lengths not measured.                                                                                                                                                                                                         |
+
+Still required before ordering: the M2 caliper check, M3's live node voltages, and M10's cable
+lengths.
 
 **Can't-close-this-week rule:** M1, M2, M3, M6, M7 and M10 are **required** to order. M4, M5 and M8
 are **optional for rev A**. Without them, `SB`/`SL`, `SER` and on/off ship as pass-through

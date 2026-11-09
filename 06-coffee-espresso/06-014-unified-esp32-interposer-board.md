@@ -46,6 +46,10 @@ outline, fab plan, tests, and the measure-first list below.
   and lossless.
 - **Shared I²C** header. The ESP32 is the master; ito `EXPANSION` sits behind DNP jumpers.
 - **`SER`:** header and DNP footprints only. Rev B, after the Saleae capture.
+- **M9 "RS232 serial" tap (added 2026-11-08):** a DNP EXCON 4-pin header to the control board's
+  empty M9 header, broken out to a link field and a spare ESP32 UART. Two paths: a fitted MAX3232
+  RS-232 transceiver and a DNP passive level-shift network, each joined to M9 only through DNP
+  links. Pin roles and levels are unknown: scope before connecting, then fit one path.
 - **Optional on/off:** a DNP dry contact using [06-017](06-017-a53-hass-onoff-interposer.md)'s
   recipe, as a stopgap until `SER` lands. It is populated only if the panel really has a closable
   ON/OFF pin pair.
@@ -53,8 +57,8 @@ outline, fab plan, tests, and the measure-first list below.
 ## Relationship to other projects
 
 - **[06-015 GICAR flow-tap interposer](06-015-gicar-flow-tap-interposer.md):** **absorbed** as this
-  board's flow function. The standalone boards (in hand) stay valid as the fallback and for bench
-  work.
+  board's flow function. The standalone boards (in hand) are shelved (George, 2026-11-08: "Rely on
+  the new interposer"): their JST XH `J1`/`J2` don't mate the machine's EXCON flow header.
 - **[06-017 HASS on/off interposer](06-017-a53-hass-onoff-interposer.md):** the **optional on/off
   stopgap** (DNP on rev A) until rev B's `SER` interposer gives full control.
 - **[06-016 control-board RE](06-016-a53-control-board-reverse-engineering.md):** the source of the
@@ -89,19 +93,37 @@ outline, fab plan, tests, and the measure-first list below.
 
 ## Progress
 
-**Measure first. These gate layout; details are in the plan's "Open facts" table:**
+**Measure first. These gate layout; details are in the plan's "Open facts" table. George took M1–M10
+on 2026-11-08 (bench page Tests 28–37):**
 
-- [ ] **M1** Control-board low-voltage GND isolated from mains? _(gates everything)_
-- [ ] **M2** `S1`/`S2` connector type + pin count at the control board
-- [ ] **M3** `S1`/`S2` node voltage range + bias (cold / at temp), cold NTC resistance
-- [ ] **M4** `SB` boiler-level sensing method + excitation _(optional for rev A)_
-- [ ] **M5** `SL` tank-level method + connector _(optional for rev A)_
-- [ ] **M6** ito `ENC` plug: Molex KK 254 4-pin + pin order confirmed
-- [ ] **M7** Encoder rest state at a detent + ito pull-up level
+- [x] **M1** Control-board low-voltage GND isolated from mains? _(gates everything)_ Yes (Test 28):
+      GND to N and to F open unplugged; GND to PE 2 mV AC, 0 V DC powered; PS1 is a Lauma SMR30.10,
+      Class II. GND is also bonded to chassis earth through M3 pin 4 (the steam-level return to the
+      boiler body, Test 30), so the interposer's GND is earth. Flash an installed board from a
+      grounded or battery-powered laptop.
+- [ ] **M2** `S1`/`S2` connector type + pin count at the control board. **Probable** (Test 29):
+      EXCON 2547, 2.54 mm, black PBT (header 2547xxWV203, housing 2547xxHA203, terminal
+      254700TC351/TC501). M2 2-pin = steam NTC (1 GND, 2 feed); M3 4-pin = 1 GND, 2 group NTC feed,
+      3 steam level probe, 4 level return; M6 = flow; M10 = tank level; M9 = empty, "RS232 serial".
+      Still to do: calipers on the 4-pin header (≈ 12.7 mm wide) before ordering.
+- [ ] **M3** `S1`/`S2` node voltage range + bias (cold / at temp), cold NTC resistance. Resistance
+      half done (Test 30): group 249 kΩ at 21 °C, 13.3 kΩ at 94 °C (β ≈ 4340 K, R25 ≈ 205 kΩ); steam
+      201.7 kΩ at 21 °C, 6.8 kΩ hot (temperature unknown); feed pin to GND ≈ 15 / 16.5 kΩ on the
+      unpowered board. **Decided (George):** "Measure 0–5.5 V, survive 24 V", then "1 MΩ series" and
+      "Accept 0–5.0 V". Live node voltages wait for an EXCON extension lead.
+- [ ] **M4** `SB` boiler-level sensing method + excitation _(optional for rev A; Test 31 not done)_
+- [ ] **M5** `SL` tank-level method + connector _(optional for rev A; Test 32 not done)_
+- [x] **M6** ito `ENC` plug: Molex KK 254 4-pin + pin order confirmed (Test 33). The cable carries
+      SW / A / B in holes 2 / 3 / 4 (each through 4.7 kΩ on the display board); hole 1 is empty.
+      ito's pin 1 is GND.
+- [x] **M7** Encoder rest state at a detent + ito pull-up level (Test 34): SW, A, B idle at 5.05 V,
+      A/B open at detents, SW pressed 0 V. Injection is pull-low only; nothing is masked at rest.
 - [ ] **M8** Panel ⇄ board link: serial `SER` vs 16-pin ribbon vs discrete pins _(optional for rev
-      A)_
-- [ ] **M9** GICAR `+` ≈ 14.3 V and `o` pulled to 5 V (re-check)
-- [ ] **M10** Physical envelope: mount point, cable lengths, max board size
+      A)_. Partial (Test 35): a 16-way ribbon on M1; the panel end isn't reached yet.
+- [x] **M9** GICAR `+` and `o` (Test 36): `+` is **~3.3 V** on this machine (meter unplugged), not
+      14.3 V; `o` idles at 4.9 V. Everything on M6 is ≤ 5 V.
+- [ ] **M10** Physical envelope: mount sites measured (Test 37: 55 × 50 mm in the control-board box,
+      70 × 50 mm beside the ito, ~130 × 120 mm opposite the tank); cable lengths not yet.
 
 **Then build:**
 
@@ -111,8 +133,10 @@ outline, fab plan, tests, and the measure-first list below.
 - [x] Pre-measurement schematic draft
       ([`_reference/interposer-rev-a/`](_reference/interposer-rev-a/README.md)): netlist as data in
       `circuit.py`, ERC checker passing, every placeholder mapped to the measurement that closes it
+- [x] Schematic updated with the 2026-11-08 measurements; EXCON 2547 2- and 4-pin footprints
+      authored from the EXCON drawing
 - [ ] Schematic + headless KiCad layout (DRC-clean; grep for bare `(remove_unused_layers)`)
-- [ ] Order from JLC (SMT top; hand-solder XH/KK/SH connectors)
+- [ ] Order from JLC (SMT top; hand-solder EXCON/XH/KK/SH connectors)
 - [ ] Bench tests T1–T7 (pass-through, rails, NTC emulation + loading, level, flow, `ENC` on a
       bench-powered ito)
 - [ ] ESPHome firmware: ADS1115 + temperature fit, steam-pressure template, flow `pulse_counter`,
