@@ -6,19 +6,25 @@ Tests 28–37, one per M; cited as **Test n**). The design of record is the
 [rev A plan](../../../docs/plans/2026-10-27-unified-esp32-interposer-rev-a-plan.md) (cited as **plan
 §n**). The 06-015 flow tap it absorbs is in [`../flow-tap-pcb/`](../flow-tap-pcb/README.md).
 
-**Status (2026-11-08): schematic as data, ERC-clean, not laid out.** M1, M6, M7 and M9 are closed;
-M2 is closed to "EXCON 2547, probable" (caliper check pending); M3 has its resistance half and
-George's front-end decision but no live node voltages; M10 has the mount sites but no cable lengths.
-Nothing here is a guess. Every value that waits on a measurement is listed in
+**Status (2026-11-08): schematic as data, ERC-clean; draft layout, DRC-clean, not ready to order**
+(see [Layout](#layout-draft-2026-11-08) and its
+[not ready to order until](#not-ready-to-order-until) list). M1, M6, M7 and M9 are closed; M2 is
+closed to "EXCON 2547, probable" (caliper check pending); M3 has its resistance half and George's
+front-end decision but no live node voltages; M10 has the mount sites but no cable lengths. Nothing
+here is a guess. Every value that waits on a measurement is listed in
 [Placeholders](#placeholders-what-closes-each-one), and every part number comes from a datasheet or
 a JLCPCB part page read on 2026-10-28 (no new LCSC numbers were added on 2026-11-08).
 
-| File                                                 | What it is                                                                                                  |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [`circuit.py`](circuit.py)                           | **Single source of truth.** Parts, nets, NC pads, GPIO map, placeholders. Importable by a future generator. |
-| [`check_circuit.py`](check_circuit.py)               | ERC-style checker (11 checks). Exit 0 = pass.                                                               |
-| [`footprints/`](footprints/)                         | The 26 KiCad 9 footprints `circuit.py` names: 24 from the KiCad 9 library (as 06-015), 2 EXCON authored     |
-| [`gen_excon_footprints.py`](gen_excon_footprints.py) | Writes `EXCON_2547-02_WV` / `-04_WV` from EXCON drawing C2547WV rev E. Plain Python.                        |
+| File                                                 | What it is                                                                                                   |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [`circuit.py`](circuit.py)                           | **Single source of truth.** Parts, nets, NC pads, GPIO map, placeholders. Importable by a future generator.  |
+| [`check_circuit.py`](check_circuit.py)               | ERC-style checker (11 checks). Exit 0 = pass.                                                                |
+| [`footprints/`](footprints/)                         | The 26 footprints `circuit.py` names (24 KiCad 9 library, 2 EXCON authored) + 2 layout-only (hole, test pad) |
+| [`gen_excon_footprints.py`](gen_excon_footprints.py) | Writes `EXCON_2547-02_WV` / `-04_WV` from EXCON drawing C2547WV rev E. Plain Python.                         |
+| [`generate_pcb.py`](generate_pcb.py)                 | Layout generator (KiCad 9 `pcbnew` API): reads `circuit.py`, writes the board, BOM and CPL.                  |
+| `interposer-rev-a.kicad_*`, `fp-lib-table`           | The generated KiCad project (board, netclasses, custom DRC rule, library table pointing at `footprints/`).   |
+| [`routing/`](routing/)                               | The Freerouting session the board is built from (committed, so regeneration doesn't need the router).        |
+| [`fab/`](fab/)                                       | Gerber + drill zip, JLC BOM + CPL, assembly drawing (PDF), top/bottom renders, DRC report.                   |
 
 ```sh
 cd 06-coffee-espresso/_reference/interposer-rev-a
@@ -451,16 +457,154 @@ next to the ito on the left side panel, 70 × 50 mm, 25 mm deep; opposite the wa
 vibe pump, about 130 × 120 mm, 30 mm or more deep (heat and pump vibration there). Still to record:
 the cable run to each connector and the heat exposure per site.
 
-## Layout notes (for the generator, not done here)
+**Site decision (George, 2026-11-09):** the large bay opposite the water tank, beside the vibe pump
+(~130 × 120 mm, ≥30 mm deep): "let's keep it by the water tank / pump so we can fit all the
+components. i'd rather have a bigger and more complete board than try to make it fit in a tight
+space". The 100 × 60 mm rev A outline stays. Follow-ups for that site: cable runs from there to each
+connector (M10), heat exposure near the pump, and vibration-tolerant mounting (standoffs; locking
+connectors are already the EXCON/KK families).
 
-- ESP32-S3-WROOM-1 PCB antenna keep-out: module DS v1.8 §3 points to the ESP32-S3 Hardware Design
-  Guidelines ("General Principles of PCB Layout for Modules"); read that before placing U5.
-- Grep the generated `.kicad_pcb` for a bare `(remove_unused_layers)` before fab (06-015 kiutils
-  bug, lab PR #73).
-- `D1` pad 1 = cathode (KiCad diode convention). `U4` tab = VOUT (`SOT-223-3_TabPin2`).
-- Keep the `S1`/`S2` input nodes (`S*_IN`) short and guarded: they are 1 MΩ, pA-level nodes.
-- EXCON headers: pin 1 is front-left on the silk (the latch-window face), as on the control board
-  (pin 1 lower-left, Test 29). Hand-solder; JLC has no LCSC number for them.
+## Layout (draft, 2026-11-08)
+
+**100 × 60 mm, 2 layers, 1.6 mm, all SMT on top. DRC: 0 errors, 0 unconnected, 5 warnings** (all
+`silk_edge_clearance`: the footprint silk of the USB-C receptacle face and of the module's antenna
+end runs to the board edge, where the fab clips it). Report:
+[`fab/interposer-rev-a-drc.rpt`](fab/interposer-rev-a-drc.rpt). Renders:
+[top](fab/interposer-rev-a-top.png), [bottom](fab/interposer-rev-a-bottom.png); the KiCad container
+has no 3D models, so the renders show footprints, not part bodies. Assembly drawing (F.Fab, DNP
+parts crossed out): [`fab/interposer-rev-a-assembly.pdf`](fab/interposer-rev-a-assembly.pdf).
+
+![top](fab/interposer-rev-a-top.png)
+
+### Regenerate
+
+Everything runs in containers (KiCad 9.0.9 `kicad/kicad:9.0`; Freerouting 2.5.0 on
+`eclipse-temurin:25-jre`, which needs Java 25). `--userns=keep-id` matters: without it rootless
+podman saves fail silently. From this directory (`K` and `J` are just shorthand here):
+
+```sh
+K="podman run --rm --userns=keep-id -e HOME=/tmp -v $PWD:/w -w /w docker.io/kicad/kicad:9.0"
+J="podman run --rm --userns=keep-id -e HOME=/tmp -v $PWD:/w -v <dir with freerouting-2.5.0.jar>:/fr:ro -w /w docker.io/library/eclipse-temurin:25-jre"
+
+$K python3 generate_pcb.py dsn       # place + net from circuit.py -> build/*.dsn
+# only when placement changed (the committed session is what the board is built from):
+$J java -jar /fr/freerouting-2.5.0.jar -de build/interposer-rev-a.dsn -do routing/interposer-rev-a.ses \
+   --router.autorouter.max_passes=100 -mt 1 -us hybrid --gui.enabled=false \
+   --router.automatic_neckdown=false --router.fanout.enabled=false
+$K python3 generate_pcb.py finish    # import session, GND fan-out/stitching, pours -> interposer-rev-a.kicad_pcb
+$K kicad-cli pcb drc --severity-all -o fab/interposer-rev-a-drc.rpt interposer-rev-a.kicad_pcb
+$K kicad-cli pcb export gerbers --layers F.Cu,B.Cu,F.Paste,B.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts -o fab/gerbers/ interposer-rev-a.kicad_pcb
+$K kicad-cli pcb export drill --excellon-separate-th --generate-map --map-format gerberx2 -o fab/gerbers/ interposer-rev-a.kicad_pcb
+$K kicad-cli pcb export pdf --mode-single --layers F.Fab,Edge.Cuts --sketch-pads-on-fab-layers --sketch-DNP-footprints-on-fab-layers --crossout-DNP-footprints-on-fab-layers --include-border-title -o fab/interposer-rev-a-assembly.pdf interposer-rev-a.kicad_pcb
+$K kicad-cli pcb render --side top --width 2400 --height 1500 --zoom 1.2 --quality high -o fab/interposer-rev-a-top.png interposer-rev-a.kicad_pcb
+$K kicad-cli pcb render --side bottom --width 2400 --height 1500 --zoom 1.2 --quality high -o fab/interposer-rev-a-bottom.png interposer-rev-a.kicad_pcb
+$K python3 generate_pcb.py fab       # BOM + CPL (fitted, LCSC only) + gerber zip
+```
+
+`finish` is deterministic: the same `circuit.py`, generator and session give a byte-identical
+`.kicad_pcb` (UUIDs are seeded). It refuses to write a board containing a bare
+`(remove_unused_layers)` (the 06-015 kiutils bug).
+
+### How the board is built
+
+- **Placement** is in `generate_pcb.py`: fixed positions for connectors, the module, the ICs that
+  set the signal flow; the passives are packed per function block (F0…F9) next to their IC.
+- **GND is not autorouted.** Every SMD GND pad gets a short stub and a via before routing; the
+  router sees GND pads, stubs and vias as obstacles and routes signals only. After routing, a GND
+  pour goes on both layers, stitching vias go wherever there is room (≥ 3.5 mm apart), any pour
+  fragment the routing walled in gets a tie via, and any via that ends up in the pour on one layer
+  only is removed.
+- **Signals are autorouted** by Freerouting, run headless in a container (choice made: the 116-part
+  board is too large to route by hand-written coordinates as 06-015 did). Three Freerouting traps,
+  all handled in the generator and worth knowing for the next board:
+  1. It **gives up on a whole net** if any of its pins starts in a clearance violation. U11's KiCad
+     VSSOP-8 land has 0.15 mm pad gaps, which made all of `+3V3` unroutable; the DSN shows U11 with
+     0.34 mm pads instead (the board keeps the real land).
+  2. A net class whose only net has no pins in the DSN (GND, once stripped) breaks the class.
+  3. Its fan-out stage necks tracks down to 0.10–0.15 mm (under JLC's 6 mil), so it is off
+     (`--router.fanout.enabled=false --router.automatic_neckdown=false`).
+
+### Rules and net classes
+
+JLCPCB standard 2-layer: 6/6 mil (0.1524 mm) routed track/space, 0.3 mm minimum drill, 0.3 mm copper
+to edge. The board-wide clearance floor is 0.15 mm only because of U11's KiCad land; a custom rule
+(`interposer-rev-a.kicad_dru`) scopes that to U11's own pads and holds 0.1524 mm everywhere else.
+
+| Class   | Track  | Clearance | Via        | Nets                                                                                        |
+| ------- | ------ | --------- | ---------- | ------------------------------------------------------------------------------------------- |
+| Default | 0.2 mm | 0.16 mm   | 0.6 / 0.3  | everything else (GND is poured)                                                             |
+| Power5  | 0.4 mm | 0.2 mm    | 0.7 / 0.35 | `+5V`, `VBUS`                                                                               |
+| Power3  | 0.3 mm | 0.16 mm   | 0.65 / 0.3 | `+3V3` (0.3 mm so it can enter the 0.5 mm-pitch ADS1115 VDD pin)                            |
+| Machine | 0.3 mm | 0.25 mm   | 0.6 / 0.3  | the machine harness pass-throughs, `M9_P1..4`, `V5_ITO`, and the 1 MΩ nodes `S1_IN`/`S2_IN` |
+
+No mains on the board (plan §3.1), so no creepage rule applies; the 8 mm 5 V↔mains creepage note
+stays for a future rev with an on-board AC-DC. The wider `Machine` gap is margin for the harness
+lines, not a safety rule.
+
+### Placement
+
+- **Machine side, bottom edge:** one bank of nine EXCON 2547 headers, pins running up from the edge
+  (pin 1 nearest the edge), in/out pairs side by side so each pass-through is a straight 7.6 mm hop
+  with no vias: `J6/J7` S1 | `J8/J9` S2+SB | `J1/J2` flow | `J12/J13` SL | `J20` M9 (DNP). The
+  legend for each header runs up the column beside it.
+- **ito side, top-left:** `J14` ENC in, `J15` ENC to ito, `J3` IMPULSE, `J17` EXPANSION (DNP). `J4`
+  5 V in and `J16` Qwiic on the left edge, `J18` SER stub (DNP) below them.
+- **ESP32-S3 module, top-right**, antenna end flush with the top edge. The footprint's own keep-out
+  (no copper, no parts, both layers) covers the antenna band on the board and the 15 mm beyond the
+  edge; the bottom render shows the bare band. I followed the footprint's keep-out and did not read
+  Espressif's Hardware Design Guidelines (the note this section used to carry asked for that; still
+  worth a look). An espresso machine's metal case will dominate the RF either way.
+- **USB-C** on the right edge with U3 / R1 / R2 / D1 beside it. **MAX3232** (U13) and the M9 links
+  sit above J20; the **ADS1115 + MCP6004** sit above the probe headers, with each 1 MΩ series R and
+  its clamp right at the header (`S1_IN` 10 mm, `S2_IN` 16 mm with 2 vias: see the PR's open
+  questions). The **ENC** FETs and buffers sit between the ito headers and the module's
+  GPIO4–7/15/16.
+- **Test pads** (layout additions, not in `circuit.py`): TP1 TXD0 (U5.37) and TP2 RXD0 (U5.36), the
+  two pads `circuit.py`'s NC list asks for, plus TP4 BOOT, TP5 3V3 and TP7 GND beside them, so an
+  installed board can be flashed over UART0 from an isolated USB-UART adapter. TP3 EN sits at the EN
+  RC, TP6 +5V at the LDO input.
+- **Mounting:** four M3 NPTH holes (no copper: the board GND is already earth, Test 30), at three
+  corners and on the right edge below the module (the top-right corner is antenna keep-out).
+- **DNP parts are placed**, marked DNP in their footprint attributes (out of the CPL; crossed out on
+  the assembly drawing).
+- Silkscreen: legends on the top side, placed clear of every courtyard; a title and the two warnings
+  (GND = machine earth, never USB while the machine is plugged in) on the bottom.
+
+### Changes to the vendored footprints
+
+- `ESP32-S3-WROOM-1.kicad_mod`: EPAD thermal vias 0.2 mm → **0.3 mm** drill (JLC standard minimum;
+  0.6 mm pad, 0.15 mm ring).
+- Added `MountingHole_3.2mm_M3` and `TestPoint_Pad_D1.5mm` (KiCad 9 library copies) for the layout
+  additions.
+
+### Assumed
+
+- **Mount site: opposite the water tank** (Test 37: ~130 × 120 mm, ≥ 30 mm deep), the only measured
+  site this board fits. The box site (55 × 50) is too small for 14 connectors. The site beside the
+  ito (70 × 50) is only 25 mm deep, which the 12.6 mm-tall EXCON headers plus mated plugs plus a
+  cable bend don't leave room for, and the parts can't be routed on two layers at that size. The
+  tank site is near pump vibration and heat: use M3 standoffs with lock washers, and check the
+  hottest surface near the site before fitting (the module is rated −40…85 °C).
+- **Cable lengths are not measured** (M10). The layout assumes the machine-side jumpers all leave
+  from the bottom edge and the ito-side cables from the top-left, so the two bundles don't cross the
+  board. Every jumper is the EXCON 2547 pigtail in the BoM, length TBD.
+
+### Not ready to order until
+
+1. **M2 caliper check:** EXCON 2547 confirmed (4-pin header ≈ 12.7 mm wide). Nine footprints and the
+   whole bank depend on it.
+2. **M3 live node voltages** for S1/S2 (needs the EXCON extension lead), and T4 run powered and
+   unpowered.
+3. **M10 cable lengths** to each connector at the chosen site, and George's pick of the site.
+4. **Steam NTC second point** (firmware only; doesn't block fab, but listed in the plan's required
+   set via M3).
+5. George eyeballs the layout in KiCad, particularly: the `S2_IN` route, the USB D± route (36 mm, 3
+   vias, fine for full-speed bench flashing), and the antenna keep-out.
+6. On order day: every LCSC number re-checked for stock and class (plan §6), and the CPL rotations
+   checked in JLC's preview (SOT-23-5 / SOT-223 / SOIC typically need an offset, the 06-015 lesson).
+
+M4 / M5 / M8 / M9-scope items stay DNP and don't block the order (plan "can't-close-this-week"
+rule).
 
 ## Notes on the plan
 

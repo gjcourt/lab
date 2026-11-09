@@ -1,0 +1,6 @@
+# generate_pcb.py scratch (placed board, DSN for the router) and per-user KiCad state
+build/
+fab/gerbers/
+__pycache__/
+*.kicad_prl
+fp-info-cache
